@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import java.util.Map;
 
+/**
+ * @author brightqin
+ */
 @SessionAttributes(value = "username")
-@Controller    //使用该注解标志它是一个控制器
+@Controller
 @RequestMapping(value = "/user")
 public class UserController {
     @Autowired
@@ -24,7 +27,9 @@ public class UserController {
     public String doLogin(@Validated String id, String password, Map<String, Object> map) {
         User user = userService.getUserById(id);
         if (user != null && password.equals(user.getPassword())) {
-            map.put("username", id);//存放在request请求域中
+            //存放在request请求域中
+             map.put("username", id);
+
             return "frame";
         }
         return "error";

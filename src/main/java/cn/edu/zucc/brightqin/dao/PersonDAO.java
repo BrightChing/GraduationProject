@@ -13,6 +13,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 
+/**
+ * @author brightqin
+ */
 @Repository
 public class PersonDAO {
 

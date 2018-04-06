@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 /**
  * controller
  *
- * @author //标识它是一个控制器
+ * @author brightqin
  * @Date2016年12月9日上午11:25:40
  */
 @SessionAttributes(value = "username")
-@Controller    //使用该注解标志它是一个控制器
+@Controller
 @RequestMapping(value = "/person")
 public class PersonController {
 
@@ -36,10 +36,6 @@ public class PersonController {
     @RequestMapping("/login")
     public String doLogin(String username, String password, Map<String, Object> map) {
 
-        if (username.equals("admin") && password.equals("admin")) {
-            map.put("username", username);//存放在request请求域中
-            return "frame";
-        }
         return "frame";
     }
 

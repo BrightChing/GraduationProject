@@ -5,6 +5,9 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
+/**
+ * @author brightqin
+ */
 @Entity
 @Table(name = "user")
 public class User {

@@ -12,22 +12,18 @@ import org.hibernate.annotations.GenericGenerator;
  * 个人信息实体类
  * 注解方式配置对应数据表
  *
- * @author Peng
- * @Date2016年12月8日下午2:54:52
+ * @author brightqin
+ *
  */
 @Entity
 @Table(name = "person")
 public class Person {
 
-    private String id;// 主键id
-    private String name;// 姓名
-    private String idCard;// 身份证号
-    private String phone;// 手机号
-    private String address;// 地址
-
-    public Person() {
-        super();
-    }
+    private String id;
+    private String name;
+    private String idCard;
+    private String phone;
+    private String address;
 
     public Person(String name, String idCard, String phone, String address) {
         super();

@@ -8,7 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional
+/**
+ * @author brightqin
+ */
+@Transactional(rollbackFor=Exception.class)
 @Service
 public class PersonService {
 

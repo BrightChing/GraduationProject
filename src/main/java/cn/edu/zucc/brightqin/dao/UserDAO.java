@@ -13,6 +13,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 
+/**
+ * @author brightqin
+ */
 @Repository
 public class UserDAO {
 
@@ -34,15 +37,15 @@ public class UserDAO {
      * 添加
      * @param User
      */
-    public void addUser(User User) {
-        this.getSession().save(User);
+    public void addUser(User user) {
+        this.getSession().save(user);
     }
     /**
      * 更新
      * @param User
      */
-    public void updateUser(User User) {
-        this.getSession().update(User);
+    public void updateUser(User user) {
+        this.getSession().update(user);
     }
     /**
      * 删除
@@ -57,9 +60,9 @@ public class UserDAO {
      */
     @SuppressWarnings("unchecked")
     public List<User> getUsers() {
-        CriteriaQuery<User> UserCriteriaQuery = this.getSession().getCriteriaBuilder().createQuery(User.class);
-        UserCriteriaQuery.from(User.class);
-        return this.getSession().createQuery(UserCriteriaQuery).getResultList();
+        CriteriaQuery<User> userCriteriaQuery = this.getSession().getCriteriaBuilder().createQuery(User.class);
+        userCriteriaQuery.from(User.class);
+        return this.getSession().createQuery(userCriteriaQuery).getResultList();
     }
 
 }
