@@ -5,28 +5,35 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.Length;
+
 
 /**
- * 个人信息实体类
- * 注解方式配置对应数据表
- *
  * @author brightqin
- *
  */
 @Entity
 @Table(name = "person")
 public class Person {
 
     private String id;
+    @Length( min = 1,max =16, message = "{error.name}")
     private String name;
+    @Pattern(regexp = "^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}([0-9]|X|x)$", message = "{error.idCard}")
     private String idCard;
+    @Pattern(regexp = "^(13[0-9]|14[579]|15[0-35-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$",message ="{error.phone}" )
     private String phone;
+    @NotNull(message = "{error.address}")
     private String address;
 
-    public Person(String name, String idCard, String phone, String address) {
+    public Person()
+    {
         super();
+    }
+    public Person(String name, String idCard, String phone, String address) {
         this.name = name;
         this.idCard = idCard;
         this.phone = phone;

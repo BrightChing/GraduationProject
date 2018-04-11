@@ -1,5 +1,6 @@
 package cn.edu.zucc.brightqin.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import cn.edu.zucc.brightqin.entity.Person;
@@ -7,16 +8,23 @@ import cn.edu.zucc.brightqin.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+
 /**
  * controller
- *
  * @author brightqin
- * @Date2016年12月9日上午11:25:40
  */
 @SessionAttributes(value = "username")
 @Controller
@@ -27,28 +35,24 @@ public class PersonController {
     public PersonService personService;
 
     /**
-     * 登录请求，失败返回error.jsp
-     *
-     * @param username
-     * @param password
-     * @return
-     */
-    @RequestMapping("/login")
-    public String doLogin(String username, String password, Map<String, Object> map) {
-
-        return "frame";
-    }
-
-    /**
      * 保存添加的数据
-     *
-     * @param person
+     * @param person person
      * @return
      */
-    @RequestMapping(value = "/savePerson")
-    public String savePerson(Person person) {
-        personService.addPerson(person);
-        return "redirect:main";
+    @RequestMapping(value = "/savePerson", method = RequestMethod.POST)
+    public String savePerson(@Valid Person person, BindingResult result, ModelMap map) {
+        if (result.hasErrors()) {
+            List<FieldError> errors = result.getFieldErrors();
+            for (FieldError error : errors) {
+                map.put("ERROR_" + error.getField(), error.getDefaultMessage());
+                 System.out.println(error.getField() + "*" + error.getDefaultMessage());
+            }
+            return "savePage";
+        }
+        else {
+            personService.addPerson(person);
+            return "redirect:main";
+        }
     }
 
     /**
@@ -70,7 +74,6 @@ public class PersonController {
      */
     @RequestMapping(value = "/deletePersonById")
     public String deletePersonById(@RequestParam(value = "id") String id) {
-        System.out.println("删除单个");
         personService.deletePersonById(id);
         return "redirect:main";
     }

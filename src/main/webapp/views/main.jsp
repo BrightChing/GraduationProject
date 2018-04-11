@@ -10,7 +10,6 @@
         .table1 {
             border: 1px solid #ddd;
             width: 900px;
-
         }
 
         thead {
@@ -31,30 +30,31 @@
 <br/>
 <table cellspacing="0" border="1" class="table1">
     <thead>
-    <tr>
         <th width="300">姓名</th>
-        <th width="300">身份证号</th>
+        <th width="400">身份证号</th>
         <th width="300">电话</th>
         <th width="300">地址</th>
-        <th width="300">编辑</th>
-        <th width="300">删除</th>
-    </tr>
+        <th width="200">编辑</th>
+        <th width="200">删除</th>
     </thead>
     <tbody>
 
-    <c:forEach var="p" items="${requestScope.personList }">
+    <c:forEach var="person" items="${requestScope.personList }">
         <tr>
-            <td align="center">${p.name }</td>
-            <td align="center">${p.idCard }</td>
-            <td align="center">${p.phone }</td>
-            <td align="center">${p.address }</td>
+            <td align="center">${person.name }</td>
+            <td align="center">${person.idCard }</td>
+            <td align="center">${person.phone }</td>
+            <td align="center">${person.address }</td>
             <td align="center">
-                <a href="${pageContext.request.contextPath}/person/doUpdate?id=${p.id}"><img
-                        src="<%=basePath %>images/编辑.png"></a>
+                <a href="${pageContext.request.contextPath}/person/doUpdate?id=${person.id}">
+                    <img src="<%=basePath %>images/edit.png">
+                </a>
             </td>
             <td align="center">
-                <a href="${pageContext.request.contextPath}/person/deletePersonById?id=${p.id}"
-                   onclick='return confirm("确认要删除吗?")'><img src="<%=basePath %>images/trash.gif"></a>
+                <a href="${pageContext.request.contextPath}/person/deletePersonById?id=${person.id}"
+                   onclick='return confirm("确认要删除吗?")'>
+                    <img src="<%=basePath%>images/trash.gif">
+                </a>
             </td>
         </tr>
     </c:forEach>

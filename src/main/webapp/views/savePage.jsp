@@ -1,43 +1,48 @@
-<%@ page language="java" import="java.util.*"
-	contentType="text/html; charset=UTF-8"%>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
-%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <html>
-<head></head>
+<head>
+    <script type="text/javascript">
+
+    </script>
+</head>
 <body>
-
-	<h3>人员添加</h3>
-
-	<br />
-	<br />
-	<form id="saveForm" action="${pageContext.request.contextPath}/person/savePerson" method="post">
-		<table style="font-size:16px">
-			<tr>
-				<td>姓名：</td>
-				<td><input type="text" value="${person.name }" name="name" /></td>
-			</tr>
-			<tr>
-				<td>身份证号码：</td>
-				<td><input type="text" value="${person.idCard }" name="idCard" /></td>
-			</tr>
-			<tr>
-			<tr>
-				<td>手机号：</td>
-				<td><input type="text" value="${person.phone }" name="phone" /></td>
-			</tr>
-			<tr>
-				<td>地址：</td>
-				<td><input type="text" value="${person.address }" name="address" /></td>
-			</tr>
-			<tr>
-			
-				<td align="right">
-				<input type="submit" value="添加" /> &nbsp;&nbsp;<a href="javascript:history.go(-1)">退回 </a>
-			</tr>
-		</table>
-	</form>
+<h3>人员添加</h3>
+<form id="saveForm" action="${pageContext.request.contextPath}/person/savePerson" method="post">
+    <table style="font-size:16px">
+        <tr>
+            <td>
+                <label for="name">姓名：</label>
+                <input id="name" type="text" value="${person.name }" name="name"/>
+                ${ERROR_name}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="idCard">身份证号码：</label>
+                <input id="idCard" type="text" value="${person.idCard }" name="idCard"/>
+                ${ERROR_idCard}
+            </td>
+        </tr>
+        <tr>
+        <tr>
+            <td><label for="phone">手机号：</label>
+                <input id="phone" type="text" value="${person.phone }" name="phone"/>
+                ${ERROR_phone}
+            </td>
+        </tr>
+        <tr>
+            <td><label for="address">地址：</label>
+                <input id="address" type="text" value="${person.address }" name="address"/>
+                ${ERROR_address}
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <input type="submit" value="添 加"/> &nbsp;&nbsp;
+                <a href="javascript:history.go(-1)">退回 </a>
+            </td>
+        </tr>
+    </table>
+</form>
 </body>
 </html>

@@ -28,8 +28,7 @@ public class UserController {
         User user = userService.getUserById(id);
         if (user != null && password.equals(user.getPassword())) {
             //存放在request请求域中
-             map.put("username", id);
-
+            map.put("username", id);
             return "frame";
         }
         return "error";
@@ -38,8 +37,8 @@ public class UserController {
     /**
      * 保存添加的数据
      *
-     * @param user
-     * @return
+     * @param user 用户
+     * @return redirect:main
      */
     @RequestMapping(value = "/saveUser")
     public String savePerson(User user) {
@@ -50,8 +49,7 @@ public class UserController {
     /**
      * 跳转到添加页面
      * savePage.jsp
-     *
-     * @return
+     * @return savePage
      */
     @RequestMapping(value = "/addUser")
     public String saveUser() {
@@ -60,9 +58,8 @@ public class UserController {
 
     /**
      * 删除一条数据
-     *
-     * @param id
-     * @return
+     * @param id 用户id
+     * @return redirect:main
      */
     @RequestMapping(value = "/deleteUserById")
     public String deleteUserById(@RequestParam(value = "id") String id) {
@@ -75,9 +72,9 @@ public class UserController {
      * 跳转到更新页面，回显数据
      * editPage.jsp
      *
-     * @param id
+     * @param id 用户ID
      * @param model 使用的Model保存回显数据
-     * @return
+     * @return editPage
      */
     @RequestMapping(value = "/doUpdate")
     public String doUpdate(@RequestParam(value = "id") String id, Model model) {
@@ -87,9 +84,8 @@ public class UserController {
 
     /**
      * 更新数据
-     *
-     * @param user
-     * @return
+     * @param user 用户
+     * @return redirect:main
      */
     @RequestMapping(value = "/updateUser")
     public String updateUser(User user) {

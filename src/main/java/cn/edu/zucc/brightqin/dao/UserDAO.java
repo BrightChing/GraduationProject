@@ -35,14 +35,14 @@ public class UserDAO {
     }
     /**
      * 添加
-     * @param User
+     * @param user
      */
     public void addUser(User user) {
         this.getSession().save(user);
     }
     /**
      * 更新
-     * @param User
+     * @param user
      */
     public void updateUser(User user) {
         this.getSession().update(user);

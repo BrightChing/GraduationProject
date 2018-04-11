@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "user")
 public class User {
-    @Size(min=1, max=30, message="{user.name.length.error}")
+
     private String id;
     private String password;
 
