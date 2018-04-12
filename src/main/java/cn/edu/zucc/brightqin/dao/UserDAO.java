@@ -31,7 +31,7 @@ public class UserDAO {
      * @return
      */
     public User getUserById(String id) {
-        return (User) this.getSession().createQuery("from User where id=?").setParameter(0, id).uniqueResult();
+        return (User) this.getSession().createQuery("from User where id= ?").setParameter(0, id).uniqueResult();
     }
     /**
      * 添加
@@ -52,7 +52,7 @@ public class UserDAO {
      * @param id
      */
     public void deleteUserById(String id) {
-        this.getSession().createQuery("delete User where id=?").setParameter(0, id).executeUpdate();
+        this.getSession().createQuery("DELETE FROM User WHERE id=?").setParameter(0, id).executeUpdate();
     }
     /**
      * 查询所有

@@ -1,10 +1,7 @@
 package cn.edu.zucc.brightqin.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import cn.edu.zucc.brightqin.entity.Person;
-import cn.edu.zucc.brightqin.service.PersonService;
+import cn.edu.zucc.brightqin.entity.Department;
+import cn.edu.zucc.brightqin.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,61 +12,65 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 import javax.validation.Valid;
-
+import java.util.List;
+import java.util.Map;
 
 /**
- * controller
+ * Created with IntelliJ IDEA.
+ * Description:
+ * User: brightqin
+ * Date: 2018-04-03
  *
  * @author brightqin
  */
 @Controller
-@RequestMapping(value = "/person")
-public class PersonController {
-
+@RequestMapping(value = "/department")
+public class DepartmentController {
     @Autowired
-    public PersonService personService;
+    public DepartmentService departmentService;
+
 
     /**
-     * 保存添加的数据
-     * @param person person
+     * 保存Company
+     * @param department department
+     * @param result result
+     * @param map map
      * @return
      */
-    @RequestMapping(value = "/savePerson", method = RequestMethod.POST)
-    public String savePerson(@Valid Person person, BindingResult result, ModelMap map) {
+    @RequestMapping(value = "/saveDepartment", method = RequestMethod.POST)
+    public String saveDepartment(@Valid Department department, BindingResult result, ModelMap map) {
         if (result.hasErrors()) {
             List<FieldError> errors = result.getFieldErrors();
             for (FieldError error : errors) {
                 map.put("ERROR_" + error.getField(), error.getDefaultMessage());
                 System.out.println(error.getField() + "*" + error.getDefaultMessage());
             }
-           return "personSavePage";
+            return "personSavePage";
         } else {
-            personService.addPerson(person);
+            departmentService.addDepartment(department);
             return "redirect:main";
         }
     }
 
     /**
      * 跳转到添加页面
-     * personSavePage.jsp
-     *
      * @return
      */
-    @RequestMapping(value = "/addPerson")
-    public String savePerson() {
-        return "personSavePage";
+    @RequestMapping(value = "/addDepartment")
+    public String addDepartment() {
+        return "saveDepartmentPage";
     }
 
     /**
      * 删除一条数据
+     *
      * @param id
      * @return
      */
-    @RequestMapping(value = "/deletePersonById")
-    public String deletePersonById(@RequestParam(value = "id") String id) {
-        personService.deletePersonById(id);
+    @RequestMapping(value = "/deleteDepartmentById")
+    public String deleteDepartmentById(@RequestParam(value = "id") String id) {
+        departmentService.deleteDepartmentById(id);
         return "redirect:main";
     }
 
@@ -83,27 +84,29 @@ public class PersonController {
      */
     @RequestMapping(value = "/doUpdate")
     public String doUpdate(@RequestParam(value = "id") String id, Model model) {
-        model.addAttribute("person", personService.getPersonById(id));
-        return "personEditPage";
+        model.addAttribute("department", departmentService.getDepartmentById(id));
+        return "companyEditPage";
     }
+
 
     /**
      * 更新数据
-     *
-     * @param person
+     * @param department
+     * @param result
+     * @param map
      * @return
      */
-    @RequestMapping(value = "/updatePerson")
-    public String updatePerson(@Valid Person person, BindingResult result, ModelMap map) {
+    @RequestMapping(value = "/updateDepartment")
+    public String updateDepartment(@Valid Department department, BindingResult result, ModelMap map) {
         if (result.hasErrors()) {
             List<FieldError> errors = result.getFieldErrors();
             for (FieldError error : errors) {
                 map.put("ERROR_" + error.getField(), error.getDefaultMessage());
                 System.out.println(error.getField() + "*" + error.getDefaultMessage());
             }
-            return "personEditPage";
+            return "departmentEditPage";
         } else {
-            personService.updatePerson(person);
+            departmentService.updateDepartment(department);
             return "redirect:main";
         }
     }
@@ -116,7 +119,7 @@ public class PersonController {
      */
     @RequestMapping(value = "/main")
     public String main(Map<String, Object> map) {
-        map.put("personList", personService.getPersons());
-        return "personMain";
+        map.put("departmentList", departmentService.getDepartments());
+        return "departmentMain";
     }
 }

@@ -13,14 +13,13 @@
      http://www.springframework.org/schema/tx
      http://www.springframework.org/schema/tx/spring-tx.xsd">
 
+    <context:annotation-config/>
     <!--包扫描-->
     <context:component-scan base-package="cn.edu.zucc.brightqin">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
     <aop:aspectj-autoproxy/>
-
-    <context:annotation-config/>
 
     <context:property-placeholder location="classpath*:hibernate.properties"/>
 

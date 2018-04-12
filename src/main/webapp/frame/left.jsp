@@ -16,6 +16,7 @@
             d.add('0101', '01', '人员管理');
             d.add('010101', '0101', '人员列表', '${pageContext.request.contextPath}/person/main', '', 'right');
             <%--d.add('010102','0101','新增人员','${pageContext.request.contextPath}/person/addPerson','','right');--%>
+            d.add('010102', '0101', '公司列表', '${pageContext.request.contextPath}/company/main', '', 'right');
             d.add('02', '-1', '信息管理系统');
             document.write(d);
         </script>

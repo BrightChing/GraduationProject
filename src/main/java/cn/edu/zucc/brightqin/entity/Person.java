@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -18,59 +19,134 @@ import org.hibernate.validator.constraints.Length;
 @Entity
 @Table(name = "person")
 public class Person {
+    /**
+     * 用户ID
+     */
+    @NotEmpty(message = "{error.personId}")
+    private String personId;
+    /**
+     * 用户名
+     */
+    @Length(min = 1, max = 16, message = "{error.name}")
+    private String personName;
+    /**
+     * 密码
+     */
 
-    private String id;
-    @Length( min = 1,max =16, message = "{error.name}")
-    private String name;
-    @Pattern(regexp = "^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}([0-9]|X|x)$", message = "{error.idCard}")
-    private String idCard;
-    @Pattern(regexp = "^(13[0-9]|14[579]|15[0-35-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$",message ="{error.phone}" )
+    private String password;
+    /**
+     * 邮箱
+     */
+    @Pattern(regexp = "^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z0-9]{2,6}$", message = "邮箱格式不正确")
+    private String email;
+    /**
+     * 部门
+     */
+    @NotEmpty(message = "部门不能为空")
+    private String department;
+    /**
+     * 公司
+     */
+    @NotEmpty(message = "公司不能为空")
+    private String company;
+    /**
+     * 职位
+     */
+    @NotEmpty(message = "职位不能为空")
+    private String position;
+    /**
+     * 手机号
+     */
+    @Pattern(regexp = "^(13[0-9]|14[579]|15[0-35-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$", message = "{error.phone}")
     private String phone;
-    @NotNull(message = "{error.address}")
+    /**
+     * 地址
+     */
+    @NotEmpty(message = "{error.address}")
     private String address;
 
-    public Person()
-    {
-        super();
+    public Person() {
     }
-    public Person(String name, String idCard, String phone, String address) {
-        this.name = name;
-        this.idCard = idCard;
+
+    public Person(String personName, String password, String email, String department, String company,
+                  String position, String phone, String address) {
+        this.personName = personName;
+        this.password = password;
+        this.email = email;
+        this.department = department;
+        this.company = company;
+        this.position = position;
         this.phone = phone;
         this.address = address;
     }
 
     @Id
-    @Column(name = "id", nullable = false, unique = true, length = 32)
+    @Column(name = "personId", nullable = false, unique = true, length = 32)
     @GenericGenerator(name = "generator", strategy = "uuid")
     @GeneratedValue(generator = "generator")
-    public String getId() {
-        return id;
+    public String getPersonId() {
+        return personId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setPersonId(String personId) {
+        this.personId = personId;
     }
 
-    @Column(name = "name", nullable = false, length = 32)
-    public String getName() {
-        return name;
+    @Column(name = "personName", nullable = false, length = 20)
+    public String getPersonName() {
+        return personName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPersonName(String personName) {
+        this.personName = personName;
     }
 
-    @Column(name = "idCard", nullable = false, length = 32)
-    public String getIdCard() {
-        return idCard;
+    @Column(name = "password", nullable = false, length = 20)
+    public String getPassword() {
+        return password;
     }
 
-    public void setIdCard(String idCard) {
-        this.idCard = idCard;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    @Column(name = "phone", nullable = false, length = 32)
+    @Column(name = "email", nullable = false, length = 32)
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Column(name = "department", nullable = false, length = 20)
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    @Column(name = "company", nullable = false, length = 16)
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    @Column(name = "position", nullable = false, length = 16)
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    @Column(name = "phone", nullable = false, length = 16)
     public String getPhone() {
         return phone;
     }
@@ -79,19 +155,13 @@ public class Person {
         this.phone = phone;
     }
 
-    @Column(name = "address", nullable = false, length = 32)
+    @Column(name = "address", nullable = false, length = 48)
     public String getAddress() {
         return address;
     }
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    @Override
-    public String toString() {
-        return "Person [id=" + id + ", name=" + name + ", idCard=" + idCard + ", phone=" + phone + ", address="
-                + address + "]";
     }
 
 }

@@ -25,13 +25,14 @@ public class UserController {
 
     @RequestMapping("/login")
     public String doLogin(@Validated String id, String password, Map<String, Object> map) {
-        User user = userService.getUserById(id);
-        if (user != null && password.equals(user.getPassword())) {
-            //存放在request请求域中
-            map.put("username", id);
-            return "frame";
-        }
-        return "error";
+//        User user = userService.getUserById(id);
+//        if (user != null && password.equals(user.getPassword())) {
+//            //存放在request请求域中
+//            map.put("username", id);
+//            return "frame";
+//        }
+//        return "error";
+        return "frame";
     }
 
     /**
@@ -48,12 +49,12 @@ public class UserController {
 
     /**
      * 跳转到添加页面
-     * savePage.jsp
+     * personSavePage.jsp
      * @return savePage
      */
     @RequestMapping(value = "/addUser")
     public String saveUser() {
-        return "savePage";
+        return "personSavePage";
     }
 
     /**
@@ -70,7 +71,7 @@ public class UserController {
 
     /**
      * 跳转到更新页面，回显数据
-     * editPage.jsp
+     * personEditPage.jsp
      *
      * @param id 用户ID
      * @param model 使用的Model保存回显数据
@@ -79,7 +80,7 @@ public class UserController {
     @RequestMapping(value = "/doUpdate")
     public String doUpdate(@RequestParam(value = "id") String id, Model model) {
         model.addAttribute("user", userService.getUserById(id));
-        return "editPage";
+        return "personEditPage";
     }
 
     /**
