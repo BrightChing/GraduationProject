@@ -9,7 +9,7 @@
     <style type="text/css">
         .table1 {
             border: 1px solid #ddd;
-            width: 100%;
+            width: 50%;
         }
 
         thead {
@@ -19,40 +19,41 @@
     </style>
 </head>
 <body>
-<table border="0" width="300px">
-    <tr>
-        <td align="center" style="font-size:24px; color:#666"> 公司管理</td>
-    </tr>
-    <tr>
-        <td align="right"><a href="${pageContext.request.contextPath}/company/addCompany">添加</a></td>
-    </tr>
-</table>
-<br/>
-<table cellspacing="0" border="1" class="table1">
-    <thead>
-    <th width="100%">公司名</th>
-    </thead>
-    <tbody>
-
-    <c:forEach var="company" items="${requestScope.companyList }">
+<div align="center">
+    <table border="0" width="50%">
         <tr>
-
-            <td align="center">${company.companyName }</td>
-            <td align="center">
-                <a href="${pageContext.request.contextPath}/company/doUpdate?id=${company.companyId}">
-                    <img src="<%=basePath %>images/edit.png">
-                </a>
-            </td>
-            <td align="center">
-                <a href="${pageContext.request.contextPath}/company/deleteCompanyById?id=${company.companyId}"
-                   onclick='return confirm("确认要删除吗?")'>
-                    <img src="<%=basePath%>images/trash.gif">
-                </a>
-            </td>
+            <td align="center" style="font-size:24px; color:#666"> 公司管理</td>
         </tr>
-    </c:forEach>
-    </tbody>
-</table>
-<br/>
+        <tr>
+            <td align="right"><a href="${pageContext.request.contextPath}/company/addCompany">添加</a></td>
+        </tr>
+    </table>
+    <br/>
+    <table cellspacing="0" border="1" class="table1">
+        <thead>
+        <th width="50%">公司名</th>
+        <th width="10%">编辑</th>
+        <th width="10%">删除</th>
+        </thead>
+        <tbody>
+        <c:forEach var="company" items="${requestScope.companyList }">
+            <tr>
+                <td align="center">${company.companyName }</td>
+                <td align="center">
+                    <a href="${pageContext.request.contextPath}/company/doUpdate?id=${company.companyId}">
+                        <img src="<%=basePath %>images/edit.png">
+                    </a>
+                </td>
+                <td align="center">
+                    <a href="${pageContext.request.contextPath}/company/deleteCompanyById?id=${company.companyId}"
+                       onclick='return confirm("确认要删除吗?")'>
+                        <img src="<%=basePath%>images/trash.gif">
+                    </a>
+                </td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

@@ -10,8 +10,8 @@
         <span class="input input--isao">
             <input class="input__field input__field--isao" id="personId" value="${person.personId}" name="personId"
                    type="text"/>
-            <label class="input__label input__label--isao" for="personId" data-content="用户名">
-                <span class="input__label-content input__label-content--isao">用户名</span>
+            <label class="input__label input__label--isao" for="personId" data-content="登录名">
+                <span class="input__label-content input__label-content--isao">登录名</span>
                 ${ERROR_personId}
             </label>
         </span>

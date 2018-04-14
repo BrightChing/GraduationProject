@@ -894,7 +894,7 @@
 	stroke: #7A7593;
 	stroke-width: 4px;
 	stroke-dasharray: 962;
-	stroke-dashoffset: 558;
+	stroke-dashoffset: 558px;
 }
 
 .input__field--madoka:focus + .input__label--madoka,

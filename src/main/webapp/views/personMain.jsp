@@ -30,6 +30,7 @@
 <br/>
 <table cellspacing="0" border="1" class="table1">
     <thead>
+    <th width="10%">登录名</th>
     <th width="10%">姓名</th>
     <th width="10%">Email</th>
     <th width="10%">电话</th>
@@ -43,6 +44,7 @@
 
     <c:forEach var="person" items="${requestScope.personList }">
         <tr>
+            <td align="center">${person.personId }</td>
             <td align="center">${person.personName }</td>
             <td align="center">${person.email}</td>
             <td align="center">${person.phone }</td>
@@ -51,12 +53,12 @@
             <td align="center">${person.company }</td>
 
             <td align="center">
-                <a href="${pageContext.request.contextPath}/person/doUpdate?id=${person.personId}">
+                <a href="${pageContext.request.contextPath}/person/doUpdate?id=${person.id}">
                     <img src="<%=basePath %>images/edit.png">
                 </a>
             </td>
             <td align="center">
-                <a href="${pageContext.request.contextPath}/person/deletePersonById?id=${person.personId}"
+                <a href="${pageContext.request.contextPath}/person/deletePersonById?id=${person.id}"
                    onclick='return confirm("确认要删除吗?")'>
                     <img src="<%=basePath%>images/trash.gif">
                 </a>

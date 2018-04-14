@@ -31,7 +31,7 @@ public class PersonDAO {
 	 * @return
 	 */
 	public Person getPersonById(String id) {
-		return (Person) this.getSession().createQuery("from Person where personId=?").setParameter(0, id).uniqueResult();
+		return (Person) this.getSession().createQuery("from Person where id=?").setParameter(0, id).uniqueResult();
 	}
 	/**
 	 * 添加
@@ -52,7 +52,7 @@ public class PersonDAO {
 	 * @param id
 	 */
 	public void deletePersonById(String id) {
-		this.getSession().createQuery("delete from Person where personId=?").setParameter(0, id).executeUpdate();
+		this.getSession().createQuery("delete from Person where id=?").setParameter(0, id).executeUpdate();
 	}
 	/**
 	 * 查询所有

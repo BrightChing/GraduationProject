@@ -39,7 +39,7 @@
 
             <div>
                 <input onclick="" type="submit" value=""
-                       style="width:309px; height:36px; background:url(${pageContext.request.contextPath}/images/icon/login_btn.jpg) left top no-repeat;">
+                       style="width:309px; height:36px; background:url(${pageContext.request.contextPath}/images/login_btn.jpg) left top no-repeat;">
             </div>
 
         </section>

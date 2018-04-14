@@ -6,7 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -19,6 +18,7 @@ import org.hibernate.validator.constraints.Length;
 @Entity
 @Table(name = "person")
 public class Person {
+    private String id;
     /**
      * 用户ID
      */
@@ -68,22 +68,19 @@ public class Person {
     public Person() {
     }
 
-    public Person(String personName, String password, String email, String department, String company,
-                  String position, String phone, String address) {
-        this.personName = personName;
-        this.password = password;
-        this.email = email;
-        this.department = department;
-        this.company = company;
-        this.position = position;
-        this.phone = phone;
-        this.address = address;
-    }
-
     @Id
-    @Column(name = "personId", nullable = false, unique = true, length = 32)
+    @Column(name = "id", nullable = false, unique = true, length = 32)
     @GenericGenerator(name = "generator", strategy = "uuid")
     @GeneratedValue(generator = "generator")
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Column(name = "personId", nullable = false, length = 20)
     public String getPersonId() {
         return personId;
     }
@@ -92,7 +89,7 @@ public class Person {
         this.personId = personId;
     }
 
-    @Column(name = "personName", nullable = false, length = 20)
+    @Column(name = "personName", nullable = false, length = 16)
     public String getPersonName() {
         return personName;
     }
@@ -101,7 +98,7 @@ public class Person {
         this.personName = personName;
     }
 
-    @Column(name = "password", nullable = false, length = 20)
+    @Column(name = "password", nullable = false, length = 32)
     public String getPassword() {
         return password;
     }

@@ -43,7 +43,7 @@ public class DepartmentDAO {
     @SuppressWarnings("unchecked")
     public List<Department> getDepartments() {
         CriteriaQuery<Department> criteriaQuery = this.getSession().getCriteriaBuilder().createQuery(Department.class);
-        criteriaQuery.from(Company.class);
+        criteriaQuery.from(Department.class);
         return this.getSession().createQuery(criteriaQuery).getResultList();
     }
 

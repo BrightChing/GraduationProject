@@ -8,11 +8,12 @@
 	<h3>员工编辑</h3>
 	<!-- action对应一个action标签，id对应提交时的对应关系 -->
 	<form id="saveForm" action="${pageContext.request.contextPath}/person/updatePerson" method="post">
+            <input class="input__field input__field--isao" id="id" value="${person.id}" name="id" type="hidden"/>
 		<span class="input input--isao">
             <input class="input__field input__field--isao" id="personId" value="${person.personId}" name="personId"
 				   type="text"/>
-            <label class="input__label input__label--isao" for="personId" data-content="用户名">
-                <span class="input__label-content input__label-content--isao">用户名</span>
+            <label class="input__label input__label--isao" for="personId" data-content="登录名">
+                <span class="input__label-content input__label-content--isao">登录名</span>
                 ${ERROR_personId}
             </label>
         </span>

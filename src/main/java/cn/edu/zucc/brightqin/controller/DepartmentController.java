@@ -46,7 +46,7 @@ public class DepartmentController {
                 map.put("ERROR_" + error.getField(), error.getDefaultMessage());
                 System.out.println(error.getField() + "*" + error.getDefaultMessage());
             }
-            return "personSavePage";
+            return "departmentSavePage";
         } else {
             departmentService.addDepartment(department);
             return "redirect:main";
@@ -59,7 +59,7 @@ public class DepartmentController {
      */
     @RequestMapping(value = "/addDepartment")
     public String addDepartment() {
-        return "saveDepartmentPage";
+        return "departmentSavePage";
     }
 
     /**
@@ -85,7 +85,7 @@ public class DepartmentController {
     @RequestMapping(value = "/doUpdate")
     public String doUpdate(@RequestParam(value = "id") String id, Model model) {
         model.addAttribute("department", departmentService.getDepartmentById(id));
-        return "companyEditPage";
+        return "departmentEditPage";
     }
 
 

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import cn.edu.zucc.brightqin.entity.Person;
 import cn.edu.zucc.brightqin.service.PersonService;
+import cn.edu.zucc.brightqin.utils.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +34,7 @@ public class PersonController {
 
     /**
      * 保存添加的数据
+     *
      * @param person person
      * @return
      */
@@ -44,8 +46,9 @@ public class PersonController {
                 map.put("ERROR_" + error.getField(), error.getDefaultMessage());
                 System.out.println(error.getField() + "*" + error.getDefaultMessage());
             }
-           return "personSavePage";
+            return "personSavePage";
         } else {
+            person.setPassword(PasswordUtil.MD5(person.getPassword()));
             personService.addPerson(person);
             return "redirect:main";
         }
@@ -64,6 +67,7 @@ public class PersonController {
 
     /**
      * 删除一条数据
+     *
      * @param id
      * @return
      */
@@ -103,7 +107,12 @@ public class PersonController {
             }
             return "personEditPage";
         } else {
-            personService.updatePerson(person);
+            if (personService.getPersonById(person.getId()).getPassword().equals(person.getPassword())) {
+                personService.updatePerson(person);
+            } else {
+                person.setPassword(PasswordUtil.MD5(person.getPassword()));
+                personService.updatePerson(person);
+            }
             return "redirect:main";
         }
     }
