@@ -23,11 +23,6 @@ public class Company {
     public Company() {
     }
 
-    public Company(String companyId, String companyName) {
-        this.companyId = companyId;
-        this.companyName = companyName;
-    }
-
     @Id
     @Column(name = "companyId", nullable = false, unique = true, length = 32)
     @GenericGenerator(name = "generator", strategy = "uuid")
@@ -40,7 +35,7 @@ public class Company {
         this.companyId = companyId;
     }
 
-    @Column(name = "companyName", nullable = false, length = 20)
+    @Column(name = "companyName", nullable = false, length = 16)
     public String getCompanyName() {
         return companyName;
     }

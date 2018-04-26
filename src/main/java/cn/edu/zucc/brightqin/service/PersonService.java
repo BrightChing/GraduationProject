@@ -14,46 +14,46 @@ import java.util.List;
 @Transactional(rollbackFor=Exception.class)
 @Service
 public class PersonService {
+	private final PersonDAO personDAO;
 
 	@Autowired
-	public final PersonDAO personDAO;
-
 	public PersonService(PersonDAO personDAO) {
 		this.personDAO = personDAO;
 	}
 
+
 	/**
 	 * 添加
-	 * @param person
+	 * @param person person
 	 */
 	public void addPerson(Person person) {
 		personDAO.addPerson(person);
 	}
 	/**
 	 * 根据id查询
-	 * @param id
-	 * @return
+	 * @param id ID
+	 * @return Person
 	 */
 	public Person getPersonById(String id){
 		return personDAO.getPersonById(id);
 	}
 	/**
 	 * 更新
-	 * @param person
+	 * @param person person
 	 */
 	public void updatePerson(Person person) {
 		personDAO.updatePerson(person);
 	}
 	/**
 	 * 删除
-	 * @param id
+	 * @param id ID
 	 */
 	public void deletePersonById(String  id) {
 		personDAO.deletePersonById(id);
 	}
 	/**
 	 * 查询所有
-	 * @return
+	 * @return Person List
 	 */
 	public List<Person> getPersons() {
 		return personDAO.getPersons();

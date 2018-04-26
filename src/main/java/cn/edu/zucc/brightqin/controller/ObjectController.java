@@ -1,7 +1,9 @@
 package cn.edu.zucc.brightqin.controller;
 
-import cn.edu.zucc.brightqin.entity.Company;
-import cn.edu.zucc.brightqin.service.CompanyService;
+import cn.edu.zucc.brightqin.entity.Object;
+import cn.edu.zucc.brightqin.entity.Object;
+import cn.edu.zucc.brightqin.service.ObjectService;
+import cn.edu.zucc.brightqin.service.ObjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,42 +19,33 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
- * Description:
- * User: brightqin
- * Date: 2018-04-03
- *
  * @author brightqin
  */
 @Controller
-@RequestMapping(value = "/company")
-public class CompanyController {
-    private final CompanyService companyService;
-
+@RequestMapping(value = "/Object")
+public class ObjectController {
     @Autowired
-    public CompanyController(CompanyService companyService) {
-        this.companyService = companyService;
-    }
+    ObjectService objectService;
 
     /**
      * 保存Company
      *
-     * @param company company
-     * @param result  result
-     * @param map     map
-     * @return personSavePage|redirect:main
+     * @param Object Object
+     * @param result     result
+     * @param map        map
+     * @return ObjectSavePage|redirect:main
      */
-    @RequestMapping(value = "/saveCompany", method = RequestMethod.POST)
-    public String saveCompany(@Valid Company company, BindingResult result, ModelMap map) {
+    @RequestMapping(value = "/saveObject", method = RequestMethod.POST)
+    public String saveObject(@Valid Object object, BindingResult result, ModelMap map) {
         if (result.hasErrors()) {
             List<FieldError> errors = result.getFieldErrors();
             for (FieldError error : errors) {
                 map.put("ERROR_" + error.getField(), error.getDefaultMessage());
                 System.out.println(error.getField() + "*" + error.getDefaultMessage());
             }
-            return "personSavePage";
+            return "objectSavePage";
         } else {
-            companyService.addCompany(company);
+            objectService.addObject(object);
             return "redirect:main";
         }
     }
@@ -60,58 +53,58 @@ public class CompanyController {
     /**
      * 跳转到添加页面
      *
-     * @return personSavePage.jsp
+     * @return ObjectSavePage
      */
-    @RequestMapping(value = "/addCompany")
-    public String addCompany() {
-        return "companySavePage";
+    @RequestMapping(value = "/addObject")
+    public String addObject() {
+        return "objectSavePage";
     }
 
     /**
      * 删除一条数据
      *
-     * @param id 公司ID
+     * @param id 部门ID
      * @return redirect:main
      */
-    @RequestMapping(value = "/deleteCompanyById")
-    public String deleteCompanyById(@RequestParam(value = "id") String id) {
-        companyService.deleteCompanyById(id);
+    @RequestMapping(value = "/deleteObjectById")
+    public String deleteObjectById(@RequestParam(value = "id") String id) {
+        objectService.getObjectById(id);
         return "redirect:main";
     }
 
     /**
      * 跳转到更新页面，回显数据
      *
-     * @param id    公司ID
+     * @param id    部门ID
      * @param model 使用的Model保存回显数据
      * @return personEditPage.jsp
      */
     @RequestMapping(value = "/doUpdate")
     public String doUpdate(@RequestParam(value = "id") String id, Model model) {
-        model.addAttribute("company", companyService.getCompanyById(id));
-        return "companyEditPage";
+        model.addAttribute("Object", objectService.getObjectById(id));
+        return "objectEditPage";
     }
 
 
     /**
      * 更新数据
      *
-     * @param company company
-     * @param result  result
-     * @param map     map
-     * @return companyEditPage | redirect:main
+     * @param object 目标
+     * @param result error
+     * @param map 回去传数据
+     * @return ObjectEditPage|redirect:main
      */
-    @RequestMapping(value = "/updateCompany")
-    public String updatePerson(@Valid Company company, BindingResult result, ModelMap map) {
+    @RequestMapping(value = "/updateObject")
+    public String updateObject(@Valid Object object, BindingResult result, ModelMap map) {
         if (result.hasErrors()) {
             List<FieldError> errors = result.getFieldErrors();
             for (FieldError error : errors) {
                 map.put("ERROR_" + error.getField(), error.getDefaultMessage());
                 System.out.println(error.getField() + "*" + error.getDefaultMessage());
             }
-            return "companyEditPage";
+            return "objectEditPage";
         } else {
-            companyService.updateCompany(company);
+            objectService.updateObject(object);
             return "redirect:main";
         }
     }
@@ -120,11 +113,11 @@ public class CompanyController {
      * 查询所有人员信息
      *
      * @param map 使用的是map保存回显数据
-     * @return companyMain
+     * @return ObjectMain
      */
     @RequestMapping(value = "/main")
-    public String main(Map<String, Object> map) {
-        map.put("companyList", companyService.getCompanies());
-        return "companyMain";
+    public String main(Map<String, java.lang.Object> map) {
+        map.put("objectList", objectService.getObjects());
+        return "objectMain";
     }
 }

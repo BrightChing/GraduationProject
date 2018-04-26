@@ -33,18 +33,12 @@
         <thead>
         <th width="50%">部门名</th>
         <th width="10%">编辑</th>
-        <th width="10%">编辑</th>
         <th width="10%">删除</th>
         </thead>
         <tbody>
         <c:forEach var="department" items="${requestScope.departmentList }">
             <tr>
-                <td align="center">${department.departmentName}</td>
-                <td align="center">
-                    <a href="${pageContext.request.contextPath}/person/main?id=${department.departmentId}">
-                        <img src="<%=basePath%>images/edit.png">
-                    </a>
-                </td>
+                <td align="center">${department.departmentName }</td>
                 <td align="center">
                     <a href="${pageContext.request.contextPath}/department/doUpdate?id=${department.departmentId}">
                         <img src="<%=basePath%>images/edit.png">

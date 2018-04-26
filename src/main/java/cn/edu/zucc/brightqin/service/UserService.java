@@ -15,9 +15,9 @@ import java.util.List;
 @Service
 public class UserService {
 
-	@Autowired
-	public final UserDAO userDAO;
+	private  final UserDAO userDAO;
 
+	@Autowired
 	public UserService(UserDAO userDAO) {
 		this.userDAO = userDAO;
 	}
@@ -25,38 +25,31 @@ public class UserService {
 
 	/**
 	 * 添加
-	 * @param user
+	 * @param user user
 	 */
 	public void addUser(User user) {
 		userDAO.addUser(user);
 	}
 	/**
 	 * 根据id查询
-	 * @param id
-	 * @return
+	 * @param id ID
+	 * @return user
 	 */
 	public User getUserById(String id){
 		return userDAO.getUserById(id);
 	}
 	/**
 	 * 更新
-	 * @param user
+	 * @param user user
 	 */
 	public void updateUser(User user) {
 		userDAO.updateUser(user);
 	}
 	/**
 	 * 删除
-	 * @param id
+	 * @param id ID
 	 */
 	public void deleteUserById(String  id) {
 		userDAO.deleteUserById(id);
-	}
-	/**
-	 * 查询所有
-	 * @return
-	 */
-	public List<User> getUsers() {
-		return userDAO.getUsers();
 	}
 }

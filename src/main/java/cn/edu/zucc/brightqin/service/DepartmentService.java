@@ -18,44 +18,46 @@ import java.util.List;
 @Service
 @Transactional(rollbackFor=Exception.class)
 public class DepartmentService {
-    @Autowired
-    public final DepartmentDAO departmentDAO;
+    private final DepartmentDAO departmentDAO;
 
+    @Autowired
     public DepartmentService(DepartmentDAO departmentDAO) {
         this.departmentDAO = departmentDAO;
     }
+
+
     /**
      * 添加
-     * @param company
+     * @param department 部门
      */
     public void addDepartment(Department department) {
         departmentDAO.addDepartment(department);
     }
     /**
      * 根据id查询
-     * @param id
-     * @return
+     * @param id 部门ID
+     * @return Department
      */
     public Department getDepartmentById(String id){
         return departmentDAO.getDepartmentById(id);
     }
     /**
      * 更新
-     * @param company
+     * @param department 部门
      */
     public void updateDepartment(Department department) {
         departmentDAO.updateDepartment(department);
     }
     /**
      * 删除
-     * @param id
+     * @param id 部门ID
      */
     public void deleteDepartmentById(String  id) {
         departmentDAO.deleteDepartmentById(id);
     }
     /**
      * 查询所有
-     * @return
+     * @return 部门列表
      */
     public List<Department> getDepartments() {
         return departmentDAO.getDepartments();

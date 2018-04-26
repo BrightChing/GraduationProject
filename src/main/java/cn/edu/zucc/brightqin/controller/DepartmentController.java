@@ -27,16 +27,21 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/department")
 public class DepartmentController {
+    private final DepartmentService departmentService;
+
     @Autowired
-    public DepartmentService departmentService;
+    public DepartmentController(DepartmentService departmentService) {
+        this.departmentService = departmentService;
+    }
 
 
     /**
-     * 保存Company
+     * 保存Department
+     *
      * @param department department
-     * @param result result
-     * @param map map
-     * @return
+     * @param result     result
+     * @param map        map
+     * @return departmentSavePage|redirect:main
      */
     @RequestMapping(value = "/saveDepartment", method = RequestMethod.POST)
     public String saveDepartment(@Valid Department department, BindingResult result, ModelMap map) {
@@ -55,7 +60,8 @@ public class DepartmentController {
 
     /**
      * 跳转到添加页面
-     * @return
+     *
+     * @return departmentSavePage
      */
     @RequestMapping(value = "/addDepartment")
     public String addDepartment() {
@@ -65,8 +71,8 @@ public class DepartmentController {
     /**
      * 删除一条数据
      *
-     * @param id
-     * @return
+     * @param id 部门ID
+     * @return redirect:main
      */
     @RequestMapping(value = "/deleteDepartmentById")
     public String deleteDepartmentById(@RequestParam(value = "id") String id) {
@@ -76,11 +82,10 @@ public class DepartmentController {
 
     /**
      * 跳转到更新页面，回显数据
-     * personEditPage.jsp
      *
-     * @param id
+     * @param id    部门ID
      * @param model 使用的Model保存回显数据
-     * @return
+     * @return personEditPage.jsp
      */
     @RequestMapping(value = "/doUpdate")
     public String doUpdate(@RequestParam(value = "id") String id, Model model) {
@@ -91,10 +96,11 @@ public class DepartmentController {
 
     /**
      * 更新数据
-     * @param department
-     * @param result
-     * @param map
-     * @return
+     *
+     * @param department 部门
+     * @param result error
+     * @param map 回去传数据
+     * @return departmentEditPage|redirect:main
      */
     @RequestMapping(value = "/updateDepartment")
     public String updateDepartment(@Valid Department department, BindingResult result, ModelMap map) {
@@ -115,7 +121,7 @@ public class DepartmentController {
      * 查询所有人员信息
      *
      * @param map 使用的是map保存回显数据
-     * @return
+     * @return departmentMain
      */
     @RequestMapping(value = "/main")
     public String main(Map<String, Object> map) {

@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
@@ -37,21 +38,12 @@ public class Person {
     /**
      * 邮箱
      */
-    @Pattern(regexp = "^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z0-9]{2,6}$", message = "邮箱格式不正确")
+    @Email(message = "邮箱格式不正确")
     private String email;
     /**
      * 部门
      */
-    @NotEmpty(message = "部门不能为空")
-    private String department;
-    /**
-     * 公司
-     */
-    @NotEmpty(message = "公司不能为空")
-    private String company;
-    /**
-     * 职位
-     */
+
     @NotEmpty(message = "职位不能为空")
     private String position;
     /**
@@ -114,24 +106,6 @@ public class Person {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    @Column(name = "department", nullable = false, length = 20)
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    @Column(name = "company", nullable = false, length = 16)
-    public String getCompany() {
-        return company;
-    }
-
-    public void setCompany(String company) {
-        this.company = company;
     }
 
     @Column(name = "position", nullable = false, length = 16)

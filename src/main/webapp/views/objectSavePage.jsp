@@ -8,7 +8,7 @@
 <form id="saveForm" action="${pageContext.request.contextPath}/department/saveDepartment" method="post">
     <div align="center">
         <span class="input input--isao">
-            <input class="input__field input__field--isao" id="departmentName" value="${department.departmentName}"
+            <input class="input__field input__field--isao" id="departmentName" value="${department.departmentId}"
                    name="departmentName" type="text"/>
             <label class="input__label input__label--isao" for="departmentName" data-content="部门名">
                 <span class="input__label-content input__label-content--isao">部门名</span>

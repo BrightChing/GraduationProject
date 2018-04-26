@@ -21,7 +21,7 @@ import java.util.List;
 @Repository
 public class CompanyDAO {
     @Resource
-    SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
 
     private Session getSession() {
         return sessionFactory.getCurrentSession();
@@ -39,14 +39,14 @@ public class CompanyDAO {
         this.getSession().update(company);
     }
 
-    @SuppressWarnings("unchecked")
-    public List<Company> getCompanys() {
-        CriteriaQuery<Company> companyCriteriaQuery = this.getSession().getCriteriaBuilder().createQuery(Company.class);
-        companyCriteriaQuery.from(Company.class);
-        return this.getSession().createQuery(companyCriteriaQuery).getResultList();
-    }
-
     public Company getCompanyById(String id) {
         return (Company) this.getSession().createQuery("from Company where companyId = ?").setParameter(0, id).uniqueResult();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Company> getCompanies() {
+        CriteriaQuery<Company> criteriaQuery = this.getSession().getCriteriaBuilder().createQuery(Company.class);
+        criteriaQuery.from(Company.class);
+        return this.getSession().createQuery(criteriaQuery).getResultList();
     }
 }

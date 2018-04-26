@@ -1,6 +1,5 @@
 package cn.edu.zucc.brightqin.dao;
 
-import cn.edu.zucc.brightqin.entity.Company;
 import cn.edu.zucc.brightqin.entity.Department;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,6 +20,7 @@ import java.util.List;
 @Repository
 public class DepartmentDAO {
     @Resource
+    private
     SessionFactory sessionFactory;
 
     private Session getSession() {

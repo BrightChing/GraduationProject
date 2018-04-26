@@ -49,9 +49,8 @@
             <td align="center">${person.email}</td>
             <td align="center">${person.phone }</td>
             <td align="center">${person.address }</td>
-            <td align="center">${person.department}</td>
-            <td align="center">${person.company }</td>
-
+            <%--<td align="center">${person.department}</td>--%>
+            <%--<td align="center">${person.company }</td>--%>
             <td align="center">
                 <a href="${pageContext.request.contextPath}/person/doUpdate?id=${person.id}">
                     <img src="<%=basePath %>images/edit.png">

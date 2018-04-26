@@ -61,22 +61,22 @@
                 ${ERROR_address}
             </label>
         </span>
-		<span class="input input--isao">
-            <input class="input__field input__field--isao" id="company" value="${person.company}" name="company"
-				   type="text"/>
-            <label class="input__label input__label--isao" for="company" data-content="公司">
-                <span class="input__label-content input__label-content--isao">公司</span>
-                ${ERROR_company}
-            </label>
-        </span>
-		<span class="input input--isao">
-            <input class="input__field input__field--isao" id="department" name="department"
-				   value="${person.department}" type="text"/>
-            <label class="input__label input__label--isao" for="department" data-content="部门">
-                <span class="input__label-content input__label-content--isao">部门</span>
-                ${ERROR_department}
-            </label>
-        </span>
+		<%--<span class="input input--isao">--%>
+            <%--<input class="input__field input__field--isao" id="company" value="${person.company}" name="company"--%>
+				   <%--type="text"/>--%>
+            <%--<label class="input__label input__label--isao" for="company" data-content="公司">--%>
+                <%--<span class="input__label-content input__label-content--isao">公司</span>--%>
+                <%--${ERROR_company}--%>
+            <%--</label>--%>
+        <%--</span>--%>
+		<%--<span class="input input--isao">--%>
+            <%--<input class="input__field input__field--isao" id="department" name="department"--%>
+				   <%--value="${person.department}" type="text"/>--%>
+            <%--<label class="input__label input__label--isao" for="department" data-content="部门">--%>
+                <%--<span class="input__label-content input__label-content--isao">部门</span>--%>
+                <%--${ERROR_department}--%>
+            <%--</label>--%>
+        <%--</span>--%>
 		<span class="input input--isao">
             <input class="input__field input__field--isao" id="position" name="position" value="${person.position}"
 				   type="text"/>

@@ -20,19 +20,22 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/user")
 public class UserController {
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @RequestMapping("/login")
     public String doLogin(@Validated String id, String password, Map<String, Object> map) {
-//        User user = userService.getUserById(id);
-//        if (user != null && password.equals(user.getPassword())) {
-//            //存放在request请求域中
-//            map.put("username", id);
-//            return "frame";
-//        }
-//        return "error";
-        return "frame";
+        User user = userService.getUserById(id);
+        if (user != null && password.equals(user.getPassword())) {
+            //存放在request请求域中
+            map.put("username", id);
+            return "frame";
+        }
+        return "error";
     }
 
     /**
@@ -93,6 +96,4 @@ public class UserController {
         userService.updateUser(user);
         return "redirect:main";
     }
-
-
 }
