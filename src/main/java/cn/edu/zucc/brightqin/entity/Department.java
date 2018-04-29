@@ -11,24 +11,23 @@ import java.util.Set;
 @Entity
 @Table(name = "department")
 public class Department {
-    private String departmentId;
+    private Integer departmentId;
     private String departmentName;
-    private String patentId;
-//    private Set<Person> persons;
-
+    private Set<Person> persons;
+    private Department department;
+    private Set<Department> childDepartments;
 
     public Department() {
     }
 
     @Id
-    @Column(name = "departmentId", nullable = false, unique = true, length = 32)
-    @GenericGenerator(name = "generator", strategy = "uuid")
-    @GeneratedValue(generator = "generator")
-    public String getDepartmentId() {
+    @Column(name = "departmentId", nullable = false)
+    @GeneratedValue(strategy =GenerationType.IDENTITY)
+    public Integer getDepartmentId() {
         return departmentId;
     }
 
-    public void setDepartmentId(String departmentId) {
+    public void setDepartmentId(Integer departmentId) {
         this.departmentId = departmentId;
     }
 
@@ -41,22 +40,33 @@ public class Department {
         this.departmentName = departmentName;
     }
 
-//    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "departmentId")
-//    public Set<Person> getPersons() {
-//        return persons;
-//    }
-//
-//    public void setPersons(Set<Person> persons) {
-//        this.persons = persons;
-//    }
-
-    @Column(name = "parentId", length = 16)
-    public String getPatentId() {
-        return patentId;
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "departmentId")
+    public Set<Person> getPersons() {
+        return persons;
     }
 
-    public void setPatentId(String patentId) {
-        this.patentId = patentId;
+    public void setPersons(Set<Person> persons) {
+        this.persons = persons;
+    }
+
+    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @JoinColumn(name = "parentId")
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @JoinColumn(name = "parentId")
+    public Set<Department> getChildDepartments() {
+        return childDepartments;
+    }
+
+    public void setChildDepartments(Set<Department> childDepartments) {
+        this.childDepartments = childDepartments;
     }
 }

@@ -34,7 +34,7 @@ public class PersonService {
 	 * @param id ID
 	 * @return Person
 	 */
-	public Person getPersonById(String id){
+	public Person getPersonById(Integer id){
 		return personDAO.getPersonById(id);
 	}
 	/**
@@ -48,7 +48,7 @@ public class PersonService {
 	 * 删除
 	 * @param id ID
 	 */
-	public void deletePersonById(String  id) {
+	public void deletePersonById(Integer  id) {
 		personDAO.deletePersonById(id);
 	}
 	/**

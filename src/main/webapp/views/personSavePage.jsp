@@ -23,12 +23,6 @@
             </label>
         </span>
         <span class="input input--isao">
-            <input class="input__field input__field--isao" type="password"/>
-            <label class="input__label input__label--isao" data-content="确认密码">
-                <span class="input__label-content input__label-content--isao">确认密码</span>
-            </label>
-        </span>
-        <span class="input input--isao">
             <input class="input__field input__field--isao" id="personName" name="personName" value="${person.personName}"
                    type="text"/>
             <label class="input__label input__label--isao" for="personName" data-content="姓名">

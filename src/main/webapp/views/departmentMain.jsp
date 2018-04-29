@@ -41,7 +41,7 @@
             <tr>
                 <td align="center">${department.departmentName}</td>
                 <td align="center">
-                    <a href="${pageContext.request.contextPath}/person/main?id=${department.departmentId}">
+                    <a href="${pageContext.request.contextPath}/person/mainDepart?id=${department.departmentId}">
                         <img src="<%=basePath%>images/edit.png">
                     </a>
                 </td>

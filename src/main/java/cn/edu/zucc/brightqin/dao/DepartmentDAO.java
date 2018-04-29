@@ -15,13 +15,13 @@ import java.util.List;
  * User: brightqin
  * Date: 2018-04-11
  * Time: 19:55
+ *
  * @author brightqin
  */
 @Repository
 public class DepartmentDAO {
     @Resource
-    private
-    SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
 
     private Session getSession() {
         return sessionFactory.getCurrentSession();
@@ -32,8 +32,8 @@ public class DepartmentDAO {
     }
 
 
-    public void deleteDepartmentById(String id) {
-        this.getSession().createQuery("delete from Department where departmentId=?").setParameter(0, id).executeUpdate();
+    public void deleteDepartmentById(int id) {
+        this.getSession().createQuery("delete from Department where departmentId = ?").setParameter(0, id).executeUpdate();
     }
 
     public void updateDepartment(Department department) {
@@ -47,7 +47,11 @@ public class DepartmentDAO {
         return this.getSession().createQuery(criteriaQuery).getResultList();
     }
 
-    public Department getDepartmentById(String id) {
-        return (Department) this.getSession().createQuery("from Department where departmentId = ?").setParameter(0, id).uniqueResult();
+    public Department getDepartmentById(int id) {
+        return this.getSession().get(Department.class, id);
+    }
+
+    public Department getRootDepartment() {
+        return (Department) this.getSession().createQuery("from Department where parentId is null").uniqueResult();
     }
 }

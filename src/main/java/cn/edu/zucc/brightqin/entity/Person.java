@@ -1,16 +1,12 @@
 package cn.edu.zucc.brightqin.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.Length;
+
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.validator.constraints.Length;
 
 
 /**
@@ -19,7 +15,7 @@ import org.hibernate.validator.constraints.Length;
 @Entity
 @Table(name = "person")
 public class Person {
-    private String id;
+    private Integer id;
     /**
      * 用户ID
      */
@@ -57,18 +53,19 @@ public class Person {
     @NotEmpty(message = "{error.address}")
     private String address;
 
+    private Department department;
+
     public Person() {
     }
 
     @Id
-    @Column(name = "id", nullable = false, unique = true, length = 32)
-    @GenericGenerator(name = "generator", strategy = "uuid")
-    @GeneratedValue(generator = "generator")
-    public String getId() {
+    @Column(name = "id", nullable = false, unique = true, length = 16)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -135,4 +132,13 @@ public class Person {
         this.address = address;
     }
 
+    @ManyToOne(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @JoinColumn(name = "departmentId")
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
 }

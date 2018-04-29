@@ -35,8 +35,6 @@
     <th width="10%">Email</th>
     <th width="10%">电话</th>
     <th width="10%">地址</th>
-    <th width="10%">部门</th>
-    <th width="10%">公司</th>
     <th width="5%">编辑</th>
     <th width="5%">删除</th>
     </thead>
@@ -49,8 +47,6 @@
             <td align="center">${person.email}</td>
             <td align="center">${person.phone }</td>
             <td align="center">${person.address }</td>
-            <%--<td align="center">${person.department}</td>--%>
-            <%--<td align="center">${person.company }</td>--%>
             <td align="center">
                 <a href="${pageContext.request.contextPath}/person/doUpdate?id=${person.id}">
                     <img src="<%=basePath %>images/edit.png">

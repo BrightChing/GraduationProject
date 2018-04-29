@@ -1,17 +1,13 @@
 package cn.edu.zucc.brightqin.dao;
 
 
-import javax.annotation.Resource;
-import javax.persistence.criteria.CriteriaQuery;
-
-
-import cn.edu.zucc.brightqin.entity.Department;
 import cn.edu.zucc.brightqin.entity.Person;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
 
@@ -34,8 +30,8 @@ public class PersonDAO {
      * @param id ID
      * @return Person
      */
-    public Person getPersonById(String id) {
-        return (Person) this.getSession().createQuery("from Person where id=?").setParameter(0, id).uniqueResult();
+    public Person getPersonById(Integer id) {
+        return this.getSession().get(Person.class,id);
     }
 
     /**
@@ -61,7 +57,7 @@ public class PersonDAO {
      *
      * @param id id
      */
-    public void deletePersonById(String id) {
+    public void deletePersonById(Integer id) {
         this.getSession().createQuery("delete from Person where id=?").setParameter(0, id).executeUpdate();
     }
 
@@ -76,4 +72,5 @@ public class PersonDAO {
         personCriteriaQuery.from(Person.class);
         return this.getSession().createQuery(personCriteriaQuery).getResultList();
     }
+
 }

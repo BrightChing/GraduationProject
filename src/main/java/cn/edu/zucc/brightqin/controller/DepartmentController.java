@@ -2,6 +2,8 @@ package cn.edu.zucc.brightqin.controller;
 
 import cn.edu.zucc.brightqin.entity.Department;
 import cn.edu.zucc.brightqin.service.DepartmentService;
+import cn.edu.zucc.brightqin.utils.TreeBuilder;
+import com.sun.deploy.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +41,7 @@ public class DepartmentController {
 
 
     /**
-     * 保存Department
+     * 保存Company
      *
      * @param department department
      * @param result     result
@@ -76,7 +81,7 @@ public class DepartmentController {
      */
     @RequestMapping(value = "/deleteDepartmentById")
     public String deleteDepartmentById(@RequestParam(value = "id") String id) {
-        departmentService.deleteDepartmentById(id);
+        departmentService.deleteDepartmentById(Integer.valueOf(id));
         return "redirect:main";
     }
 
@@ -89,7 +94,7 @@ public class DepartmentController {
      */
     @RequestMapping(value = "/doUpdate")
     public String doUpdate(@RequestParam(value = "id") String id, Model model) {
-        model.addAttribute("department", departmentService.getDepartmentById(id));
+        model.addAttribute("department", departmentService.getDepartmentById(Integer.valueOf(id)));
         return "departmentEditPage";
     }
 
@@ -98,8 +103,8 @@ public class DepartmentController {
      * 更新数据
      *
      * @param department 部门
-     * @param result error
-     * @param map 回去传数据
+     * @param result     error
+     * @param map        回去传数据
      * @return departmentEditPage|redirect:main
      */
     @RequestMapping(value = "/updateDepartment")
@@ -127,5 +132,32 @@ public class DepartmentController {
     public String main(Map<String, Object> map) {
         map.put("departmentList", departmentService.getDepartments());
         return "departmentMain";
+    }
+
+    /**
+     * 发送部门树
+     *
+     * @param response
+     */
+    @RequestMapping(value = "/departmentTree")
+    public void buildTree(HttpServletResponse response) {
+        response.setContentType("application/xml");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter pw = null;
+        Department department = departmentService.getRootDepartment();
+        try {
+            if (department != null) {
+                department = departmentService.getDepartmentById(department.getDepartmentId());
+                TreeBuilder treeBuilder = new TreeBuilder(department);
+                pw = response.getWriter();
+                pw.print(treeBuilder.build());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (pw != null) {
+                pw.close();
+            }
+        }
     }
 }

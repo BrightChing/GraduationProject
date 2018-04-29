@@ -48,4 +48,16 @@
     </servlet-mapping>
     <!--SpringMVC configuration end-->
 
+    <filter>
+        <filter-name>openSessionInView</filter-name>
+        <filter-class>org.springframework.orm.hibernate5.support.OpenSessionInViewFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>openSessionInView</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <welcome-file-list>
+        <welcome-file>views/frame.jsp</welcome-file>
+    </welcome-file-list>
+
 </web-app>

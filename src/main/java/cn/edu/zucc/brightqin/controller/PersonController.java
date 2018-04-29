@@ -1,11 +1,19 @@
 package cn.edu.zucc.brightqin.controller;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import cn.edu.zucc.brightqin.entity.Department;
 import cn.edu.zucc.brightqin.entity.Person;
+import cn.edu.zucc.brightqin.service.DepartmentService;
 import cn.edu.zucc.brightqin.service.PersonService;
 import cn.edu.zucc.brightqin.utils.PasswordUtil;
+import cn.edu.zucc.brightqin.utils.PersonXml;
+import cn.edu.zucc.brightqin.utils.TreeBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,11 +25,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 
 /**
  * controller
+ *
  * @author brightqin
  */
 @Controller
@@ -34,6 +44,9 @@ public class PersonController {
     public PersonController(PersonService personService) {
         this.personService = personService;
     }
+
+    @Autowired
+    DepartmentService departmentService;
 
     /**
      * 保存添加的数据
@@ -60,7 +73,6 @@ public class PersonController {
     /**
      * 跳转到添加页面
      *
-     *
      * @return personSavePage.jsp
      */
     @RequestMapping(value = "/addPerson")
@@ -76,7 +88,7 @@ public class PersonController {
      */
     @RequestMapping(value = "/deletePersonById")
     public String deletePersonById(@RequestParam(value = "id") String id) {
-        personService.deletePersonById(id);
+        personService.deletePersonById(Integer.valueOf(id));
         return "redirect:main";
     }
 
@@ -84,13 +96,13 @@ public class PersonController {
      * 跳转到更新页面，回显数据
      * personEditPage.jsp
      *
-     * @param id ID
+     * @param id    ID
      * @param model 使用的Model保存回显数据
      * @return personEditPage
      */
     @RequestMapping(value = "/doUpdate")
     public String doUpdate(@RequestParam(value = "id") String id, Model model) {
-        model.addAttribute("person", personService.getPersonById(id));
+        model.addAttribute("person", personService.getPersonById(Integer.valueOf(id)));
         return "personEditPage";
     }
 
@@ -98,7 +110,7 @@ public class PersonController {
      * 更新数据
      *
      * @param person person
-     * @return  personEditPage|redirect:main
+     * @return personEditPage|redirect:main
      */
     @RequestMapping(value = "/updatePerson")
     public String updatePerson(@Valid Person person, BindingResult result, ModelMap map) {
@@ -122,13 +134,25 @@ public class PersonController {
 
     /**
      * 查询所有人员信息
-     *
-     * @param map 使用的是map保存回显数据
-     * @return personMain
      */
     @RequestMapping(value = "/main")
-    public String main(@RequestParam(value = "id") String id,Map<String, Object> map) {
-        map.put("personList", personService.getPersons());
-        return "personMain";
+    public void main(HttpServletResponse response) {
+        response.setContentType("application/xml");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter pw = null;
+        List<Person> people = personService.getPersons();
+        try {
+            if (people != null) {
+                PersonXml personXML = new PersonXml(people);
+                pw = response.getWriter();
+                pw.print(personXML.build());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (pw != null) {
+                pw.close();
+            }
+        }
     }
 }

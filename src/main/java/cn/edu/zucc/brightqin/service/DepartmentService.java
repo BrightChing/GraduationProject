@@ -13,10 +13,11 @@ import java.util.List;
  * Description:
  * User: brightqin
  * Date: 2018-04-03
+ *
  * @author brightqin
  */
 @Service
-@Transactional(rollbackFor=Exception.class)
+@Transactional(rollbackFor = Exception.class)
 public class DepartmentService {
     private final DepartmentDAO departmentDAO;
 
@@ -28,35 +29,53 @@ public class DepartmentService {
 
     /**
      * 添加
+     *
      * @param department 部门
      */
     public void addDepartment(Department department) {
         departmentDAO.addDepartment(department);
     }
+
     /**
      * 根据id查询
+     *
      * @param id 部门ID
      * @return Department
      */
-    public Department getDepartmentById(String id){
+    public Department getDepartmentById(int id) {
         return departmentDAO.getDepartmentById(id);
     }
+
+    /**
+     * getRootDepartment
+     *
+     * @return Department
+     */
+    public Department getRootDepartment() {
+        return departmentDAO.getRootDepartment();
+    }
+
     /**
      * 更新
+     *
      * @param department 部门
      */
     public void updateDepartment(Department department) {
         departmentDAO.updateDepartment(department);
     }
+
     /**
      * 删除
+     *
      * @param id 部门ID
      */
-    public void deleteDepartmentById(String  id) {
+    public void deleteDepartmentById(int id) {
         departmentDAO.deleteDepartmentById(id);
     }
+
     /**
      * 查询所有
+     *
      * @return 部门列表
      */
     public List<Department> getDepartments() {
