@@ -72,11 +72,7 @@ public class PersonController {
 
     /**
      * 删除一条数据
-     *
-     * @param id ID
-     * @return redirect:main
      */
-
     @RequestMapping(value = "/deletePersonById")
     public void deletePersonById(HttpServletResponse response, HttpServletRequest request) {
         String id = request.getParameter("id");
@@ -127,7 +123,6 @@ public class PersonController {
     @RequestMapping(value = "/getPeople")
     public void getPeople(HttpServletResponse response, HttpServletRequest request) {
         String id = request.getParameter("id");
-        System.out.println(request.getParameter("id"));
         response.setContentType("application/xml");
         response.setCharacterEncoding("UTF-8");
         PrintWriter pw = null;
@@ -145,6 +140,5 @@ public class PersonController {
                 pw.close();
             }
         }
-
     }
 }

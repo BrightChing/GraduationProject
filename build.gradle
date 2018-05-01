@@ -15,12 +15,12 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
     /*spring相关包*/
-    compile group: 'org.springframework', name: 'spring-web', version: '4.3.15.RELEASE'
-    compile group: 'org.springframework', name: 'spring-context', version: '4.3.15.RELEASE'
-    compile group: 'org.springframework', name: 'spring-core', version: '4.3.15.RELEASE'
-    compile group: 'org.springframework', name: 'spring-beans', version: '4.3.15.RELEASE'
-    compile group: 'org.springframework', name: 'spring-webmvc', version: '4.3.15.RELEASE'
-    compile group: 'org.springframework', name: 'spring-orm', version: '4.3.15.RELEASE'
+    compile group: 'org.springframework', name: 'spring-web', version: '5.0.5.RELEASE'
+    compile group: 'org.springframework', name: 'spring-context', version: '5.0.5.RELEASE'
+    compile group: 'org.springframework', name: 'spring-core', version: '5.0.5.RELEASE'
+    compile group: 'org.springframework', name: 'spring-beans', version: '5.0.5.RELEASE'
+    compile group: 'org.springframework', name: 'spring-webmvc', version: '5.0.5.RELEASE'
+    compile group: 'org.springframework', name: 'spring-orm', version: '5.0.5.RELEASE'
     /*springMVC文件上传*/
     compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.3.3'
     /*hibernate核心包*/
@@ -36,4 +36,6 @@ dependencies {
     runtime 'javax.servlet:jstl:1.2'
     compile group: 'org.hibernate', name: 'hibernate-validator', version: '6.0.9.Final'
     testCompile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+    testCompile group: 'org.springframework', name: 'spring-test', version: '5.0.5.RELEASE'
+    testCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 }

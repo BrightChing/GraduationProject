@@ -1,6 +1,5 @@
 package cn.edu.zucc.brightqin.entity;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -13,7 +12,7 @@ import javax.validation.constraints.Pattern;
  * @author brightqin
  */
 @Entity
-@Table(name = "person")
+@Table(name = "Person")
 public class Person {
     private Integer id;
     /**

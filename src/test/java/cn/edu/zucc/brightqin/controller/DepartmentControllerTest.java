@@ -21,7 +21,6 @@ public class DepartmentControllerTest {
 
     @Test
     public void main() {
-
         Department department = departmentService.getRootDepartment();
         if (department != null) {
             department = departmentService.getDepartmentById(department.getDepartmentId());
