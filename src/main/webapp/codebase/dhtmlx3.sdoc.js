@@ -7,8 +7,8 @@
 * @alias dhtmlXLayoutObject.prototype
  * @return {dhtmlXLayoutObject}
  */
- function dhtmlXLayoutObject(){};
-
+function dhtmlXLayoutObject() {
+}
 /**
  * 
  * @id dhtmlXLayoutObject.attachAccordion
@@ -805,11 +805,8 @@
 * @alias dhtmlXAccordion.prototype
  * @return {dhtmlXAccordion}
  */
- function dhtmlXAccordion(){};
-
-
-
-
+function dhtmlXAccordion() {
+}
 /**
  * 
  * @id dhtmlXAccordion.attachAccordion
@@ -1234,11 +1231,8 @@
 * @alias dhtmlXTabBar.prototype
  * @return {dhtmlXTabBar}
  */
- function dhtmlXTabBar(){};
-
-
-
-
+function dhtmlXTabBar() {
+}
 /**
  * add tab to TabBar
  * @id dhtmlXTabBar.addTab
@@ -1767,11 +1761,8 @@
 * @alias dhtmlXWindows.prototype
  * @return {dhtmlXWindows}
  */
- function dhtmlXWindows(){};
-
-
-
-
+function dhtmlXWindows() {
+}
 /**
  * adds a user button
  * @id dhtmlXWindows.addUserButton
@@ -2536,11 +2527,8 @@
 * @alias dhtmlXForm.prototype
  * @return {dhtmlXForm}
  */
- function dhtmlXForm(){};
-
-
-
-
+function dhtmlXForm() {
+}
 /**
  * 
  * @id dhtmlXForm.attachEvent
@@ -3219,11 +3207,8 @@
 * @alias dhtmlXGridObject.prototype
  * @return {dhtmlXGridObject}
  */
- function dhtmlXGridObject(){};
-
-
-
-
+function dhtmlXGridObject() {
+}
 /**
  * add row to the grid
  * @id dhtmlXGridObject.addRow
@@ -6143,11 +6128,8 @@
 * @alias dhtmlXTreeObject.prototype
  * @return {dhtmlXTreeObject}
  */
- function dhtmlXTreeObject(){};
-
-
-
-
+function dhtmlXTreeObject() {
+}
 /**
  * configure keys used for keyboard navigation
  * @id dhtmlXTreeObject.assignKeys
@@ -7736,11 +7718,8 @@
 * @alias dhtmlXTreeGridObject.prototype
  * @return {dhtmlXTreeGridObject}
  */
- function dhtmlXTreeGridObject(){};
-
-
-
-
+function dhtmlXTreeGridObject() {
+}
 /**
  * add new row to treeGrid
  * @id dhtmlXTreeGridObject.addRow
@@ -8081,11 +8060,8 @@
 * @alias dhtmlxFolders.prototype
  * @return {dhtmlxFolders}
  */
- function dhtmlxFolders(){};
-
-
-
-
+function dhtmlxFolders() {
+}
 /**
  * adds any user-defined handler to available events
  * @id dhtmlxFolders.attachEvent
@@ -8478,11 +8454,8 @@
 * @alias dhtmlXDataView.prototype
  * @return {dhtmlXDataView}
  */
- function dhtmlXDataView(){};
-
-
-
-
+function dhtmlXDataView() {
+}
 /**
  * adds any user-defined handler to available events
  * @id dhtmlXDataView.attachEvent 
@@ -8915,11 +8888,8 @@
 * @alias dhtmlChart.prototype
  * @return {dhtmlChart}
  */
- function dhtmlChart(){};
-
-
-
-
+function dhtmlChart() {
+}
 /**
  * adds the new data object and redraws a chart
  * @id dhtmlChart.add 
@@ -9200,11 +9170,8 @@
 * @alias dhtmlXMenuObject.prototype
  * @return {dhtmlXMenuObject}
  */
- function dhtmlXMenuObject(){};
-
-
-
-
+function dhtmlXMenuObject() {
+}
 /**
  * adds a new checkbox, sibling|child mode
  * @id dhtmlXMenuObject.addCheckbox
@@ -9941,11 +9908,8 @@
 * @alias dhtmlxToolbar.prototype
  * @return {dhtmlxToolbar}
  */
- function dhtmlxToolbar(){};
-
-
-
-
+function dhtmlxToolbar() {
+}
 /**
  * adds a button to webbar
  * @id dhtmlxToolbar.addButton
@@ -10777,11 +10741,8 @@
 * @alias dhtmlXCombo.prototype
  * @return {dhtmlXCombo}
  */
- function dhtmlXCombo(){};
-
-
-
-
+function dhtmlXCombo() {
+}
 /**
  * add new option
  * @id dhtmlXCombo.addOption
@@ -11213,11 +11174,8 @@
 * @alias dhtmlXCalendarObject.prototype
  * @return {dhtmlXCalendarObject}
  */
- function dhtmlXCalendarObject(){};
-
-
-
-
+function dhtmlXCalendarObject() {
+}
 /**
  * 
  * @id dhtmlXCalendarObject.attachEvent
@@ -11531,11 +11489,8 @@
 * @alias dhtmlXColorPicker.prototype
  * @return {dhtmlXColorPicker}
  */
- function dhtmlXColorPicker(){};
-
-
-
-
+function dhtmlXColorPicker() {
+}
 /**
  * adds any user-defined handler to available events
  * @id dhtmlXColorPicker.attachEvent 
@@ -11694,11 +11649,8 @@
 * @alias dhtmlxSlider.prototype
  * @return {dhtmlxSlider}
  */
- function dhtmlxSlider(){};
-
-
-
-
+function dhtmlxSlider() {
+}
 /**
  * adds any user-defined handler to available events
  * @id dhtmlxSlider.attachEvent 
@@ -11827,11 +11779,8 @@
 * @alias dhtmlXEditor.prototype
  * @return {dhtmlXEditor}
  */
- function dhtmlXEditor(){};
-
-
-
-
+function dhtmlXEditor() {
+}
 /**
  * 
  * @id dhtmlXEditor.alignCenter
@@ -12066,11 +12015,8 @@
 * @alias dhtmlXVaultObject.prototype
  * @return {dhtmlXVaultObject}
  */
- function dhtmlXVaultObject(){};
-
-
-
-
+function dhtmlXVaultObject() {
+}
 /**
  * adds any user-defined handler to available events
  * @id dhtmlXVaultObject.attachEvent 
@@ -12201,11 +12147,8 @@
 * @alias dataProcessor.prototype
  * @return {dataProcessor}
  */
- function dataProcessor(){};
-
-
-
-
+function dataProcessor() {
+}
 /**
  * used in combination with setOnBeforeUpdateHandler to create custom client-server transport system
  * @id dataProcessor.afterUpdateCallback
@@ -12429,11 +12372,8 @@
 * @alias dhtmlXDataStore.prototype
  * @return {dhtmlXDataStore}
  */
- function dhtmlXDataStore(){};
-
-
-
-
+function dhtmlXDataStore() {
+}
 /**
  * 
  * @id dhtmlXDataStore.add
@@ -12709,11 +12649,8 @@
 * @alias scheduler.prototype
  * @return {scheduler}
  */
- function scheduler(){};
-
-
-
-
+function scheduler() {
+}
 /**
  * adds a new event
  * @id scheduler.addEvent

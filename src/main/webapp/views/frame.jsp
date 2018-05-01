@@ -6,47 +6,115 @@
     <script src="${pageContext.request.contextPath}/codebase/dhtmlx.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/codebase/dhtmlx.css">
     <style>
-        html, body {
+        body {
+            width: 100%;
+            height: 900px;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        div#layoutObj {
+            position: relative;
+            margin: 10px;
             width: 100%;
             height: 100%;
-            overflow: hidden; /*hides the default body's space*/
-            margin: 0; /*hides the body's scrolls*/
         }
     </style>
 </head>
 <header>
 
 </header>
-<body>
+<body onload="doLoad()">
 <script type="text/javascript">
-    dhtmlxEvent(window, "load", function () {
-        var myLayout = new dhtmlXLayoutObject(document.body, "2U");
+    function doLoad() {
+        var myLayout = new dhtmlXLayoutObject("layoutObj", "2U");
+        /*左边的布局 部门树*/
         myLayout.cells("a").setWidth(260);
         myLayout.cells("a").setText("部门管理");
-        myLayout.cells("b").setText("人员管理");
-        var myToolbar = myLayout.cells("a").attachToolbar();
-        myToolbar.setIconsPath("icons/");
-        myToolbar.loadStruct("data/toolbarStruct.xml");
+        var myToolbarLeft = myLayout.cells("a").attachToolbar();
+        myToolbarLeft.setIconsPath("icons/");
+        myToolbarLeft.loadStruct("data/toolbarStruct.xml");
         var myTree = myLayout.cells("a").attachTree();
         myTree.setImagesPath("codebase/images/");
+
+        /*右边的的布局 人员表*/
+        myLayout.cells("b").setText("人员管理");
+        var myToolbarRight = myLayout.cells("b").attachToolbar();
+        myToolbarRight.setIconsPath("icons/");
+        myToolbarRight.loadStruct("data/toolbarStruct.xml");
         var myGrid = myLayout.cells("b").attachGrid();
         myGrid.setImagePath("codebase/images/");
         myGrid.setIconsPath("icons/");                //sets the path to custom images
-        myGrid.setHeader("&nbsp;,部门,员工名,邮箱,地址,手机号,职位");
+        myGrid.setHeader("&nbsp;,部门,员工名,职位,邮箱,手机号,地址");
         myGrid.setColTypes("img,ro,ro,ro,ro,ro,ro");             //sets the types of columns
-        myGrid.setInitWidths("70,0,100,0,300,150,*");   //sets the initial widths of columns
+        myGrid.setInitWidths("70,0,100,100,150,120,*");   //sets the initial widths of columns
         myGrid.setColAlign("center,left,left,left,left,left");
         myGrid.init();
-        myTree.attachEvent("onSelect", function (id) {              //attaches a handler function to the 'onSelect' event that fires when the user clicks on a tree's item.
-            myGrid.filterBy(1,id,false);                                 //filters the grid by the 5th data's property (the parent item of the file) and compares it with the item selected in the tree.
+
+        /*给通过ToolbarRight操作人员表*/
+        myToolbarRight.attachEvent("onClick", function (id) {
+            switch (id) {
+                case 'add':
+                    alert("hello boy");
+                    break;
+                case 'delete':
+                    if (myGrid.getSelectedRowId() == null) {
+                        alert("请选中您将要删除的员工");
+                        return;
+                    }
+                    if (confirm('主人，真的要狠心删除我吗')) {
+                        myGrid.load("person/deletePersonById?id=" + myGrid.getSelectedRowId(), function () {
+                        });
+                        myGrid.deleteRow(myGrid.getSelectedRowId());
+                    }
+                    break;
+                default:
+                    alert("hello boy,this is edit button");
+            }
+        });
+        myToolbarLeft.attachEvent("onClick", function (id) {
+            switch (id) {
+                case 'add':
+                    alert("hello boy");
+                    break;
+                case 'delete':
+                    if (myTree.hasChildren(myTree.getSelectedItemId()) === 0) {
+                        if (myGrid.getRowsNum() === 0 && confirm('主人，真的要狠心删除我吗')) {
+                            let sid = myTree.getSelectedItemId();
+                            let pid = myTree.getParentId(sid);
+                            myTree.load("department/departmentById?id=" + sid, function () {
+                            });
+                            myTree.deleteItem(myTree.getSelectedItemId(), true);
+                            /*加载父级部门的员工*/
+                            myGrid.load("person/getPeople?id=" + pid, function () {
+                            });
+                        } else {
+                            alert("亲，该部门下还存在员工，先删除员工");
+                        }
+                    } else {
+                        alert("亲，该部门下还存在子部门，请先删除子部门");
+                    }
+                    break;
+                default:
+                    alert("hello boy,this is edit button");
+            }
+        });
+
+        myTree.attachEvent("onSelect", function (id) {
+            myGrid.filterBy(1, id, false);
             return true;
         });
-        myTree.loadXML("department/departmentTree", function () {           //adds the callback function to the loadXML method to select the item in the tree just after the data to the tree has been completely loaded
-            myGrid.load("person/main", function () {           //adds the callback function to the load method to select the item in the tree just after the data to the grid has been completely loaded
-                myTree.selectItem("1");                        //makes the 'books' folder selected initially
-            })
+        /*加载部门树*/
+        myTree.load("department/departmentTree", function () {
         });
-    });
+        /*加载点击部门的员工表*/
+        myTree.attachEvent("onClick", function () {
+            myGrid.clearAll(false);
+            myGrid.load("person/getPeople?id=" + myTree.getSelectedItemId(), function () {
+            });
+        });
+    }
 </script>
+<div id="layoutObj"></div>
 </body>
 </html>

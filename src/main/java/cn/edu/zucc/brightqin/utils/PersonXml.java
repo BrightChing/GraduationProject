@@ -20,8 +20,7 @@ public class PersonXml {
     public String build() {
         stringBuilder.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
         stringBuilder.append("<rows>");
-        for (Person person : personList
-                ) {
+        for (Person person : personList) {
             buildTree(person);
         }
         stringBuilder.append("</rows>");
@@ -47,16 +46,16 @@ public class PersonXml {
         stringBuilder.append(person.getPersonName());
         stringBuilder.append("</cell>");
         stringBuilder.append("<cell>");
-        stringBuilder.append(person.getEmail());
+        stringBuilder.append(person.getPosition());
         stringBuilder.append("</cell>");
         stringBuilder.append("<cell>");
-        stringBuilder.append(person.getAddress());
+        stringBuilder.append(person.getEmail());
         stringBuilder.append("</cell>");
         stringBuilder.append("<cell>");
         stringBuilder.append(person.getPhone());
         stringBuilder.append("</cell>");
         stringBuilder.append("<cell>");
-        stringBuilder.append(person.getPosition());
+        stringBuilder.append(person.getAddress());
         stringBuilder.append("</cell>");
         stringBuilder.append("</row>");
     }

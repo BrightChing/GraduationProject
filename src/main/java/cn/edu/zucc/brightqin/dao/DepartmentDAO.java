@@ -32,7 +32,7 @@ public class DepartmentDAO {
     }
 
 
-    public void deleteDepartmentById(int id) {
+    public void deleteDepartmentById(Integer id) {
         this.getSession().createQuery("delete from Department where departmentId = ?").setParameter(0, id).executeUpdate();
     }
 
@@ -47,7 +47,7 @@ public class DepartmentDAO {
         return this.getSession().createQuery(criteriaQuery).getResultList();
     }
 
-    public Department getDepartmentById(int id) {
+    public Department getDepartmentById(Integer id) {
         return this.getSession().get(Department.class, id);
     }
 

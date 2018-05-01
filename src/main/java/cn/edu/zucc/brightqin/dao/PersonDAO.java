@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaQuery;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -58,7 +59,7 @@ public class PersonDAO {
      * @param id id
      */
     public void deletePersonById(Integer id) {
-        this.getSession().createQuery("delete from Person where id=?").setParameter(0, id).executeUpdate();
+        this.getSession().createQuery("delete from Person where id= ?").setParameter(0, id).executeUpdate();
     }
 
     /**
@@ -73,4 +74,12 @@ public class PersonDAO {
         return this.getSession().createQuery(personCriteriaQuery).getResultList();
     }
 
+    public List<Person> getPersonByDepartmentId(Integer id) {
+        List list = this.getSession().createQuery("from Person where departmentId = ?").setParameter(0, id).getResultList();
+        List<Person> people = new ArrayList<>();
+        for (Object o : list) {
+            people.add((Person) o);
+        }
+        return people;
+    }
 }

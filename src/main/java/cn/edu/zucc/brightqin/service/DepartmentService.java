@@ -42,7 +42,7 @@ public class DepartmentService {
      * @param id 部门ID
      * @return Department
      */
-    public Department getDepartmentById(int id) {
+    public Department getDepartmentById(Integer id) {
         return departmentDAO.getDepartmentById(id);
     }
 
@@ -69,7 +69,7 @@ public class DepartmentService {
      *
      * @param id 部门ID
      */
-    public void deleteDepartmentById(int id) {
+    public void deleteDepartmentById(Integer id) {
         departmentDAO.deleteDepartmentById(id);
     }
 

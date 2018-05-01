@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<toolbar>
-    <item id="add"    type="button" img="add.png"    text="Add"/>
-    <item id="edit"   type="button" img="edit.png"   text="Edit"/>
-    <item id="delete" type="button" img="delete.png" text="Delete"/>
-</toolbar>

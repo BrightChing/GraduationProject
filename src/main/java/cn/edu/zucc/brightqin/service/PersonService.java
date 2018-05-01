@@ -58,4 +58,9 @@ public class PersonService {
 	public List<Person> getPersons() {
 		return personDAO.getPersons();
 	}
+
+
+    public List<Person> getPersonByDepartmentId(Integer id) {
+        return personDAO.getPersonByDepartmentId(id);
+    }
 }

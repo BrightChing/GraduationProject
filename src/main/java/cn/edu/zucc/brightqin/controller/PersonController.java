@@ -1,19 +1,9 @@
 package cn.edu.zucc.brightqin.controller;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import cn.edu.zucc.brightqin.entity.Department;
 import cn.edu.zucc.brightqin.entity.Person;
-import cn.edu.zucc.brightqin.service.DepartmentService;
 import cn.edu.zucc.brightqin.service.PersonService;
 import cn.edu.zucc.brightqin.utils.PasswordUtil;
 import cn.edu.zucc.brightqin.utils.PersonXml;
-import cn.edu.zucc.brightqin.utils.TreeBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
 
 /**
@@ -44,9 +37,6 @@ public class PersonController {
     public PersonController(PersonService personService) {
         this.personService = personService;
     }
-
-    @Autowired
-    DepartmentService departmentService;
 
     /**
      * 保存添加的数据
@@ -86,11 +76,13 @@ public class PersonController {
      * @param id ID
      * @return redirect:main
      */
+
     @RequestMapping(value = "/deletePersonById")
-    public String deletePersonById(@RequestParam(value = "id") String id) {
+    public void deletePersonById(HttpServletResponse response, HttpServletRequest request) {
+        String id = request.getParameter("id");
         personService.deletePersonById(Integer.valueOf(id));
-        return "redirect:main";
     }
+
 
     /**
      * 跳转到更新页面，回显数据
@@ -132,15 +124,14 @@ public class PersonController {
         }
     }
 
-    /**
-     * 查询所有人员信息
-     */
-    @RequestMapping(value = "/main")
-    public void main(HttpServletResponse response) {
+    @RequestMapping(value = "/getPeople")
+    public void getPeople(HttpServletResponse response, HttpServletRequest request) {
+        String id = request.getParameter("id");
+        System.out.println(request.getParameter("id"));
         response.setContentType("application/xml");
         response.setCharacterEncoding("UTF-8");
         PrintWriter pw = null;
-        List<Person> people = personService.getPersons();
+        List<Person> people = personService.getPersonByDepartmentId(Integer.valueOf(id));
         try {
             if (people != null) {
                 PersonXml personXML = new PersonXml(people);
@@ -154,5 +145,6 @@ public class PersonController {
                 pw.close();
             }
         }
+
     }
 }

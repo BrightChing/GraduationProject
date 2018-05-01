@@ -3,7 +3,6 @@ package cn.edu.zucc.brightqin.controller;
 import cn.edu.zucc.brightqin.entity.Department;
 import cn.edu.zucc.brightqin.service.DepartmentService;
 import cn.edu.zucc.brightqin.utils.TreeBuilder;
-import com.sun.deploy.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -75,22 +75,15 @@ public class DepartmentController {
 
     /**
      * 删除一条数据
-     *
-     * @param id 部门ID
-     * @return redirect:main
      */
     @RequestMapping(value = "/deleteDepartmentById")
-    public String deleteDepartmentById(@RequestParam(value = "id") String id) {
+    public void deleteDepartmentById(HttpServletResponse response, HttpServletRequest request) {
+        String id = request.getParameter("id");
         departmentService.deleteDepartmentById(Integer.valueOf(id));
-        return "redirect:main";
     }
 
     /**
-     * 跳转到更新页面，回显数据
-     *
-     * @param id    部门ID
-     * @param model 使用的Model保存回显数据
-     * @return personEditPage.jsp
+     * 跳转到更新
      */
     @RequestMapping(value = "/doUpdate")
     public String doUpdate(@RequestParam(value = "id") String id, Model model) {
@@ -136,8 +129,6 @@ public class DepartmentController {
 
     /**
      * 发送部门树
-     *
-     * @param response
      */
     @RequestMapping(value = "/departmentTree")
     public void buildTree(HttpServletResponse response) {
@@ -161,3 +152,4 @@ public class DepartmentController {
         }
     }
 }
+
