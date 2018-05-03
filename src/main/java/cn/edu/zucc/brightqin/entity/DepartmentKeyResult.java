@@ -1,7 +1,5 @@
 package cn.edu.zucc.brightqin.entity;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 
 /**
@@ -12,6 +10,10 @@ import javax.persistence.*;
 public class DepartmentKeyResult {
     private Integer keyResultId;
     private String keyResultName;
+    private int selfScore;
+    private int upstreamScore;
+    private int totalScore;
+    private DepartmentObject departmentObject;
 
     public DepartmentKeyResult() {
     }
@@ -34,5 +36,43 @@ public class DepartmentKeyResult {
 
     public void setKeyResultName(String keyResultName) {
         this.keyResultName = keyResultName;
+    }
+
+
+    @Column(name = "selfScore")
+    public int getSelfScore() {
+        return selfScore;
+    }
+
+    public void setSelfScore(int selfScore) {
+        this.selfScore = selfScore;
+    }
+
+    @Column(name = "upstreamScore")
+    public int getUpstreamScore() {
+        return upstreamScore;
+    }
+
+    public void setUpstreamScore(int upstreamScore) {
+        this.upstreamScore = upstreamScore;
+    }
+
+    @Column(name = "totalScore")
+    public int getTotalScore() {
+        return totalScore;
+    }
+
+    public void setTotalScore(int totalScore) {
+        this.totalScore = totalScore;
+    }
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "objectId")
+    public DepartmentObject getDepartmentObject() {
+        return departmentObject;
+    }
+
+    public void setDepartmentObject(DepartmentObject departmentObject) {
+        this.departmentObject = departmentObject;
     }
 }

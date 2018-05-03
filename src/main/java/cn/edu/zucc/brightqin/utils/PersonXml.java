@@ -34,7 +34,7 @@ public class PersonXml {
      */
     private void buildTree(Person person) {
         stringBuilder.append("<row id=\"");
-        stringBuilder.append(person.getId());
+        stringBuilder.append(person.getPersonId());
         stringBuilder.append("\">");
         stringBuilder.append("<cell>");
         stringBuilder.append("../icons/people.png");

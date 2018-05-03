@@ -1,8 +1,7 @@
 package cn.edu.zucc.brightqin.entity;
 
-        import org.hibernate.annotations.GenericGenerator;
 
-        import javax.persistence.*;
+import javax.persistence.*;
 
 /**
  * @author brightqin
@@ -12,6 +11,10 @@ package cn.edu.zucc.brightqin.entity;
 public class PersonKeyResult {
     private Integer keyResultId;
     private String keyResultName;
+    private int selfScore;
+    private int upstreamScore;
+    private int totalScore;
+    private PersonObject personObject;
 
     public PersonKeyResult() {
     }
@@ -34,5 +37,42 @@ public class PersonKeyResult {
 
     public void setKeyResultName(String keyResultName) {
         this.keyResultName = keyResultName;
+    }
+
+    @Column(name = "selfScore")
+    public int getSelfScore() {
+        return selfScore;
+    }
+
+    public void setSelfScore(int selfScore) {
+        this.selfScore = selfScore;
+    }
+
+    @Column(name = "upstreamScore")
+    public int getUpstreamScore() {
+        return upstreamScore;
+    }
+
+    public void setUpstreamScore(int upstreamScore) {
+        this.upstreamScore = upstreamScore;
+    }
+
+    @Column(name = "totalScore")
+    public int getTotalScore() {
+        return totalScore;
+    }
+
+    public void setTotalScore(int totalScore) {
+        this.totalScore = totalScore;
+    }
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "personObjectId")
+    public PersonObject getPersonObject() {
+        return personObject;
+    }
+
+    public void setPersonObject(PersonObject personObject) {
+        this.personObject = personObject;
     }
 }

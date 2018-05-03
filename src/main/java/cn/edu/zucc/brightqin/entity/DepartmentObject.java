@@ -1,8 +1,8 @@
 package cn.edu.zucc.brightqin.entity;
 
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * @author brightqin
@@ -12,6 +12,7 @@ import javax.persistence.*;
 public class DepartmentObject {
     private Integer objectId;
     private String objectName;
+    private Set<DepartmentKeyResult> results;
 
     public DepartmentObject() {
 
@@ -35,5 +36,15 @@ public class DepartmentObject {
 
     public void setObjectName(String objectName) {
         this.objectName = objectName;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "objectId")
+    public Set<DepartmentKeyResult> getResults() {
+        return results;
+    }
+
+    public void setResults(Set<DepartmentKeyResult> results) {
+        this.results = results;
     }
 }

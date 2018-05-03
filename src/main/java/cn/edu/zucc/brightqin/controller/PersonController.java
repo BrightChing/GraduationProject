@@ -1,24 +1,20 @@
 package cn.edu.zucc.brightqin.controller;
 
+import cn.edu.zucc.brightqin.entity.Department;
 import cn.edu.zucc.brightqin.entity.Person;
+import cn.edu.zucc.brightqin.service.DepartmentService;
 import cn.edu.zucc.brightqin.service.PersonService;
-import cn.edu.zucc.brightqin.utils.PasswordUtil;
 import cn.edu.zucc.brightqin.utils.PersonXml;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 
@@ -30,45 +26,47 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/person")
 public class PersonController {
-
-    private final PersonService personService;
-
     @Autowired
-    public PersonController(PersonService personService) {
-        this.personService = personService;
-    }
+    private DepartmentService departmentService;
+    @Autowired
+    private PersonService personService;
 
     /**
      * 保存添加的数据
-     *
-     * @param person person
-     * @return personSavePage|redirect:main
      */
-    @RequestMapping(value = "/savePerson", method = RequestMethod.POST)
-    public String savePerson(@Valid Person person, BindingResult result, ModelMap map) {
-        if (result.hasErrors()) {
-            List<FieldError> errors = result.getFieldErrors();
-            for (FieldError error : errors) {
-                map.put("ERROR_" + error.getField(), error.getDefaultMessage());
-                System.out.println(error.getField() + "*" + error.getDefaultMessage());
-            }
-            return "personSavePage";
-        } else {
-            person.setPassword(PasswordUtil.MD5(person.getPassword()));
+    @RequestMapping(value = "/addPerson", method = RequestMethod.POST)
+    public void addPerson(HttpServletRequest request) {
+        String personName = request.getParameter("personName");
+        String email = request.getParameter("email");
+        String position = request.getParameter("position");
+        String phone = request.getParameter("phone");
+        String address = request.getParameter("address");
+        String did = request.getParameter("departmentId");
+
+        try {
+            personName = java.net.URLDecoder.decode(personName, "UTF-8");
+            email = java.net.URLDecoder.decode(email, "UTF-8");
+            position = java.net.URLDecoder.decode(position, "UTF-8");
+            phone = java.net.URLDecoder.decode(phone, "UTF-8");
+            address = java.net.URLDecoder.decode(address, "UTF-8");
+            did = java.net.URLDecoder.decode(did, "UTF-8");
+            Person person = new Person();
+            person.setPersonName(personName);
+            person.setEmail(email);
+            person.setPosition(position);
+            person.setPhone(phone);
+            person.setAddress(address);
+            person.setPassword("df");
+            System.out.println(personName + ";" + email + ";" + position + ";" + phone + ";" + address + ";" + did);
+            Department department = departmentService.getDepartmentById(Integer.valueOf(did));
+            person.setDepartment(department);
             personService.addPerson(person);
-            return "redirect:main";
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
     }
 
-    /**
-     * 跳转到添加页面
-     *
-     * @return personSavePage.jsp
-     */
-    @RequestMapping(value = "/addPerson")
-    public String savePerson() {
-        return "personSavePage";
-    }
 
     /**
      * 删除一条数据
@@ -81,43 +79,35 @@ public class PersonController {
 
 
     /**
-     * 跳转到更新页面，回显数据
-     * personEditPage.jsp
-     *
-     * @param id    ID
-     * @param model 使用的Model保存回显数据
-     * @return personEditPage
-     */
-    @RequestMapping(value = "/doUpdate")
-    public String doUpdate(@RequestParam(value = "id") String id, Model model) {
-        model.addAttribute("person", personService.getPersonById(Integer.valueOf(id)));
-        return "personEditPage";
-    }
-
-    /**
      * 更新数据
-     *
-     * @param person person
-     * @return personEditPage|redirect:main
      */
-    @RequestMapping(value = "/updatePerson")
-    public String updatePerson(@Valid Person person, BindingResult result, ModelMap map) {
-        if (result.hasErrors()) {
-            List<FieldError> errors = result.getFieldErrors();
-            for (FieldError error : errors) {
-                map.put("ERROR_" + error.getField(), error.getDefaultMessage());
-                System.out.println(error.getField() + "*" + error.getDefaultMessage());
-            }
-            return "personEditPage";
-        } else {
-            if (personService.getPersonById(person.getId()).getPassword().equals(person.getPassword())) {
-                personService.updatePerson(person);
-            } else {
-                person.setPassword(PasswordUtil.MD5(person.getPassword()));
-                personService.updatePerson(person);
-            }
-            return "redirect:main";
+    @RequestMapping(value = "/updatePerson", method = RequestMethod.POST)
+    public void updatePerson(HttpServletRequest request, HttpServletResponse response) {
+        String personId = request.getParameter("personId");
+        String personName = request.getParameter("personName");
+        String email = request.getParameter("email");
+        String position = request.getParameter("position");
+        String phone = request.getParameter("phone");
+        String address = request.getParameter("address");
+        try {
+            personId = java.net.URLDecoder.decode(personId, "UTF-8");
+            personName = java.net.URLDecoder.decode(personName, "UTF-8");
+            email = java.net.URLDecoder.decode(email, "UTF-8");
+            position = java.net.URLDecoder.decode(position, "UTF-8");
+            phone = java.net.URLDecoder.decode(phone, "UTF-8");
+            address = java.net.URLDecoder.decode(address, "UTF-8");
+
+            Person person = personService.getPersonById(Integer.valueOf(personId));
+            person.setPersonName(personName);
+            person.setEmail(email);
+            person.setPosition(position);
+            person.setPhone(phone);
+            person.setAddress(address);
+            personService.updatePerson(person);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
+
     }
 
     @RequestMapping(value = "/getPeople")

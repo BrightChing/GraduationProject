@@ -5,21 +5,14 @@ import cn.edu.zucc.brightqin.service.DepartmentService;
 import cn.edu.zucc.brightqin.utils.TreeBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
-import java.util.Map;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -41,37 +34,32 @@ public class DepartmentController {
 
 
     /**
-     * 保存Company
-     *
-     * @param department department
-     * @param result     result
-     * @param map        map
-     * @return departmentSavePage|redirect:main
+     * 保存部门
      */
-    @RequestMapping(value = "/saveDepartment", method = RequestMethod.POST)
-    public String saveDepartment(@Valid Department department, BindingResult result, ModelMap map) {
-        if (result.hasErrors()) {
-            List<FieldError> errors = result.getFieldErrors();
-            for (FieldError error : errors) {
-                map.put("ERROR_" + error.getField(), error.getDefaultMessage());
-                System.out.println(error.getField() + "*" + error.getDefaultMessage());
-            }
-            return "departmentSavePage";
-        } else {
+    @RequestMapping(value = "/addDepartment", method = RequestMethod.POST)
+    public void addDepartment(HttpServletRequest request, HttpServletResponse response) {
+        String name = request.getParameter("departmentName");
+        String pid = request.getParameter("parentId");
+        try {
+            name = java.net.URLDecoder.decode(name, "UTF-8");
+            pid = java.net.URLDecoder.decode(pid, "UTF-8");
+
+            Department department = new Department();
+            Department parent = departmentService.getDepartmentById(Integer.valueOf(pid));
+            department.setDepartmentName(name);
+            department.setDepartment(parent);
             departmentService.addDepartment(department);
-            return "redirect:main";
+            response.getWriter().print(department.getDepartmentId());
+            System.out.println(department.getDepartmentId());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+
     }
 
-    /**
-     * 跳转到添加页面
-     *
-     * @return departmentSavePage
-     */
-    @RequestMapping(value = "/addDepartment")
-    public String addDepartment() {
-        return "departmentSavePage";
-    }
 
     /**
      * 删除一条数据
@@ -82,49 +70,25 @@ public class DepartmentController {
         departmentService.deleteDepartmentById(Integer.valueOf(id));
     }
 
-    /**
-     * 跳转到更新
-     */
-    @RequestMapping(value = "/doUpdate")
-    public String doUpdate(@RequestParam(value = "id") String id, Model model) {
-        model.addAttribute("department", departmentService.getDepartmentById(Integer.valueOf(id)));
-        return "departmentEditPage";
-    }
-
 
     /**
      * 更新数据
-     *
-     * @param department 部门
-     * @param result     error
-     * @param map        回去传数据
-     * @return departmentEditPage|redirect:main
      */
-    @RequestMapping(value = "/updateDepartment")
-    public String updateDepartment(@Valid Department department, BindingResult result, ModelMap map) {
-        if (result.hasErrors()) {
-            List<FieldError> errors = result.getFieldErrors();
-            for (FieldError error : errors) {
-                map.put("ERROR_" + error.getField(), error.getDefaultMessage());
-                System.out.println(error.getField() + "*" + error.getDefaultMessage());
-            }
-            return "departmentEditPage";
-        } else {
+    @RequestMapping(value = "/updateDepartment", method = RequestMethod.POST)
+    public void updateDepartment(HttpServletRequest request, HttpServletResponse response) {
+        String name = request.getParameter("departmentName");
+        String id = request.getParameter("departmentId");
+        System.out.println("name" + name + " id:" + id);
+        try {
+            name = java.net.URLDecoder.decode(name, "UTF-8");
+            id = java.net.URLDecoder.decode(id, "UTF-8");
+            Department department = departmentService.getDepartmentById(Integer.valueOf(id));
+            department.setDepartmentName(name);
             departmentService.updateDepartment(department);
-            return "redirect:main";
+            System.out.println("name" + name + " id:" + id);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
-    }
-
-    /**
-     * 查询所有人员信息
-     *
-     * @param map 使用的是map保存回显数据
-     * @return departmentMain
-     */
-    @RequestMapping(value = "/main")
-    public String main(Map<String, Object> map) {
-        map.put("departmentList", departmentService.getDepartments());
-        return "departmentMain";
     }
 
     /**
