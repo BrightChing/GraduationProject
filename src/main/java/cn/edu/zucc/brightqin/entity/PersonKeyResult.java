@@ -21,7 +21,7 @@ public class PersonKeyResult {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "keyResultId", nullable = false, unique = true, length = 16)
+    @Column(name = "keyResultId")
     public Integer getKeyResultId() {
         return keyResultId;
     }
@@ -30,7 +30,7 @@ public class PersonKeyResult {
         this.keyResultId = keyResultId;
     }
 
-    @Column(name = "keyResultName", nullable = false, length = 16)
+    @Column(name = "keyResultName", nullable = false, length = 32)
     public String getKeyResultName() {
         return keyResultName;
     }

@@ -1,7 +1,6 @@
 package cn.edu.zucc.brightqin.entity;
 
 
-
 import javax.persistence.*;
 import java.util.Set;
 
@@ -14,12 +13,13 @@ public class PersonObject {
     private Integer personObjectId;
     private String personObjectName;
     private Set<PersonKeyResult> results;
+    private Person person;
 
     public PersonObject() {
     }
 
     @Id
-    @Column(name = "personObjectId", nullable = false, unique = true, length = 16)
+    @Column(name = "personObjectId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getPersonObjectId() {
         return personObjectId;
@@ -29,7 +29,7 @@ public class PersonObject {
         this.personObjectId = personObjectId;
     }
 
-    @Column(name = "personObjectName", nullable = false, unique = true, length = 16)
+    @Column(name = "personObjectName", nullable = false, unique = true, length = 32)
     public String getPersonObjectName() {
         return personObjectName;
     }
@@ -46,5 +46,15 @@ public class PersonObject {
 
     public void setResults(Set<PersonKeyResult> results) {
         this.results = results;
+    }
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "personId")
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 }

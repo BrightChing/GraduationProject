@@ -1,9 +1,8 @@
 package cn.edu.zucc.brightqin.entity;
 
 
-
 import javax.persistence.*;
-
+import java.util.Set;
 
 
 /**
@@ -47,6 +46,8 @@ public class Person {
     private String address;
 
     private Department department;
+
+    private Set<PersonObject> personObjects;
 
     public Person() {
     }
@@ -124,5 +125,15 @@ public class Person {
 
     public void setDepartment(Department department) {
         this.department = department;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "personId")
+    public Set<PersonObject> getPersonObjects() {
+        return personObjects;
+    }
+
+    public void setPersonObjects(Set<PersonObject> personObjects) {
+        this.personObjects = personObjects;
     }
 }

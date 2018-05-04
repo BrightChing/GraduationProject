@@ -29,7 +29,6 @@ public class PersonXml {
 
     /**
      * 构建XML文档
-     *
      * @param person
      */
     private void buildTree(Person person) {

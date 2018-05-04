@@ -13,6 +13,7 @@ public class DepartmentObject {
     private Integer objectId;
     private String objectName;
     private Set<DepartmentKeyResult> results;
+    private Department department;
 
     public DepartmentObject() {
 
@@ -46,5 +47,15 @@ public class DepartmentObject {
 
     public void setResults(Set<DepartmentKeyResult> results) {
         this.results = results;
+    }
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "departmentId")
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaQuery;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,8 +30,8 @@ public class PersonObjectDAO {
         this.getSession().save(object);
     }
 
-    public void deleteObject(String id) {
-        this.getSession().createQuery("delete from PersonObject where objectId = ?").setParameter(0, id).executeUpdate();
+    public void deleteObject(Integer id) {
+        this.getSession().createQuery("delete from PersonObject where personObjectId = ?").setParameter(0, id).executeUpdate();
     }
 
     public void updateObject(PersonObject object) {
@@ -46,5 +47,15 @@ public class PersonObjectDAO {
         CriteriaQuery<PersonObject> criteriaQuery = this.getSession().getCriteriaBuilder().createQuery(PersonObject.class);
         criteriaQuery.from(PersonObject.class);
         return this.getSession().createQuery(criteriaQuery).getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<PersonObject> getObjectsByPersonId(Integer id) {
+        List list = this.getSession().createQuery("from PersonObject where personId = ?").setParameter(0, id).getResultList();
+        List<PersonObject> list1 = new ArrayList<>();
+        for (Object object : list) {
+            list1.add((PersonObject) object);
+        }
+        return list1;
     }
 }

@@ -14,13 +14,14 @@ public class Department {
     private Set<Person> persons;
     private Department department;
     private Set<Department> childDepartments;
+    private Set<DepartmentObject> departmentObjects;
 
     public Department() {
     }
 
     @Id
     @Column(name = "departmentId", nullable = false)
-    @GeneratedValue(strategy =GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getDepartmentId() {
         return departmentId;
     }
@@ -66,5 +67,15 @@ public class Department {
 
     public void setChildDepartments(Set<Department> childDepartments) {
         this.childDepartments = childDepartments;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "departmentId")
+    public Set<DepartmentObject> getDepartmentObjects() {
+        return departmentObjects;
+    }
+
+    public void setDepartmentObjects(Set<DepartmentObject> departmentObjects) {
+        this.departmentObjects = departmentObjects;
     }
 }

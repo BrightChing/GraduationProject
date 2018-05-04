@@ -17,34 +17,35 @@
         }
     </style>
     <script type="text/javascript">
-        let myLayout, myTabBar;
+        let myLayout1, myLayout2, myTabBar;
 
         function doOnLoad() {
             myTabBar = new dhtmlXTabBar("my_tabBar");
             myTabBar.addTab("tab1", "组织管理", null, null, true);
-            myTabBar.addTab("a2", "", null, null);
+            myTabBar.addTab("tab2", "OKR管理", null, null);
             OrganizationManagement();
+            DepartmentOKRManagement()
         }
 
         function OrganizationManagement() {
-            myLayout = myTabBar.tabs("tab1").attachLayout("2U");
+            myLayout1 = myTabBar.tabs("tab1").attachLayout("2U");
             /*左边的布局 部门树*/
-            myLayout.cells("a").setWidth(260);
-            myLayout.cells("a").setText("部门管理");
-            let myToolbarLeft = myLayout.cells("a").attachToolbar();
+            myLayout1.cells("a").setWidth(260);
+            myLayout1.cells("a").setText("部门管理");
+            let myToolbarLeft = myLayout1.cells("a").attachToolbar();
             myToolbarLeft.setIconsPath("icons/");
             myToolbarLeft.loadStruct("data/toolbarStruct.xml", function () {
             });
-            let myTree = myLayout.cells("a").attachTree();
+            let myTree = myLayout1.cells("a").attachTree();
             myTree.setImagesPath("codebase/images/");
 
             /*右边的的布局 人员表*/
-            myLayout.cells("b").setText("人员管理");
-            let myToolbarRight = myLayout.cells("b").attachToolbar();
+            myLayout1.cells("b").setText("人员管理");
+            let myToolbarRight = myLayout1.cells("b").attachToolbar();
             myToolbarRight.setIconsPath("icons/");
             myToolbarRight.loadStruct("data/toolbarStruct.xml", function () {
             });
-            let myGrid = myLayout.cells("b").attachGrid();
+            let myGrid = myLayout1.cells("b").attachGrid();
             myGrid.setImagePath("codebase/images/");
             myGrid.setIconsPath("icons/");
             myGrid.setHeader("&nbsp;,部门,员工名,职位,邮箱,手机号,地址");
@@ -52,12 +53,6 @@
             myGrid.setInitWidths("70,0,100,100,150,120,*");
             myGrid.setColAlign("center,left,left,left,left,left");
             myGrid.init();
-
-
-            myTree.attachEvent("onSelect", function (id) {
-                myGrid.filterBy(1, id, false);
-                return true;
-            });
 
             /*加载部门树*/
             myTree.load("department/departmentTree", function () {
@@ -313,6 +308,192 @@
                         editPerson()
                 }
             });
+        }
+
+        function DepartmentOKRManagement() {
+
+            myLayout2 = myTabBar.tabs("tab2").attachLayout("4W");
+            /*左边的布局 部门树*/
+            myLayout2.cells("a").setWidth(260);
+            myLayout2.cells("a").setText("部门");
+
+            let myTree = myLayout2.cells("a").attachTree();
+            myTree.setImagesPath("codebase/images/");
+
+            /*右边的的布局 人员表*/
+            myLayout2.cells("b").setText("人员");
+            myLayout2.cells("b").setWidth(200);
+            let personGrid = myLayout2.cells("b").attachGrid();
+            personGrid.setImagePath("codebase/images/");
+            personGrid.setIconsPath("icons/");
+            personGrid.setHeader("&nbsp;,部门,员工名");
+            personGrid.setColTypes("img,ro,ro");
+            personGrid.setInitWidths("70,0,*");
+            personGrid.setColAlign("center,left,left");
+            personGrid.init();
+
+            myLayout2.cells("c").setText("目标");
+            myLayout2.cells("c").setWidth(500);
+            let myToolbarLeft = myLayout2.cells("c").attachToolbar();
+            myToolbarLeft.setIconsPath("icons/");
+            myToolbarLeft.loadStruct("data/toolbarStruct.xml", function () {
+            });
+            let objectGrid = myLayout2.cells("c").attachGrid();
+            objectGrid.setImagePath("codebase/images/");
+            objectGrid.setIconsPath("icons/");
+            objectGrid.setHeader("&nbsp;,员工ID,目标名");
+            objectGrid.setColTypes("img,ro,ro");
+            objectGrid.setInitWidths("70,0,*");
+            objectGrid.setColAlign("center,left,left");
+            objectGrid.init();
+
+            myLayout2.cells("d").setText("关键结果管理");
+            let myToolbarRight = myLayout2.cells("d").attachToolbar();
+            myToolbarRight.setIconsPath("icons/");
+            myToolbarRight.loadStruct("data/toolbarStruct.xml", function () {
+            });
+            let keyResultGrid = myLayout2.cells("d").attachGrid();
+            keyResultGrid.setImagePath("codebase/images/");
+            keyResultGrid.setIconsPath("icons/");
+            keyResultGrid.setHeader("&nbsp;,目标ID,关键结果名");
+            keyResultGrid.setColTypes("img,ro,ro");
+            keyResultGrid.setInitWidths("70,0,*");
+            keyResultGrid.setColAlign("center,left,left");
+            keyResultGrid.init();
+
+
+            /*加载部门树*/
+            myTree.load("department/departmentTree", function () {
+            }, "xml");
+            /*加载点击部门的员工表*/
+            myTree.attachEvent("onClick", function (id) {
+                personGrid.clearAll(false);
+                objectGrid.clearAll(false);
+                personGrid.load("person/getPeople?id=" + id, function () {
+                }, "xml");
+            });
+            /*当选择人员时加载人员的目标*/
+            personGrid.attachEvent("onRowSelect", function (id, ind) {
+                objectGrid.clearAll(false);
+                objectGrid.load("personObject/getPersonObjects?id=" + id, function () {
+                }, "xml");
+            });
+
+            /*给通过ToolbarLeft员工目标操作*/
+            myToolbarLeft.attachEvent("onClick", function (id) {
+                switch (id) {
+                    case 'add':
+                        addDepartment();
+                        break;
+                    case 'delete':
+                        deletePersonObject();
+                        break;
+                    default:
+                        editDepartment();
+                }
+            });
+
+
+            /*添加目标*/
+            function addDepartment() {
+                let formData = [
+                    {
+                        type: "checkbox", checked: true, list: [
+                            {type: "settings", labelWidth: 90, inputWidth: 200, position: "label-left"},
+                            {type: "input", name: "departmentName", label: "部门名", value: ""},
+                        ]
+                    },
+                    {
+                        type: "checkbox", checked: 1, list: [
+                            {type: "button", name: "OK", value: "确认", offsetLeft: 40, offsetTop: 10, inputWidth: 50},
+                            {type: "newcolumn"},
+                            {type: "button", name: "CANCEL", value: "取消", offsetLeft: 8, offsetTop: 10}
+                        ]
+                    }
+                ];
+
+                let dhxWins = new dhtmlXWindows();
+                dhxWins.attachViewportTo("my_tabBar");
+                let w1 = dhxWins.createWindow("w1", 0, 0, 300, 260);
+                dhxWins.window("w1").center();
+                w1.setText("添加部门");
+                let myForm = w1.attachForm(formData);
+                myForm.attachEvent("onButtonClick", function (name) {
+                    if (name === "OK") {
+                        let pid = personGrid.getSelectedRowId();
+                        let data = "personObjectName=" + encodeURI(encodeURI(myForm.getItemValue("personObjectName")))
+                            + "&personId=" + pid;
+                        dhx.ajax.post("personObject/addPersonObject", data, function () {
+                            keyResultGrid.clearAll(false);
+                            objectGrid.clearAll(false);
+                            objectGrid.load("personObject/getPersonObjects?id=" + id, function () {
+                            }, "xml");
+                        });
+                    }
+                    dhxWins.window("w1").hide();
+                });
+            }
+
+            /*删除目标*/
+            function deletePersonObject() {
+                let id = objectGrid.getSelectedRowId();
+                if (id == null) {
+                    dhtmlx.alert("请选中您将要删除的目标");
+                    return;
+                }
+                if (keyResultGrid.getRowsNum() === 0) {
+                    dhtmlx.confirm('主人，真的要狠心删除我吗', function (result) {
+                        if (result) {
+                            myTree.load("personObject/deletePersonObjectById?id=" + id, function () {
+                                keyResultGrid.clearAll(false);
+                                objectGrid.deleteRow(id);
+                            }, "xml");
+                        } else {
+                            dhtmlx.alert("已取消删除");
+                        }
+                    });
+                } else {
+                    dhtmlx.alert("亲，该目标下还存在关键结果");
+                }
+            }
+
+
+            /*编辑目标*/
+            function editDepartment() {
+
+                let formData = [
+                    {
+                        type: "checkbox", checked: true, list: [
+                            {type: "settings", labelWidth: 90, inputWidth: 200, position: "label-left"},
+                            {type: "input", name: "departmentName", label: "部门名", value: myTree.getSelectedItemText()},
+                        ]
+                    },
+                    {
+                        type: "checkbox", checked: 1, list: [
+                            {type: "button", name: "OK", value: "确认", offsetLeft: 40, offsetTop: 10, inputWidth: 50},
+                            {type: "newcolumn"},
+                            {type: "button", name: "CANCEL", value: "取消", offsetLeft: 8, offsetTop: 10}
+                        ]
+                    }
+                ];
+                let dhxWins = new dhtmlXWindows();
+                dhxWins.attachViewportTo("my_tabBar");
+                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "260");
+                dhxWins.window("w1").center();
+                w1.setText("编辑目标");
+                let myForm = w1.attachForm(formData);
+                myForm.attachEvent("onButtonClick", function (name) {
+                    if (name === "OK") {
+                        let id = myTree.getSelectedItemId();
+                        let data = "departmentName=" + encodeURI(encodeURI(myForm.getItemValue("departmentName")))
+                            + "&parentId=" + myTree.getParentId(id) + "&departmentId=" + id;
+                        dhx.ajax.post("department/updateDepartment", data, function () {
+                            myTree.setItemText(id, myForm.getItemValue("departmentName"), null);
+                        });
+                    }
+                    dhxWins.window("w1").hide();
+                });
+            }
         }
     </script>
 </head>

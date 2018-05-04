@@ -2,3 +2,11 @@
 /out/
 /.idea/dataSources.local.xml
 .idea/workspace.xml
+.gradle/
+.idea/dataSources/
+.idea/modules.xml
+.idea/modules/
+.idea/sqldialects.xml
+build/
+src/test/java/cn/edu/zucc/brightqin/entity/
+src/test/resources/

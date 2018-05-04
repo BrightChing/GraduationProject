@@ -23,7 +23,7 @@ public class PersonObjectService {
         objectDAO.saveObject(object);
     }
 
-    public void deleteObject(String id) {
+    public void deleteObject(Integer id) {
         objectDAO.deleteObject(id);
     }
 
@@ -37,5 +37,9 @@ public class PersonObjectService {
 
     public List<PersonObject> getObjects() {
         return objectDAO.getObjects();
+    }
+
+    public List<PersonObject> getObjectsByPersonId(Integer id) {
+        return objectDAO.getObjectsByPersonId(id);
     }
 }
