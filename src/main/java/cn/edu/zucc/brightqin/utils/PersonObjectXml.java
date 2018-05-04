@@ -4,6 +4,9 @@ import cn.edu.zucc.brightqin.entity.PersonObject;
 
 import java.util.List;
 
+/**
+ * @author brightqin
+ */
 public class PersonObjectXml {
 
     private final List<PersonObject> personObjects;
@@ -17,7 +20,7 @@ public class PersonObjectXml {
         stringBuilder.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
         stringBuilder.append("<rows>");
         for (PersonObject object : personObjects) {
-            buildTree(object);
+            buildXML(object);
         }
         stringBuilder.append("</rows>");
         return stringBuilder.toString();
@@ -25,10 +28,8 @@ public class PersonObjectXml {
 
     /**
      * 构建XML文档
-     *
-     * @param person
      */
-    private void buildTree(PersonObject object) {
+    private void buildXML(PersonObject object) {
         stringBuilder.append("<row id=\"");
         stringBuilder.append(object.getPersonObjectId());
         stringBuilder.append("\">");

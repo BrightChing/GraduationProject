@@ -21,7 +21,7 @@ public class PersonXml {
         stringBuilder.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
         stringBuilder.append("<rows>");
         for (Person person : personList) {
-            buildTree(person);
+            buildXML(person);
         }
         stringBuilder.append("</rows>");
         return stringBuilder.toString();
@@ -31,7 +31,7 @@ public class PersonXml {
      * 构建XML文档
      * @param person
      */
-    private void buildTree(Person person) {
+    private void buildXML(Person person) {
         stringBuilder.append("<row id=\"");
         stringBuilder.append(person.getPersonId());
         stringBuilder.append("\">");

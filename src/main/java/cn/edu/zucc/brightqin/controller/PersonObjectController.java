@@ -1,8 +1,10 @@
 package cn.edu.zucc.brightqin.controller;
 
 
+import cn.edu.zucc.brightqin.entity.Person;
 import cn.edu.zucc.brightqin.entity.PersonObject;
 import cn.edu.zucc.brightqin.service.PersonObjectService;
+import cn.edu.zucc.brightqin.service.PersonService;
 import cn.edu.zucc.brightqin.utils.PersonObjectXml;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 
@@ -24,13 +27,28 @@ import java.util.List;
 public class PersonObjectController {
     @Autowired
     private PersonObjectService service;
+    @Autowired
+    private PersonService personService;
 
     /**
      * 保存添加的数据
      */
     @RequestMapping(value = "/addPersonObject", method = RequestMethod.POST)
     public void addPersonObject(HttpServletRequest request) {
-
+        String pid = request.getParameter("personId");
+        String objectName = request.getParameter("objectName");
+        System.out.println(pid + "   " + objectName);
+        try {
+            pid = java.net.URLDecoder.decode(pid, "UTF-8");
+            objectName = java.net.URLDecoder.decode(objectName, "UTF-8");
+            PersonObject object = new PersonObject();
+            Person person = personService.getPersonById(Integer.valueOf(pid));
+            object.setPerson(person);
+            object.setPersonObjectName(objectName);
+            service.addObject(object);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -48,7 +66,18 @@ public class PersonObjectController {
      * 更新数据
      */
     @RequestMapping(value = "/updatePersonObject", method = RequestMethod.POST)
-    public void updatePersonObject(HttpServletRequest request, HttpServletResponse response) {
+    public void updatePersonObject(HttpServletRequest request) {
+        String id = request.getParameter("objectId");
+        String objectName = request.getParameter("objectName");
+        try {
+            objectName = java.net.URLDecoder.decode(objectName, "UTF-8");
+            id = java.net.URLDecoder.decode(id, "UTF-8");
+            PersonObject object = service.getObjectById(Integer.valueOf(id));
+            object.setPersonObjectName(objectName);
+            service.updateObject(object);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
     }
 

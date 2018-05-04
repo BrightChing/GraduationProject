@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <toolbar>
-    <item id="add" type="button" img="add.png" text="Add"/>
-    <item id="edit" type="button" img="edit.png" text="Edit"/>
-    <item id="delete" type="button" img="delete.png" text="Delete"/>
+    <item id="add" type="button" img="add.png" text="添加"/>
+    <item id="edit" type="button" img="edit.png" text="编辑"/>
+    <item id="delete" type="button" img="delete.png" text="删除"/>
 </toolbar>

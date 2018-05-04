@@ -48,7 +48,7 @@
             let myGrid = myLayout1.cells("b").attachGrid();
             myGrid.setImagePath("codebase/images/");
             myGrid.setIconsPath("icons/");
-            myGrid.setHeader("&nbsp;,部门,员工名,职位,邮箱,手机号,地址");
+            myGrid.setHeader("&nbsp;,departmentId,员工名,职位,邮箱,手机号,地址");
             myGrid.setColTypes("img,ro,ro,ro,ro,ro,ro");
             myGrid.setInitWidths("70,0,100,100,150,120,*");
             myGrid.setColAlign("center,left,left,left,left,left");
@@ -67,6 +67,10 @@
 
             /*添加人员*/
             function addPerson() {
+                if (myTree.getSelectedItemId() == null) {
+                    dhtmlx.alert("请您选择要在哪个部门添加人员");
+                    return;
+                }
                 let formData = [
                     {
                         type: "checkbox", checked: true, list: [
@@ -175,6 +179,10 @@
 
             /*添加部门*/
             function addDepartment() {
+                if (myTree.getSelectedItemId() == null) {
+                    dhtmlx.alert("请您选择要在哪个节点下添加部门");
+                    return;
+                }
                 let formData = [
                     {
                         type: "checkbox", checked: true, list: [
@@ -219,7 +227,11 @@
                 if (sid == null) {
                     dhtmlx.alert("请选中您将要删除的部门");
                     return;
+                } else if (sid === "1") {
+                    dhtmlx.alert("顶级公司不可删除的，您可以按需求修改");
+                    return;
                 }
+
                 if (myTree.hasChildren(sid) === 0) {
                     if (myGrid.getRowsNum() === 0) {
                         dhtmlx.confirm('主人，真的要狠心删除我吗', function (result) {
@@ -326,7 +338,7 @@
             let personGrid = myLayout2.cells("b").attachGrid();
             personGrid.setImagePath("codebase/images/");
             personGrid.setIconsPath("icons/");
-            personGrid.setHeader("&nbsp;,部门,员工名");
+            personGrid.setHeader("&nbsp;,departmentId,员工名");
             personGrid.setColTypes("img,ro,ro");
             personGrid.setInitWidths("70,0,*");
             personGrid.setColAlign("center,left,left");
@@ -339,13 +351,14 @@
             myToolbarLeft.loadStruct("data/toolbarStruct.xml", function () {
             });
             let objectGrid = myLayout2.cells("c").attachGrid();
-            objectGrid.setImagePath("codebase/images/");
-            objectGrid.setIconsPath("icons/");
-            objectGrid.setHeader("&nbsp;,员工ID,目标名");
-            objectGrid.setColTypes("img,ro,ro");
-            objectGrid.setInitWidths("70,0,*");
+            // objectGrid.setHeader("&nbsp,Booktitle,Author");
+            objectGrid.setHeader("&nbsp,personId,目标名");
+            objectGrid.setInitWidths("70,0,180");
             objectGrid.setColAlign("center,left,left");
+            objectGrid.setColTypes("img,ro,ro");
+
             objectGrid.init();
+
 
             myLayout2.cells("d").setText("关键结果管理");
             let myToolbarRight = myLayout2.cells("d").attachToolbar();
@@ -355,7 +368,7 @@
             let keyResultGrid = myLayout2.cells("d").attachGrid();
             keyResultGrid.setImagePath("codebase/images/");
             keyResultGrid.setIconsPath("icons/");
-            keyResultGrid.setHeader("&nbsp;,目标ID,关键结果名");
+            keyResultGrid.setHeader("&nbsp;,objectId,关键结果名");
             keyResultGrid.setColTypes("img,ro,ro");
             keyResultGrid.setInitWidths("70,0,*");
             keyResultGrid.setColAlign("center,left,left");
@@ -383,24 +396,28 @@
             myToolbarLeft.attachEvent("onClick", function (id) {
                 switch (id) {
                     case 'add':
-                        addDepartment();
+                        addPersonObject();
                         break;
                     case 'delete':
                         deletePersonObject();
                         break;
                     default:
-                        editDepartment();
+                        editPersonObject();
                 }
             });
 
 
             /*添加目标*/
-            function addDepartment() {
+            function addPersonObject() {
+                if (personGrid.getSelectedRowId() == null) {
+                    dhtmlx.alert("请您先选中，您要为哪个人添加目标");
+                    return;
+                }
                 let formData = [
                     {
                         type: "checkbox", checked: true, list: [
                             {type: "settings", labelWidth: 90, inputWidth: 200, position: "label-left"},
-                            {type: "input", name: "departmentName", label: "部门名", value: ""},
+                            {type: "input", name: "objectName", label: "目标名", value: ""},
                         ]
                     },
                     {
@@ -414,19 +431,19 @@
 
                 let dhxWins = new dhtmlXWindows();
                 dhxWins.attachViewportTo("my_tabBar");
-                let w1 = dhxWins.createWindow("w1", 0, 0, 300, 260);
+                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "260");
                 dhxWins.window("w1").center();
-                w1.setText("添加部门");
+                w1.setText("添加目标");
                 let myForm = w1.attachForm(formData);
                 myForm.attachEvent("onButtonClick", function (name) {
                     if (name === "OK") {
                         let pid = personGrid.getSelectedRowId();
-                        let data = "personObjectName=" + encodeURI(encodeURI(myForm.getItemValue("personObjectName")))
+                        let data = "objectName=" + encodeURI(encodeURI(myForm.getItemValue("objectName")))
                             + "&personId=" + pid;
                         dhx.ajax.post("personObject/addPersonObject", data, function () {
                             keyResultGrid.clearAll(false);
                             objectGrid.clearAll(false);
-                            objectGrid.load("personObject/getPersonObjects?id=" + id, function () {
+                            objectGrid.load("personObject/getPersonObjects?id=" + pid, function () {
                             }, "xml");
                         });
                     }
@@ -459,17 +476,22 @@
 
 
             /*编辑目标*/
-            function editDepartment() {
-
+            function editPersonObject() {
+                let rid = objectGrid.getSelectedRowId();
                 let formData = [
                     {
                         type: "checkbox", checked: true, list: [
                             {type: "settings", labelWidth: 90, inputWidth: 200, position: "label-left"},
-                            {type: "input", name: "departmentName", label: "部门名", value: myTree.getSelectedItemText()},
+                            {
+                                type: "input",
+                                name: "objectName",
+                                label: "目标名",
+                                value: objectGrid.cells(rid, 2).getValue()
+                            },
                         ]
                     },
                     {
-                        type: "checkbox", checked: 1, list: [
+                        type: "checkbox", checked: true, list: [
                             {type: "button", name: "OK", value: "确认", offsetLeft: 40, offsetTop: 10, inputWidth: 50},
                             {type: "newcolumn"},
                             {type: "button", name: "CANCEL", value: "取消", offsetLeft: 8, offsetTop: 10}
@@ -484,11 +506,136 @@
                 let myForm = w1.attachForm(formData);
                 myForm.attachEvent("onButtonClick", function (name) {
                     if (name === "OK") {
-                        let id = myTree.getSelectedItemId();
-                        let data = "departmentName=" + encodeURI(encodeURI(myForm.getItemValue("departmentName")))
-                            + "&parentId=" + myTree.getParentId(id) + "&departmentId=" + id;
-                        dhx.ajax.post("department/updateDepartment", data, function () {
-                            myTree.setItemText(id, myForm.getItemValue("departmentName"), null);
+                        let data = "objectName=" + encodeURI(encodeURI(myForm.getItemValue("objectName")))
+                            + "&objectId=" + rid;
+                        dhx.ajax.post("personObject/updatePersonObject", data, function () {
+                            keyResultGrid.clearAll(false);
+                            objectGrid.clearAll(false);
+                            objectGrid.clearAll(false);
+                            objectGrid.load("personObject/getPersonObjects?id=" + personGrid.getSelectedRowId(), function () {
+                            }, "xml");
+                        });
+                    }
+                    dhxWins.window("w1").hide();
+                });
+            }
+
+            /*给通过ToolbarLeft员工目标操作*/
+            myToolbarRight.attachEvent("onClick", function (id) {
+                switch (id) {
+                    case 'add':
+                        addKeyResult();
+                        break;
+                    case 'delete':
+                        deleteResult();
+                        break;
+                    default:
+                        editResult();
+                }
+            });
+
+            /*添加关键结果*/
+            function addKeyResult() {
+                if (objectGrid.getSelectedRowId() == null) {
+                    dhtmlx.alert("请您先选中，您要为哪目标添加关键成果");
+                    return;
+                }
+                let formData = [
+                    {
+                        type: "checkbox", checked: true, list: [
+                            {type: "settings", labelWidth: 90, inputWidth: 200, position: "label-left"},
+                            {type: "input", name: "keyResultName", label: "目标名", value: ""},
+                        ]
+                    },
+                    {
+                        type: "checkbox", checked: 1, list: [
+                            {type: "button", name: "OK", value: "确认", offsetLeft: 40, offsetTop: 10, inputWidth: 50},
+                            {type: "newcolumn"},
+                            {type: "button", name: "CANCEL", value: "取消", offsetLeft: 8, offsetTop: 10}
+                        ]
+                    }
+                ];
+
+                let dhxWins = new dhtmlXWindows();
+                dhxWins.attachViewportTo("my_tabBar");
+                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "260");
+                dhxWins.window("w1").center();
+                w1.setText("添加关键成果");
+                let myForm = w1.attachForm(formData);
+                myForm.attachEvent("onButtonClick", function (name) {
+                    if (name === "OK") {
+                        let pid = objectGrid.getSelectedRowId();
+                        let data = "keyResultName=" + encodeURI(encodeURI(myForm.getItemValue("keyResultName")))
+                            + "&personObjectId=" + pid;
+                        dhx.ajax.post("personKeyResult/addKeyObject", data, function () {
+                            keyResultGrid.clearAll(false);
+                            objectGrid.clearAll(false);
+                            objectGrid.load("personKeyResult/getKeyResults?id=" + pid, function () {
+                            }, "xml");
+                        });
+                    }
+                    dhxWins.window("w1").hide();
+                });
+            }
+
+            /*删除关键结果*/
+            function deleteResult() {
+                let id = keyResultGrid.getSelectedRowId();
+                if (id == null) {
+                    dhtmlx.alert("请选中您将要删除的目标");
+                    return;
+                }
+                dhtmlx.confirm('主人，真的要狠心删除我吗', function (result) {
+                    if (result) {
+                        myTree.load("personKeyResult/deletePersonKeyResultById?id=" + id, function () {
+                            keyResultGrid.clearAll(false);
+                            objectGrid.deleteRow(id);
+                        }, "xml");
+                    } else {
+                        dhtmlx.alert("已取消删除");
+                    }
+                });
+            }
+
+            /*编辑关键结果*/
+            function editResult() {
+                let rid = objectGrid.getSelectedRowId();
+                let formData = [
+                    {
+                        type: "checkbox", checked: true, list: [
+                            {type: "settings", labelWidth: 90, inputWidth: 200, position: "label-left"},
+                            {
+                                type: "input",
+                                name: "objectName",
+                                label: "目标名",
+                                value: objectGrid.cells(rid, 2).getValue()
+                            },
+                        ]
+                    },
+                    {
+                        type: "checkbox", checked: true, list: [
+                            {type: "button", name: "OK", value: "确认", offsetLeft: 40, offsetTop: 10, inputWidth: 50},
+                            {type: "newcolumn"},
+                            {type: "button", name: "CANCEL", value: "取消", offsetLeft: 8, offsetTop: 10}
+                        ]
+                    }
+                ];
+                let dhxWins = new dhtmlXWindows();
+                dhxWins.attachViewportTo("my_tabBar");
+                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "260");
+                dhxWins.window("w1").center();
+                w1.setText("编辑目标");
+                let myForm = w1.attachForm(formData);
+                myForm.attachEvent("onButtonClick", function (name) {
+                    if (name === "OK") {
+                        let data = "objectName=" + encodeURI(encodeURI(myForm.getItemValue("objectName")))
+                            + "&objectId=" + rid;
+                        dhx.ajax.post("personObject/updatePersonObject", data, function () {
+                            keyResultGrid.clearAll(false);
+                            objectGrid.clearAll(false);
+                            objectGrid.clearAll(false);
+                            objectGrid.load("personObject/getPersonObjects?id=" + personGrid.getSelectedRowId(), function () {
+                            }, "xml");
                         });
                     }
                     dhxWins.window("w1").hide();
