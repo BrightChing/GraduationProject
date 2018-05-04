@@ -14,8 +14,12 @@ import java.util.List;
  */
 @Repository
 public class DepartmentKeyResultDAO {
+    private final SessionFactory sessionFactory;
+
     @Autowired
-    private SessionFactory sessionFactory;
+    public DepartmentKeyResultDAO(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     private Session getSession() {
         return sessionFactory.getCurrentSession();

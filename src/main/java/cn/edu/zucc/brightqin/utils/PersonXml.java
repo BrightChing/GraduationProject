@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class PersonXml {
 
-    private List<Person> personList;
+    private final List<Person> personList;
     private StringBuilder stringBuilder = new StringBuilder(128);
 
     public PersonXml(List<Person> personList) {

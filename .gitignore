@@ -1,7 +1,4 @@
 # Created by .ignore support plugin (hsz.mobi)
-/.gradle/
-/build/
 /out/
-/.idea/libraries/
 /.idea/dataSources.local.xml
 .idea/workspace.xml

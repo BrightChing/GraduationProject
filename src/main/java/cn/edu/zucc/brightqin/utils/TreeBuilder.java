@@ -8,7 +8,7 @@ import java.util.Set;
  * @author brightqin
  */
 public class TreeBuilder {
-    private Department root;
+    private final Department root;
     private StringBuilder treeString = new StringBuilder(128);
     public TreeBuilder(Department root) {
         this.root = root;
@@ -16,7 +16,6 @@ public class TreeBuilder {
 
     /**
      * 构建树
-     * @return
      */
     public String build() {
         treeString.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");

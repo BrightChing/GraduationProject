@@ -1,16 +1,13 @@
 package cn.edu.zucc.brightqin.dao;
 
 
-import javax.annotation.Resource;
-import javax.persistence.criteria.CriteriaQuery;
-
-
 import cn.edu.zucc.brightqin.entity.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
 
@@ -20,8 +17,12 @@ import java.util.List;
 @Repository
 public class UserDAO {
 
+    private final SessionFactory sessionFactory;
+
     @Autowired
-    private SessionFactory sessionFactory;
+    public UserDAO(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     private Session getSession() {
         return sessionFactory.getCurrentSession();

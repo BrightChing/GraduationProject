@@ -1,7 +1,5 @@
 package cn.edu.zucc.brightqin.entity;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.util.Set;
 

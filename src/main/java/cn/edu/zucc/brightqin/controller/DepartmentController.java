@@ -51,8 +51,6 @@ public class DepartmentController {
             departmentService.addDepartment(department);
             response.getWriter().print(department.getDepartmentId());
             System.out.println(department.getDepartmentId());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

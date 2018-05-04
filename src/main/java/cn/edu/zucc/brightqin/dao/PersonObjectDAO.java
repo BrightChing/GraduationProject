@@ -14,8 +14,12 @@ import java.util.List;
  */
 @Repository
 public class PersonObjectDAO {
+    private final SessionFactory sessionFactory;
+
     @Autowired
-    private SessionFactory sessionFactory;
+    public PersonObjectDAO(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     private Session getSession() {
         return sessionFactory.getCurrentSession();
@@ -26,7 +30,7 @@ public class PersonObjectDAO {
     }
 
     public void deleteObject(String id) {
-        this.getSession().createQuery("delete from Object where objectId = ?").setParameter(0, id).executeUpdate();
+        this.getSession().createQuery("delete from PersonObject where objectId = ?").setParameter(0, id).executeUpdate();
     }
 
     public void updateObject(PersonObject object) {

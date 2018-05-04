@@ -15,8 +15,12 @@ import java.util.List;
  */
 @Repository
 public class PersonKeyResultDAO {
+    private final SessionFactory sessionFactory;
+
     @Autowired
-    private SessionFactory sessionFactory;
+    public PersonKeyResultDAO(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     private Session getSession() {
         return sessionFactory.getCurrentSession();

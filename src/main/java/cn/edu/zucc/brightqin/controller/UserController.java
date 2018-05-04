@@ -33,7 +33,7 @@ public class UserController {
         if (user != null && password.equals(user.getPassword())) {
             //存放在request请求域中
             map.put("username", id);
-            return "framewew";
+            return "frame";
         }
         return "error";
     }

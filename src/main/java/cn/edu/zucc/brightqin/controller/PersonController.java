@@ -26,10 +26,14 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/person")
 public class PersonController {
+    private final DepartmentService departmentService;
+    private final PersonService personService;
+
     @Autowired
-    private DepartmentService departmentService;
-    @Autowired
-    private PersonService personService;
+    public PersonController(DepartmentService departmentService, PersonService personService) {
+        this.departmentService = departmentService;
+        this.personService = personService;
+    }
 
     /**
      * 保存添加的数据
