@@ -29,7 +29,6 @@ public class PersonXml {
 
     /**
      * 构建XML文档
-     * @param person
      */
     private void buildXML(Person person) {
         stringBuilder.append("<row id=\"");

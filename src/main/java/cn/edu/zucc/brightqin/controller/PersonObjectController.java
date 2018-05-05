@@ -25,10 +25,14 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/personObject")
 public class PersonObjectController {
+    private final PersonObjectService service;
+    private final PersonService personService;
+
     @Autowired
-    private PersonObjectService service;
-    @Autowired
-    private PersonService personService;
+    public PersonObjectController(PersonObjectService service, PersonService personService) {
+        this.service = service;
+        this.personService = personService;
+    }
 
     /**
      * 保存添加的数据
@@ -37,7 +41,6 @@ public class PersonObjectController {
     public void addPersonObject(HttpServletRequest request) {
         String pid = request.getParameter("personId");
         String objectName = request.getParameter("objectName");
-        System.out.println(pid + "   " + objectName);
         try {
             pid = java.net.URLDecoder.decode(pid, "UTF-8");
             objectName = java.net.URLDecoder.decode(objectName, "UTF-8");
@@ -87,10 +90,10 @@ public class PersonObjectController {
         response.setContentType("application/xml");
         response.setCharacterEncoding("UTF-8");
         PrintWriter pw = null;
-        List<PersonObject> personObjects = service.getObjectsByPersonId(Integer.valueOf(id));
+        List<PersonObject> objects = service.getObjectsByPersonId(Integer.valueOf(id));
         try {
-            if (personObjects != null) {
-                PersonObjectXml personObjectXml = new PersonObjectXml(personObjects);
+            if (objects != null) {
+                PersonObjectXml personObjectXml = new PersonObjectXml(objects);
                 pw = response.getWriter();
                 pw.print(personObjectXml.build());
             }

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -63,7 +63,6 @@
                 myGrid.load("person/getPeople?id=" + myTree.getSelectedItemId(), function () {
                 }, "xml");
             });
-
 
             /*添加人员*/
             function addPerson() {
@@ -179,7 +178,8 @@
 
             /*添加部门*/
             function addDepartment() {
-                if (myTree.getSelectedItemId() == null) {
+                let pid = myTree.getSelectedItemId();
+                if (pid === '') {
                     dhtmlx.alert("请您选择要在哪个节点下添加部门");
                     return;
                 }
@@ -187,7 +187,7 @@
                     {
                         type: "checkbox", checked: true, list: [
                             {type: "settings", labelWidth: 90, inputWidth: 200, position: "label-left"},
-                            {type: "input", name: "departmentName", label: "部门名", value: ""},
+                            {type: "input", name: "departmentName", label: "部门名", value: ""}
                         ]
                     },
                     {
@@ -201,13 +201,12 @@
 
                 let dhxWins = new dhtmlXWindows();
                 dhxWins.attachViewportTo("my_tabBar");
-                let w1 = dhxWins.createWindow("w1", 0, 0, 300, 260);
+                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "260");
                 dhxWins.window("w1").center();
                 w1.setText("添加部门");
                 let myForm = w1.attachForm(formData);
                 myForm.attachEvent("onButtonClick", function (name) {
                     if (name === "OK") {
-                        let pid = myTree.getSelectedItemId();
                         let data = "departmentName=" + encodeURI(encodeURI(myForm.getItemValue("departmentName")))
                             + "&parentId=" + pid;
                         dhx.ajax.post("department/addDepartment", data, function (result) {
@@ -224,7 +223,7 @@
             function deleteDepartment() {
                 let sid = myTree.getSelectedItemId();
                 let pid = myTree.getParentId(sid);
-                if (sid == null) {
+                if (sid === '') {
                     dhtmlx.alert("请选中您将要删除的部门");
                     return;
                 } else if (sid === "1") {
@@ -256,7 +255,11 @@
 
             /*编辑部门*/
             function editDepartment() {
-
+                let id = myTree.getSelectedItemId();
+                if (id === '') {
+                    dhtmlx.alert("请选中您将要编辑的部门");
+                    return;
+                }
                 let formData = [
                     {
                         type: "checkbox", checked: true, list: [
@@ -274,13 +277,13 @@
                 ];
                 let dhxWins = new dhtmlXWindows();
                 dhxWins.attachViewportTo("my_tabBar");
-                let w1 = dhxWins.createWindow("w1", 0, 0, 300, 260);
+                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "260");
                 dhxWins.window("w1").center();
                 w1.setText("编辑部门");
                 let myForm = w1.attachForm(formData);
                 myForm.attachEvent("onButtonClick", function (name) {
                     if (name === "OK") {
-                        let id = myTree.getSelectedItemId();
+
                         let data = "departmentName=" + encodeURI(encodeURI(myForm.getItemValue("departmentName")))
                             + "&parentId=" + myTree.getParentId(id) + "&departmentId=" + id;
                         dhx.ajax.post("department/updateDepartment", data, function () {
@@ -290,7 +293,6 @@
                     dhxWins.window("w1").hide();
                 });
             }
-
 
             /*给通过ToolbarLeft 部门操作*/
             myToolbarLeft.attachEvent("onClick", function (id) {
@@ -305,7 +307,6 @@
                         editDepartment();
                 }
             });
-
 
             /*给通过ToolbarRight操作人员表*/
             myToolbarRight.attachEvent("onClick", function (id) {
@@ -351,12 +352,10 @@
             myToolbarLeft.loadStruct("data/toolbarStruct.xml", function () {
             });
             let objectGrid = myLayout2.cells("c").attachGrid();
-            // objectGrid.setHeader("&nbsp,Booktitle,Author");
             objectGrid.setHeader("&nbsp,personId,目标名");
             objectGrid.setInitWidths("70,0,180");
             objectGrid.setColAlign("center,left,left");
             objectGrid.setColTypes("img,ro,ro");
-
             objectGrid.init();
 
 
@@ -378,17 +377,28 @@
             /*加载部门树*/
             myTree.load("department/departmentTree", function () {
             }, "xml");
+
             /*加载点击部门的员工表*/
             myTree.attachEvent("onClick", function (id) {
+                keyResultGrid.clearAll(false);
                 personGrid.clearAll(false);
                 objectGrid.clearAll(false);
                 personGrid.load("person/getPeople?id=" + id, function () {
                 }, "xml");
             });
+
             /*当选择人员时加载人员的目标*/
             personGrid.attachEvent("onRowSelect", function (id, ind) {
+                keyResultGrid.clearAll(false);
                 objectGrid.clearAll(false);
                 objectGrid.load("personObject/getPersonObjects?id=" + id, function () {
+                }, "xml");
+            });
+
+            /*当选择人员目标时加载关键目标*/
+            objectGrid.attachEvent("onRowSelect", function (id, ind) {
+                keyResultGrid.clearAll(false);
+                keyResultGrid.load("personKeyResult/getPersonKeyResultsByObjectId?id=" + id, function () {
                 }, "xml");
             });
 
@@ -406,7 +416,6 @@
                 }
             });
 
-
             /*添加目标*/
             function addPersonObject() {
                 if (personGrid.getSelectedRowId() == null) {
@@ -417,7 +426,7 @@
                     {
                         type: "checkbox", checked: true, list: [
                             {type: "settings", labelWidth: 90, inputWidth: 200, position: "label-left"},
-                            {type: "input", name: "objectName", label: "目标名", value: ""},
+                            {type: "input", name: "objectName", label: "目标名", value: ""}
                         ]
                     },
                     {
@@ -474,7 +483,6 @@
                 }
             }
 
-
             /*编辑目标*/
             function editPersonObject() {
                 let rid = objectGrid.getSelectedRowId();
@@ -511,7 +519,6 @@
                         dhx.ajax.post("personObject/updatePersonObject", data, function () {
                             keyResultGrid.clearAll(false);
                             objectGrid.clearAll(false);
-                            objectGrid.clearAll(false);
                             objectGrid.load("personObject/getPersonObjects?id=" + personGrid.getSelectedRowId(), function () {
                             }, "xml");
                         });
@@ -544,7 +551,7 @@
                     {
                         type: "checkbox", checked: true, list: [
                             {type: "settings", labelWidth: 90, inputWidth: 200, position: "label-left"},
-                            {type: "input", name: "keyResultName", label: "目标名", value: ""},
+                            {type: "input", name: "keyResultName", label: "关键结果名", value: ""}
                         ]
                     },
                     {
@@ -567,10 +574,9 @@
                         let pid = objectGrid.getSelectedRowId();
                         let data = "keyResultName=" + encodeURI(encodeURI(myForm.getItemValue("keyResultName")))
                             + "&personObjectId=" + pid;
-                        dhx.ajax.post("personKeyResult/addKeyObject", data, function () {
+                        dhx.ajax.post("personKeyResult/addPersonKeyResult", data, function () {
                             keyResultGrid.clearAll(false);
-                            objectGrid.clearAll(false);
-                            objectGrid.load("personKeyResult/getKeyResults?id=" + pid, function () {
+                            keyResultGrid.load("personKeyResult/getPersonKeyResultsByObjectId?id=" + pid, function () {
                             }, "xml");
                         });
                     }
@@ -588,8 +594,7 @@
                 dhtmlx.confirm('主人，真的要狠心删除我吗', function (result) {
                     if (result) {
                         myTree.load("personKeyResult/deletePersonKeyResultById?id=" + id, function () {
-                            keyResultGrid.clearAll(false);
-                            objectGrid.deleteRow(id);
+                            keyResultGrid.deleteRow(id);
                         }, "xml");
                     } else {
                         dhtmlx.alert("已取消删除");
@@ -599,21 +604,21 @@
 
             /*编辑关键结果*/
             function editResult() {
-                let rid = objectGrid.getSelectedRowId();
+                let rid = keyResultGrid.getSelectedRowId();
                 let formData = [
                     {
                         type: "checkbox", checked: true, list: [
                             {type: "settings", labelWidth: 90, inputWidth: 200, position: "label-left"},
                             {
                                 type: "input",
-                                name: "objectName",
-                                label: "目标名",
-                                value: objectGrid.cells(rid, 2).getValue()
-                            },
+                                name: "keyResultName",
+                                label: "关键结果名",
+                                value: keyResultGrid.cells(rid, 2).getValue()
+                            }
                         ]
                     },
                     {
-                        type: "checkbox", checked: true, list: [
+                        type: "checkbox", checked: 1, list: [
                             {type: "button", name: "OK", value: "确认", offsetLeft: 40, offsetTop: 10, inputWidth: 50},
                             {type: "newcolumn"},
                             {type: "button", name: "CANCEL", value: "取消", offsetLeft: 8, offsetTop: 10}
@@ -624,17 +629,17 @@
                 dhxWins.attachViewportTo("my_tabBar");
                 let w1 = dhxWins.createWindow("w1", "0", "0", "300", "260");
                 dhxWins.window("w1").center();
-                w1.setText("编辑目标");
+                w1.setText("编辑关键结果");
                 let myForm = w1.attachForm(formData);
+
                 myForm.attachEvent("onButtonClick", function (name) {
                     if (name === "OK") {
-                        let data = "objectName=" + encodeURI(encodeURI(myForm.getItemValue("objectName")))
-                            + "&objectId=" + rid;
-                        dhx.ajax.post("personObject/updatePersonObject", data, function () {
+                        let data = "keyResultName=" + encodeURI(encodeURI(myForm.getItemValue("keyResultName")))
+                            + "&keyResultId=" + rid;
+                        dhx.ajax.post("personKeyResult/updatePersonKeyResult", data, function () {
                             keyResultGrid.clearAll(false);
-                            objectGrid.clearAll(false);
-                            objectGrid.clearAll(false);
-                            objectGrid.load("personObject/getPersonObjects?id=" + personGrid.getSelectedRowId(), function () {
+                            keyResultGrid.load("personKeyResult/getPersonKeyResultsByObjectId?id="
+                                + objectGrid.getSelectedRowId(), function () {
                             }, "xml");
                         });
                     }

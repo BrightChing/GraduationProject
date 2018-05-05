@@ -25,11 +25,11 @@ import java.io.UnsupportedEncodingException;
 @Controller
 @RequestMapping(value = "/department")
 public class DepartmentController {
-    private final DepartmentService departmentService;
+    private final DepartmentService service;
 
     @Autowired
-    public DepartmentController(DepartmentService departmentService) {
-        this.departmentService = departmentService;
+    public DepartmentController(DepartmentService service) {
+        this.service = service;
     }
 
 
@@ -43,12 +43,14 @@ public class DepartmentController {
         try {
             name = java.net.URLDecoder.decode(name, "UTF-8");
             pid = java.net.URLDecoder.decode(pid, "UTF-8");
-
             Department department = new Department();
-            Department parent = departmentService.getDepartmentById(Integer.valueOf(pid));
+            String flag = "null";
+            if (!pid.equals(flag)) {
+                Department parent = service.getDepartmentById(Integer.valueOf(pid));
+                department.setDepartment(parent);
+            }
             department.setDepartmentName(name);
-            department.setDepartment(parent);
-            departmentService.addDepartment(department);
+            service.addDepartment(department);
             response.getWriter().print(department.getDepartmentId());
             System.out.println(department.getDepartmentId());
         } catch (IOException e) {
@@ -65,7 +67,7 @@ public class DepartmentController {
     @RequestMapping(value = "/deleteDepartmentById")
     public void deleteDepartmentById(HttpServletResponse response, HttpServletRequest request) {
         String id = request.getParameter("id");
-        departmentService.deleteDepartmentById(Integer.valueOf(id));
+        service.deleteDepartmentById(Integer.valueOf(id));
     }
 
 
@@ -80,9 +82,9 @@ public class DepartmentController {
         try {
             name = java.net.URLDecoder.decode(name, "UTF-8");
             id = java.net.URLDecoder.decode(id, "UTF-8");
-            Department department = departmentService.getDepartmentById(Integer.valueOf(id));
+            Department department = service.getDepartmentById(Integer.valueOf(id));
             department.setDepartmentName(name);
-            departmentService.updateDepartment(department);
+            service.updateDepartment(department);
             System.out.println("name" + name + " id:" + id);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -97,10 +99,10 @@ public class DepartmentController {
         response.setContentType("application/xml");
         response.setCharacterEncoding("UTF-8");
         PrintWriter pw = null;
-        Department department = departmentService.getRootDepartment();
+        Department department = service.getRootDepartment();
         try {
             if (department != null) {
-                department = departmentService.getDepartmentById(department.getDepartmentId());
+                department = service.getDepartmentById(department.getDepartmentId());
                 TreeBuilder treeBuilder = new TreeBuilder(department);
                 pw = response.getWriter();
                 pw.print(treeBuilder.build());

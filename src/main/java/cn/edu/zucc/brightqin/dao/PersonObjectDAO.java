@@ -52,10 +52,10 @@ public class PersonObjectDAO {
     @SuppressWarnings("unchecked")
     public List<PersonObject> getObjectsByPersonId(Integer id) {
         List list = this.getSession().createQuery("from PersonObject where personId = ?").setParameter(0, id).getResultList();
-        List<PersonObject> list1 = new ArrayList<>();
+        List<PersonObject> objects = new ArrayList<>();
         for (Object object : list) {
-            list1.add((PersonObject) object);
+            objects.add((PersonObject) object);
         }
-        return list1;
+        return objects;
     }
 }

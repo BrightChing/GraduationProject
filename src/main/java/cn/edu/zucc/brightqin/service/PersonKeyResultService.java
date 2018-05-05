@@ -26,8 +26,8 @@ public class PersonKeyResultService {
         keyResultDAO.saveKeyResult(keyResult);
     }
 
-    public void deleteKeyResult(PersonKeyResult keyResult) {
-        keyResultDAO.deleteKeyResult(keyResult);
+    public void deleteKeyResultById(Integer id) {
+        keyResultDAO.deleteKeyResultById(id);
     }
 
     public void updateKeyResult(PersonKeyResult keyResult) {
@@ -40,5 +40,9 @@ public class PersonKeyResultService {
 
     public List<PersonKeyResult> getKeyResults() {
         return keyResultDAO.getKeyResults();
+    }
+
+    public List<PersonKeyResult> getKeyResultsByObjectId(Integer id) {
+        return keyResultDAO.getKeyResultsByObjectId(id);
     }
 }

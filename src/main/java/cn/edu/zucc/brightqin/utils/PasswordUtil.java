@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 /**
  * @author brightqin
  */
-public class PasswordUtil {
+class PasswordUtil {
     public static String MD5(String s) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");

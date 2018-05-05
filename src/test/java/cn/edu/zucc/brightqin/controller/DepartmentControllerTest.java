@@ -34,4 +34,13 @@ public class DepartmentControllerTest {
             System.out.println("department is null");
         }
     }
+
+    @Test
+    public void addDepartment() {
+        Department department = new Department();
+        department.setDepartmentName("hello");
+        departmentService.addDepartment(department);
+        Department parent = departmentService.getDepartmentById(Integer.valueOf(null));
+        System.out.println(parent.getDepartmentName());
+    }
 }
