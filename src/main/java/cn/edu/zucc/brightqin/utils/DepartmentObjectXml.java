@@ -44,6 +44,9 @@ public class DepartmentObjectXml {
         stringBuilder.append("<cell>");
         stringBuilder.append(object.getWeight());
         stringBuilder.append("</cell>");
+        stringBuilder.append("<cell>");
+        stringBuilder.append(object.getMonth());
+        stringBuilder.append("</cell>");
         stringBuilder.append("</row>");
     }
 }

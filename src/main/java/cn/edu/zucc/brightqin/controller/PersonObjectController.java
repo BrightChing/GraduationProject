@@ -6,6 +6,7 @@ import cn.edu.zucc.brightqin.entity.PersonObject;
 import cn.edu.zucc.brightqin.service.PersonObjectService;
 import cn.edu.zucc.brightqin.service.PersonService;
 import cn.edu.zucc.brightqin.utils.PersonObjectXml;
+import cn.edu.zucc.brightqin.utils.WightUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-
 
 /**
  * @author brightqin
@@ -34,21 +34,26 @@ public class PersonObjectController {
         this.personService = personService;
     }
 
+
     /**
      * 保存添加的数据
      */
+
     @RequestMapping(value = "/addPersonObject", method = RequestMethod.POST)
     public void addPersonObject(HttpServletRequest request, HttpServletResponse response) {
         String pid = request.getParameter("personId");
         String objectName = request.getParameter("objectName");
         String weight = request.getParameter("weight");
+        String month = request.getParameter("month");
         try {
             pid = java.net.URLDecoder.decode(pid, "UTF-8");
             objectName = java.net.URLDecoder.decode(objectName, "UTF-8");
             weight = java.net.URLDecoder.decode(weight, "UTF-8");
+            month = java.net.URLDecoder.decode(month, "UTF-8");
             PersonObject object = new PersonObject();
             Person person = personService.getPersonById(Integer.valueOf(pid));
             object.setPerson(person);
+            object.setMonth(Integer.parseInt(month));
             object.setWeight(Float.parseFloat(weight));
             object.setPersonObjectName(objectName);
             service.addObject(object);
@@ -71,7 +76,6 @@ public class PersonObjectController {
         String id = request.getParameter("id");
         service.deleteObject(Integer.valueOf(id));
     }
-
 
     /**
      * 更新数据
@@ -101,40 +105,37 @@ public class PersonObjectController {
 
     @RequestMapping(value = "/getPersonObjects")
     public void getPersonObjects(HttpServletResponse response, HttpServletRequest request) {
-        String id = request.getParameter("id");
+        Integer id = Integer.valueOf(request.getParameter("id"));
+        int month = Integer.parseInt(request.getParameter("month"));
         response.setContentType("application/xml");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter pw = null;
-        List<PersonObject> objects = service.getObjectsByPersonId(Integer.valueOf(id));
-        try {
-            if (objects != null) {
-                PersonObjectXml personObjectXml = new PersonObjectXml(objects);
-                pw = response.getWriter();
+        List<PersonObject> objects;
+        if (month == 0) {
+            objects = service.getObjectsByPersonId(id);
+        } else {
+            objects = service.getObjectsByPersonIdAndMonth(id, month);
+        }
+        if (objects != null) {
+            PersonObjectXml personObjectXml = new PersonObjectXml(objects);
+            try (PrintWriter pw = response.getWriter()) {
                 pw.print(personObjectXml.build());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (pw != null) {
-                pw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
 
     @RequestMapping(value = "/checkWeight", method = RequestMethod.POST)
     public void checkWeight(HttpServletResponse response, HttpServletRequest request) {
+        float weightSum = 0;
         String id = request.getParameter("personId");
+        String month = request.getParameter("month");
         response.setContentType("application/xml");
         response.setCharacterEncoding("UTF-8");
-        float weightSum = 0;
-        List<PersonObject> objects = service.getObjectsByPersonId(Integer.valueOf(id));
+        List<PersonObject> objects = service.getObjectsByPersonIdAndMonth(Integer.valueOf(id), Integer.parseInt(month));
         for (PersonObject object : objects) {
             weightSum += object.getWeight();
         }
-        try (PrintWriter pw = response.getWriter()) {
-            pw.print(weightSum);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        WightUtil.print(weightSum, response, "目标");
     }
 }

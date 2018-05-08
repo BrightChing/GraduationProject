@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <script src="${pageContext.request.contextPath}/js/jquery-3.3.1.min.js"></script>
     <script src="${pageContext.request.contextPath}/codebase/dhtmlx.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/codebase/dhtmlx.css">
     <style>
@@ -35,6 +36,20 @@
             });
         }
 
+
+        function checkWeight(url, data) {
+            dhx.ajax.post(url, data, function (result) {
+                let temp = result.xmlDoc.responseText;
+                if (temp !== "") {
+                    dhtmlx.alert({
+                        title: "警告!⚠️",
+                        type: "alert-error",
+                        text: temp
+                    });
+                }
+            });
+        }
+
         function OrganizationManagement() {
             myLayout1 = myTabBar.tabs("tab1").attachLayout("2U");
             /*左边的布局 部门树*/
@@ -42,7 +57,7 @@
             myLayout1.cells("a").setText("部门管理");
             let myToolbarLeft = myLayout1.cells("a").attachToolbar();
             myToolbarLeft.setIconsPath("icons/");
-            myToolbarLeft.loadStruct("data/toolbarStruct.xml", function () {
+            myToolbarLeft.loadStruct("data/toolbar.xml", function () {
             });
             let myTree = myLayout1.cells("a").attachTree();
             myTree.setImagesPath("codebase/images/");
@@ -51,7 +66,7 @@
             myLayout1.cells("b").setText("人员管理");
             let myToolbarRight = myLayout1.cells("b").attachToolbar();
             myToolbarRight.setIconsPath("icons/");
-            myToolbarRight.loadStruct("data/toolbarStruct.xml", function () {
+            myToolbarRight.loadStruct("data/toolbar.xml", function () {
             });
             let myGrid = myLayout1.cells("b").attachGrid();
             myGrid.setImagePath("codebase/images/");
@@ -209,7 +224,7 @@
 
                 let dhxWins = new dhtmlXWindows();
                 dhxWins.attachViewportTo("my_tabBar");
-                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "260");
+                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "280");
                 dhxWins.window("w1").center();
                 w1.setText("添加部门");
                 let myForm = w1.attachForm(formData);
@@ -285,7 +300,7 @@
                 ];
                 let dhxWins = new dhtmlXWindows();
                 dhxWins.attachViewportTo("my_tabBar");
-                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "260");
+                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "280");
                 dhxWins.window("w1").center();
                 w1.setText("编辑部门");
                 let myForm = w1.attachForm(formData);
@@ -335,7 +350,7 @@
 
             myLayout2 = myTabBar.tabs("tab2").attachLayout("4W");
             /*左边的布局 部门树*/
-            myLayout2.cells("a").setWidth(260);
+            myLayout2.cells("a").setWidth(280);
             myLayout2.cells("a").setText("部门");
 
             let myTree = myLayout2.cells("a").attachTree();
@@ -356,20 +371,39 @@
             myLayout2.cells("c").setText("目标");
             myLayout2.cells("c").setWidth(500);
             let myToolbarLeft = myLayout2.cells("c").attachToolbar();
+            myToolbarLeft.addInput("time", 4, "", 150);
+            $("input").replaceWith("月份&nbsp;" +
+                "<select id='month'  class='month' style='height:25px'>"
+                + "<option ></option>"
+                + "<option >1</option>"
+                + "<option >2</option>"
+                + "<option >3</option>"
+                + "<option >4</option>"
+                + "<option >5</option>"
+                + "<option >6</option>"
+                + "<option >7</option>"
+                + "<option >8</option>"
+                + "<option >9</option>"
+                + "<option >10</option>"
+                + "<option >11</option>"
+                + "<option >12</option>"
+                + "</select>");
             myToolbarLeft.setIconsPath("icons/");
-            myToolbarLeft.loadStruct("data/toolbarStruct.xml", function () {
+            myToolbarLeft.loadStruct("data/toolbar.xml", function () {
             });
+
+
             let objectGrid = myLayout2.cells("c").attachGrid();
-            objectGrid.setHeader("&nbsp,departmentId,目标名,权重(%)");
-            objectGrid.setInitWidths("70,0,120,90");
-            objectGrid.setColAlign("center,left,left,left");
-            objectGrid.setColTypes("img,ro,ro,ro");
+            objectGrid.setHeader("&nbsp,departmentId,目标名,权重(%),所属月份");
+            objectGrid.setInitWidths("70,0,120,90,90");
+            objectGrid.setColAlign("center,left,left,left,left");
+            objectGrid.setColTypes("img,ro,ro,ro,ro");
             objectGrid.init();
 
             myLayout2.cells("d").setText("关键结果管理");
             let myToolbarRight = myLayout2.cells("d").attachToolbar();
             myToolbarRight.setIconsPath("icons/");
-            myToolbarRight.loadStruct("data/toolbarStruct.xml", function () {
+            myToolbarRight.loadStruct("data/toolbar.xml", function () {
             });
             let keyResultGrid = myLayout2.cells("d").attachGrid();
             keyResultGrid.setImagePath("codebase/images/");
@@ -379,7 +413,6 @@
             keyResultGrid.setInitWidths("70,0,120,90");
             keyResultGrid.setColAlign("center,left,left,left");
             keyResultGrid.init();
-
 
             /*加载部门树*/
             myTree.load("department/departmentTree", function () {
@@ -394,19 +427,33 @@
                 }, "xml");
             });
 
-            /*当选择人员时加载人员的目标*/
-            personGrid.attachEvent("onRowSelect", function (id, ind) {
+            function loadObject(personId) {
                 keyResultGrid.clearAll(false);
                 objectGrid.clearAll(false);
-                objectGrid.load("personObject/getPersonObjects?id=" + id, function () {
+                objectGrid.load("personObject/getPersonObjects?id=" + personId
+                    + "&month=" + document.getElementById('month').selectedIndex, function () {
                 }, "xml");
+            }
+
+            /*当选择人员时加载人员的目标*/
+            personGrid.attachEvent("onRowSelect", function (id, ind) {
+                document.getElementById('month').selectedIndex = 0;
+                loadObject(id)
             });
 
             /*当选择人员目标时加载关键目标*/
             objectGrid.attachEvent("onRowSelect", function (id, ind) {
-                keyResultGrid.clearAll(false);
-                keyResultGrid.load("personKeyResult/getPersonKeyResultsByObjectId?id=" + id, function () {
-                }, "xml");
+                loadKeyResult(id);
+            });
+
+            $(document).ready(function () {
+                $(".month").change(function () {
+                    let pid = personGrid.getSelectedRowId();
+                    if (pid === "") {
+                    } else {
+                        loadObject(pid)
+                    }
+                });
             });
 
             /*给通过ToolbarLeft员工目标操作*/
@@ -418,8 +465,9 @@
                     case 'delete':
                         deletePersonObject();
                         break;
-                    default:
+                    case 'edit':
                         editPersonObject();
+                        break;
                 }
             });
 
@@ -427,6 +475,10 @@
             function addPersonObject() {
                 if (personGrid.getSelectedRowId() == null) {
                     dhtmlx.alert("请您先选中，您要为哪个人添加目标");
+                    return;
+                }
+                if (document.getElementById("month").selectedIndex === 0) {
+                    dhtmlx.alert("请您先选中，您要为哪个月添加添加目标");
                     return;
                 }
                 let formData = [
@@ -455,7 +507,7 @@
 
                 let dhxWins = new dhtmlXWindows();
                 dhxWins.attachViewportTo("my_tabBar");
-                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "260");
+                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "280");
                 dhxWins.window("w1").center();
                 w1.setText("添加目标");
                 let myForm = w1.attachForm(formData);
@@ -476,22 +528,14 @@
                 myForm.attachEvent("onButtonClick", function (name) {
                     if (name === "OK") {
                         let pid = personGrid.getSelectedRowId();
-                        let data = "objectName=" + encodeURI(encodeURI(myForm.getItemValue("objectName"))) +
-                            "&weight=" + encodeURI(encodeURI(myForm.getItemValue("weight"))) + "&personId=" + pid;
+                        let data = "objectName=" + encodeURI(encodeURI(myForm.getItemValue("objectName")))
+                            + "&month=" + document.getElementById('month').selectedIndex
+                            + "&weight=" + encodeURI(encodeURI(myForm.getItemValue("weight")))
+                            + "&personId=" + pid;
                         dhx.ajax.post("personObject/addPersonObject", data, function (result) {
                             if (result.xmlDoc.responseText === "true") {
-                                keyResultGrid.clearAll(false);
-                                objectGrid.clearAll(false);
-                                objectGrid.load("personObject/getPersonObjects?id=" + pid, function () {
-                                }, "xml");
-                                dhx.ajax.post("personObject/checkWeight", data, function (result) {
-                                    let weightSum = parseFloat(result.xmlDoc.responseText);
-                                    if (weightSum > 100) {
-                                        dhtmlx.alert("权重和为" + weightSum + "大于了100，请您修改权重，或删除目标");
-                                    } else if (weightSum < 100) {
-                                        dhtmlx.alert("权重和为" + weightSum + " 小于100,请您修改权重，或添加目标");
-                                    }
-                                });
+                                loadObject(pid);
+                                checkWeight("personObject/checkWeight", data);
                             }
                         });
                     }
@@ -557,7 +601,7 @@
                 ];
                 let dhxWins = new dhtmlXWindows();
                 dhxWins.attachViewportTo("my_tabBar");
-                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "260");
+                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "280");
                 dhxWins.window("w1").center();
                 w1.setText("编辑目标");
                 let myForm = w1.attachForm(formData);
@@ -579,21 +623,11 @@
                     if (name === "OK") {
                         let data = "objectName=" + encodeURI(encodeURI(myForm.getItemValue("objectName"))) +
                             "&weight=" + encodeURI(encodeURI(myForm.getItemValue("weight"))) + "&objectId=" + rid;
-                        let data1 = "personId=" + pid;
+                        let data1 = "personId=" + pid + "&month=" + objectGrid.cells(rid, 4).getValue();
                         dhx.ajax.post("personObject/updatePersonObject", data, function (result) {
                             if (result.xmlDoc.responseText === "true") {
-                                keyResultGrid.clearAll(false);
-                                objectGrid.clearAll(false);
-                                objectGrid.load("personObject/getPersonObjects?id=" + pid, function () {
-                                }, "xml");
-                                dhx.ajax.post("personObject/checkWeight", data1, function (result) {
-                                    let weightSum = parseFloat(result.xmlDoc.responseText);
-                                    if (weightSum > 100) {
-                                        dhtmlx.alert("权重和为" + weightSum + "大于了100，请您修改权重，或删除目标");
-                                    } else if (weightSum < 100) {
-                                        dhtmlx.alert("权重和为" + weightSum + " 小于100,请您修改权重，或添加目标");
-                                    }
-                                });
+                                loadObject(pid);
+                                checkWeight("personObject/checkWeight", data1)
                             }
                         });
                     }
@@ -614,6 +648,12 @@
                         editResult();
                 }
             });
+
+            function loadKeyResult(objectId) {
+                keyResultGrid.clearAll(false);
+                keyResultGrid.load("personKeyResult/getPersonKeyResultsByObjectId?id=" + objectId, function () {
+                }, "xml");
+            }
 
             /*添加关键结果*/
             function addKeyResult() {
@@ -647,7 +687,7 @@
 
                 let dhxWins = new dhtmlXWindows();
                 dhxWins.attachViewportTo("my_tabBar");
-                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "260");
+                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "280");
                 dhxWins.window("w1").center();
                 w1.setText("添加关键成果");
                 let myForm = w1.attachForm(formData);
@@ -666,24 +706,14 @@
                 });
                 myForm.attachEvent("onButtonClick", function (name) {
                     if (name === "OK") {
-                        let pid = objectGrid.getSelectedRowId();
+                        let oid = objectGrid.getSelectedRowId();
                         let data = "keyResultName=" + encodeURI(encodeURI(myForm.getItemValue("keyResultName")))
-                            + "&weight=" + encodeURI(encodeURI(myForm.getItemValue("weight"))) + "&personObjectId=" + pid;
+                            + "&weight=" + encodeURI(encodeURI(myForm.getItemValue("weight"))) + "&personObjectId=" + oid;
                         dhx.ajax.post("personKeyResult/addPersonKeyResult", data, function (result) {
                             if (result.xmlDoc.responseText === "true") {
-                                keyResultGrid.clearAll(false);
-                                keyResultGrid.load("personKeyResult/getPersonKeyResultsByObjectId?id=" + pid, function () {
-                                }, "xml");
-                                dhx.ajax.post("personKeyResult/checkWeight", data, function (result) {
-                                    let weightSum = parseFloat(result.xmlDoc.responseText);
-                                    if (weightSum > 100) {
-                                        dhtmlx.alert("权重和为" + weightSum + "大于了100，请您修改权重，或删除目标");
-                                    } else if (weightSum < 100) {
-                                        dhtmlx.alert("权重和为" + weightSum + " 小于100,请您修改权重，或添加目标");
-                                    }
-                                });
+                                loadObject(oid);
+                                checkWeight("personKeyResult/checkWeight", data)
                             }
-
                         });
                     }
                     dhxWins.window("w1").hide();
@@ -742,7 +772,7 @@
                 ];
                 let dhxWins = new dhtmlXWindows();
                 dhxWins.attachViewportTo("my_tabBar");
-                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "260");
+                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "280");
                 dhxWins.window("w1").center();
                 w1.setText("编辑关键结果");
                 let myForm = w1.attachForm(formData);
@@ -766,18 +796,8 @@
                         let data1 = "personObjectId=" + oid;
                         dhx.ajax.post("personKeyResult/updatePersonKeyResult", data, function (result) {
                             if (result.xmlDoc.responseText === "true") {
-                                keyResultGrid.clearAll(false);
-                                keyResultGrid.load("personKeyResult/getPersonKeyResultsByObjectId?id=" + oid, function () {
-                                }, "xml");
-
-                                dhx.ajax.post("personKeyResult/checkWeight", data1, function (result) {
-                                    let weightSum = parseFloat(result.xmlDoc.responseText);
-                                    if (weightSum > 100) {
-                                        dhtmlx.alert("权重和为" + weightSum + "大于了100，请您修改权重，或删除目标");
-                                    } else if (weightSum < 100) {
-                                        dhtmlx.alert("权重和为" + weightSum + " 小于100,请您修改权重，或添加目标");
-                                    }
-                                });
+                                loadKeyResult(oid);
+                                checkWeight("personKeyResult/checkWeight", data1);
                             }
                         });
                     }
@@ -801,20 +821,37 @@
             myLayout3.cells("b").setWidth(500);
             let myToolbarLeft = myLayout3.cells("b").attachToolbar();
             myToolbarLeft.setIconsPath("icons/");
-            myToolbarLeft.loadStruct("data/toolbarStruct.xml", function () {
+            myToolbarLeft.loadStruct("data/toolbar.xml", function () {
             });
-            let objectGrid = myLayout3.cells("b").attachGrid();
-            objectGrid.setHeader("&nbsp,departmentId,目标名,权重(%)");
-            objectGrid.setInitWidths("70,0,120,90");
-            objectGrid.setColAlign("center,left,left,left");
-            objectGrid.setColTypes("img,ro,ro,ro");
-            objectGrid.init();
+            myToolbarLeft.addInput("time", 4, "", 150);
+            $("input").replaceWith("月份&nbsp;" +
+                "<select id='month1'  class='month1' style='height:25px'>"
+                + "<option ></option>"
+                + "<option >1</option>"
+                + "<option >2</option>"
+                + "<option >3</option>"
+                + "<option >4</option>"
+                + "<option >5</option>"
+                + "<option >6</option>"
+                + "<option >7</option>"
+                + "<option >8</option>"
+                + "<option >9</option>"
+                + "<option >10</option>"
+                + "<option >11</option>"
+                + "<option >12</option>"
+                + "</select>");
 
+            let objectGrid = myLayout3.cells("b").attachGrid();
+            objectGrid.setHeader("&nbsp,departmentId,目标名,权重(%),所属月份");
+            objectGrid.setInitWidths("70,0,120,90,90");
+            objectGrid.setColAlign("center,left,left,left,left");
+            objectGrid.setColTypes("img,ro,ro,ro,ro");
+            objectGrid.init();
 
             myLayout3.cells("c").setText("关键结果管理");
             let myToolbarRight = myLayout3.cells("c").attachToolbar();
             myToolbarRight.setIconsPath("icons/");
-            myToolbarRight.loadStruct("data/toolbarStruct.xml", function () {
+            myToolbarRight.loadStruct("data/toolbar.xml", function () {
             });
             let keyResultGrid = myLayout3.cells("c").attachGrid();
             keyResultGrid.setImagePath("codebase/images/");
@@ -826,23 +863,43 @@
             keyResultGrid.init();
 
 
+            $(document).ready(function () {
+                $(".month1").change(function () {
+                    let did = myTree.getSelectedItemId();
+                    if (did === "") {
+                    } else {
+                        loadObject(did)
+                    }
+                });
+            });
+
             /*加载部门树*/
             myTree.load("department/departmentTree", function () {
             }, "xml");
 
-            /*点击加载部门的目标表*/
-            myTree.attachEvent("onClick", function (id) {
+            function loadObject(departmentId) {
                 keyResultGrid.clearAll(false);
                 objectGrid.clearAll(false);
-                objectGrid.load("departmentObject/getDepartmentObjectsByDepartmentId?id=" + id, function () {
+                objectGrid.load("departmentObject/getDepartmentObjectsByDepartmentId?id=" + departmentId
+                    + "&month=" + document.getElementById('month1').selectedIndex, function () {
                 }, "xml");
+            }
+
+            /*点击加载部门的目标表*/
+            myTree.attachEvent("onClick", function (id) {
+                document.getElementById('month1').selectedIndex = 0;
+                loadObject(id);
             });
+
+            function loadKeyResult(objectId) {
+                keyResultGrid.clearAll(false);
+                keyResultGrid.load("departmentKeyResult/getDepartmentKeyResultsByObjectId?id=" + objectId, function () {
+                }, "xml");
+            }
 
             /*当选择目标时加载关键目标*/
             objectGrid.attachEvent("onRowSelect", function (id, ind) {
-                keyResultGrid.clearAll(false);
-                keyResultGrid.load("departmentKeyResult/getDepartmentKeyResultsByObjectId?id=" + id, function () {
-                }, "xml");
+                loadKeyResult(id);
             });
 
             /*给通过ToolbarLeft部门目标操作*/
@@ -912,22 +969,13 @@
                 myForm.attachEvent("onButtonClick", function (name) {
                     if (name === "OK") {
                         let did = myTree.getSelectedItemId();
-                        let data = "objectName=" + encodeURI(encodeURI(myForm.getItemValue("objectName"))) +
-                            "&weight=" + encodeURI(encodeURI(myForm.getItemValue("weight"))) + "&departmentId=" + did;
+                        let data = "objectName=" + encodeURI(encodeURI(myForm.getItemValue("objectName")))
+                            + "&month=" + document.getElementById('month1').selectedIndex
+                            + "&weight=" + encodeURI(encodeURI(myForm.getItemValue("weight"))) + "&departmentId=" + did;
                         dhx.ajax.post("departmentObject/addDepartmentObject", data, function (result) {
                             if (result.xmlDoc.responseText === "true") {
-                                keyResultGrid.clearAll(false);
-                                objectGrid.clearAll(false);
-                                objectGrid.load("departmentObject/getDepartmentObjectsByDepartmentId?id=" + did, function () {
-                                }, "xml");
-                                dhx.ajax.post("departmentObject/checkWeight", data, function (result) {
-                                    let weightSum = parseFloat(result.xmlDoc.responseText);
-                                    if (weightSum > 100) {
-                                        dhtmlx.alert("权重和为" + weightSum + "大于了100，请您修改权重，或删除目标");
-                                    } else if (weightSum < 100) {
-                                        dhtmlx.alert("权重和为" + weightSum + " 小于100,请您修改权重，或添加目标");
-                                    }
-                                });
+                                loadObject(did);
+                                checkWeight("departmentObject/checkWeight", data);
                             }
                         });
                     }
@@ -1019,21 +1067,11 @@
                     if (name === "OK") {
                         let data = "objectName=" + encodeURI(encodeURI(myForm.getItemValue("objectName"))) + "&weight="
                             + encodeURI(encodeURI(myForm.getItemValue("weight"))) + "&objectId=" + rid;
-                        let data1 = "departmentId=" + did;
+                        let data1 = "departmentId=" + did + "&month=" + objectGrid.cells(rid, 4).getValue();
                         dhx.ajax.post("departmentObject/updateDepartmentObject", data, function (result) {
                             if (result.xmlDoc.responseText === "true") {
-                                keyResultGrid.clearAll(false);
-                                objectGrid.clearAll(false);
-                                objectGrid.load("departmentObject/getDepartmentObjectsByDepartmentId?id=" + did, function () {
-                                }, "xml");
-                                dhx.ajax.post("departmentObject/checkWeight", data1, function (result) {
-                                    let weightSum = parseFloat(result.xmlDoc.responseText);
-                                    if (weightSum > 100) {
-                                        dhtmlx.alert("权重和为" + weightSum + "大于了100，请您修改权重，或删除目标");
-                                    } else if (weightSum < 100) {
-                                        dhtmlx.alert("权重和为" + weightSum + " 小于100,请您修改权重，或添加目标");
-                                    }
-                                });
+                                loadObject(did);
+                                checkWeight("departmentObject/checkWeight", data1);
                             }
                         });
                     }
@@ -1087,7 +1125,7 @@
 
                 let dhxWins = new dhtmlXWindows();
                 dhxWins.attachViewportTo("my_tabBar");
-                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "260");
+                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "280");
                 dhxWins.window("w1").center();
                 w1.setText("添加关键成果");
                 let myForm = w1.attachForm(formData);
@@ -1111,18 +1149,8 @@
                             + encodeURI(encodeURI(myForm.getItemValue("weight"))) + "&objectId=" + oid;
                         dhx.ajax.post("departmentKeyResult/addDepartmentKeyResult", data, function (result) {
                             if (result.xmlDoc.responseText === "true") {
-                                keyResultGrid.clearAll(false);
-                                keyResultGrid.load("departmentKeyResult/getDepartmentKeyResultsByObjectId?id=" + oid, function () {
-                                }, "xml");
-
-                                dhx.ajax.post("departmentKeyResult/checkWeight", data, function (result) {
-                                    let weightSum = parseFloat(result.xmlDoc.responseText);
-                                    if (weightSum > 100) {
-                                        dhtmlx.alert("权重和为" + weightSum + "大于了100，请您修改权重，或删除目标");
-                                    } else if (weightSum < 100) {
-                                        dhtmlx.alert("权重和为" + weightSum + " 小于100,请您修改权重，或添加目标");
-                                    }
-                                });
+                                loadKeyResult(oid);
+                                checkWeight("departmentKeyResult/checkWeight", data);
                             }
                         });
                     }
@@ -1187,7 +1215,7 @@
                 ];
                 let dhxWins = new dhtmlXWindows();
                 dhxWins.attachViewportTo("my_tabBar");
-                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "260");
+                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "280");
                 dhxWins.window("w1").center();
                 w1.setText("编辑关键结果");
                 let myForm = w1.attachForm(formData);
@@ -1211,17 +1239,8 @@
                         let data1 = "objectId=" + oid;
                         dhx.ajax.post("departmentKeyResult/updateDepartmentKeyResult", data, function (result) {
                             if (result.xmlDoc.responseText === "true") {
-                                keyResultGrid.clearAll(false);
-                                keyResultGrid.load("departmentKeyResult/getDepartmentKeyResultsByObjectId?id=" + oid, function () {
-                                }, "xml");
-                                dhx.ajax.post("departmentKeyResult/checkWeight", data1, function (result) {
-                                    let weightSum = parseFloat(result.xmlDoc.responseText);
-                                    if (weightSum > 100) {
-                                        dhtmlx.alert("权重和为" + weightSum + "大于了100，请您修改权重，或删除目标");
-                                    } else if (weightSum < 100) {
-                                        dhtmlx.alert("权重和为" + weightSum + " 小于100,请您修改权重，或添加目标");
-                                    }
-                                });
+                                loadKeyResult(oid);
+                                checkWeight("departmentKeyResult/checkWeight", data1);
                             }
                         });
                     }

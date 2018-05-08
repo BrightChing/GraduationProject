@@ -6,6 +6,7 @@ import cn.edu.zucc.brightqin.entity.PersonObject;
 import cn.edu.zucc.brightqin.service.PersonKeyResultService;
 import cn.edu.zucc.brightqin.service.PersonObjectService;
 import cn.edu.zucc.brightqin.utils.PersonKeyResultXml;
+import cn.edu.zucc.brightqin.utils.WightUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -108,7 +109,6 @@ public class PersonKeyResultController {
         response.setContentType("application/xml");
         response.setCharacterEncoding("UTF-8");
         List<PersonKeyResult> personKeyResults = service.getKeyResultsByObjectId(Integer.valueOf(id));
-
         if (personKeyResults != null) {
             PersonKeyResultXml resultXml = new PersonKeyResultXml(personKeyResults);
             try (PrintWriter pw = response.getWriter()) {
@@ -129,11 +129,6 @@ public class PersonKeyResultController {
         for (PersonKeyResult result : results) {
             weightSum += result.getWeight();
         }
-        try (PrintWriter pw = response.getWriter()) {
-            pw.print(weightSum);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        WightUtil.print(weightSum, response, "关键结果");
     }
-
 }

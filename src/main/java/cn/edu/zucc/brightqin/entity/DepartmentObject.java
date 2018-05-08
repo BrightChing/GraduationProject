@@ -13,6 +13,7 @@ public class DepartmentObject {
     private Integer departmentObjectId;
     private String departmentObjectName;
     private float weight;
+    private int month;
     private Set<DepartmentKeyResult> departmentKeyResults;
     private Department department;
 
@@ -31,7 +32,7 @@ public class DepartmentObject {
         this.departmentObjectId = departmentObjectId;
     }
 
-    @Column(name = "departmentObjectName", nullable = false, unique = true, length = 16)
+    @Column(name = "departmentObjectName", nullable = false, length = 16)
     public String getDepartmentObjectName() {
         return departmentObjectName;
     }
@@ -40,7 +41,7 @@ public class DepartmentObject {
         this.departmentObjectName = departmentObjectName;
     }
 
-    @Column(name = "weight")
+    @Column(name = "weight", columnDefinition = "float default 0")
     public float getWeight() {
         return weight;
     }
@@ -57,6 +58,15 @@ public class DepartmentObject {
 
     public void setDepartmentKeyResults(Set<DepartmentKeyResult> departmentKeyResults) {
         this.departmentKeyResults = departmentKeyResults;
+    }
+
+    @Column(name = "month", columnDefinition = "int default 0")
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
     }
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

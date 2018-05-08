@@ -57,4 +57,14 @@ public class DepartmentObjectDAO {
         }
         return objects;
     }
+
+    public List<DepartmentObject> getDepartmentObjectByDepartmentId(Integer id, int month) {
+        List list = this.getSession().createQuery("from DepartmentObject where departmentId = ? and month = ?  order by month")
+                .setParameter(0, id).setParameter(1, month).getResultList();
+        List<DepartmentObject> objects = new ArrayList<>();
+        for (Object object : list) {
+            objects.add((DepartmentObject) object);
+        }
+        return objects;
+    }
 }

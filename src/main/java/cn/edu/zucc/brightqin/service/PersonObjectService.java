@@ -42,4 +42,8 @@ public class PersonObjectService {
     public List<PersonObject> getObjectsByPersonId(Integer id) {
         return objectDAO.getObjectsByPersonId(id);
     }
+
+    public List<PersonObject> getObjectsByPersonIdAndMonth(Integer id, int month) {
+        return objectDAO.getObjectsByPersonIdAndMonth(id, month);
+    }
 }

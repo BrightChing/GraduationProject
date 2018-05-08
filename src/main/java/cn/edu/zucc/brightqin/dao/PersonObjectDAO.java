@@ -51,7 +51,18 @@ public class PersonObjectDAO {
 
     @SuppressWarnings("unchecked")
     public List<PersonObject> getObjectsByPersonId(Integer id) {
-        List list = this.getSession().createQuery("from PersonObject where personId = ?").setParameter(0, id).getResultList();
+        List list = this.getSession().createQuery("from PersonObject where personId = ? order by month").setParameter(0, id).getResultList();
+        List<PersonObject> objects = new ArrayList<>();
+        for (Object object : list) {
+            objects.add((PersonObject) object);
+        }
+        return objects;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<PersonObject> getObjectsByPersonIdAndMonth(Integer id, int month) {
+        List list = this.getSession().createQuery("from PersonObject where personId = ? and month = ?")
+                .setParameter(0, id).setParameter(1, month).getResultList();
         List<PersonObject> objects = new ArrayList<>();
         for (Object object : list) {
             objects.add((PersonObject) object);

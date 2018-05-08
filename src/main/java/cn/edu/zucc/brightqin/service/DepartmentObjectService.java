@@ -48,4 +48,8 @@ public class DepartmentObjectService {
     public List<DepartmentObject> getDepartmenttObjectsByDepartmentId(Integer id) {
         return objectDAO.getDepartmentObjectByDepartmentId(id);
     }
+
+    public List<DepartmentObject> getDepartmenttObjectsByDepartmentId(Integer id, int month) {
+        return objectDAO.getDepartmentObjectByDepartmentId(id, month);
+    }
 }

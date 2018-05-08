@@ -14,6 +14,7 @@ public class PersonObject {
     private String personObjectName;
     private Set<PersonKeyResult> results;
     private float weight;
+    private int month;
     private Person person;
 
     public PersonObject() {
@@ -30,7 +31,7 @@ public class PersonObject {
         this.personObjectId = personObjectId;
     }
 
-    @Column(name = "personObjectName", nullable = false, unique = true, length = 32)
+    @Column(name = "personObjectName", nullable = false, length = 32)
     public String getPersonObjectName() {
         return personObjectName;
     }
@@ -49,13 +50,22 @@ public class PersonObject {
         this.results = results;
     }
 
+    @Column(name = "weight", columnDefinition = "float default 0")
     public float getWeight() {
         return weight;
     }
 
-    @Column(name = "weight")
     public void setWeight(float weight) {
         this.weight = weight;
+    }
+
+    @Column(name = "month", columnDefinition = "int default 0")
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
     }
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

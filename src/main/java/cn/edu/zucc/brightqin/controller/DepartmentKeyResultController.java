@@ -6,6 +6,7 @@ import cn.edu.zucc.brightqin.entity.DepartmentObject;
 import cn.edu.zucc.brightqin.service.DepartmentKeyResultService;
 import cn.edu.zucc.brightqin.service.DepartmentObjectService;
 import cn.edu.zucc.brightqin.utils.DepartmentKeyResultXml;
+import cn.edu.zucc.brightqin.utils.WightUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -141,10 +142,6 @@ public class DepartmentKeyResultController {
         for (DepartmentKeyResult result : results) {
             weightSum += result.getWeight();
         }
-        try (PrintWriter pw = response.getWriter()) {
-            pw.print(weightSum);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        WightUtil.print(weightSum, response, "关键结果");
     }
 }
