@@ -14,6 +14,7 @@ public class PersonKeyResult {
     private int selfScore;
     private int upstreamScore;
     private int totalScore;
+    private float weight;
     private PersonObject personObject;
 
     public PersonKeyResult() {
@@ -64,6 +65,15 @@ public class PersonKeyResult {
 
     public void setTotalScore(int totalScore) {
         this.totalScore = totalScore;
+    }
+
+    @Column(name = "weight")
+    public float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(float weight) {
+        this.weight = weight;
     }
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

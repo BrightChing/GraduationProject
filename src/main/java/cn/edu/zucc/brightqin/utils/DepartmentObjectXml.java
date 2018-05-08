@@ -1,25 +1,24 @@
 package cn.edu.zucc.brightqin.utils;
 
-import cn.edu.zucc.brightqin.entity.PersonObject;
+import cn.edu.zucc.brightqin.entity.DepartmentObject;
 
 import java.util.List;
 
 /**
  * @author brightqin
  */
-public class PersonObjectXml {
-
-    private final List<PersonObject> objects;
+public class DepartmentObjectXml {
+    private final List<DepartmentObject> objects;
     private StringBuilder stringBuilder = new StringBuilder(128);
 
-    public PersonObjectXml(List<PersonObject> objects) {
+    public DepartmentObjectXml(List<DepartmentObject> objects) {
         this.objects = objects;
     }
 
     public String build() {
         stringBuilder.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
         stringBuilder.append("<rows>");
-        for (PersonObject object : objects) {
+        for (DepartmentObject object : objects) {
             buildXML(object);
         }
         stringBuilder.append("</rows>");
@@ -29,18 +28,18 @@ public class PersonObjectXml {
     /**
      * 构建XML文档
      */
-    private void buildXML(PersonObject object) {
+    private void buildXML(DepartmentObject object) {
         stringBuilder.append("<row id=\"");
-        stringBuilder.append(object.getPersonObjectId());
+        stringBuilder.append(object.getDepartmentObjectId());
         stringBuilder.append("\">");
         stringBuilder.append("<cell>");
         stringBuilder.append("../icons/object.png");
         stringBuilder.append("</cell>");
         stringBuilder.append("<cell>");
-        stringBuilder.append(object.getPerson().getPersonId());
+        stringBuilder.append(object.getDepartment().getDepartmentId());
         stringBuilder.append("</cell>");
         stringBuilder.append("<cell>");
-        stringBuilder.append(object.getPersonObjectName());
+        stringBuilder.append(object.getDepartmentObjectName());
         stringBuilder.append("</cell>");
         stringBuilder.append("<cell>");
         stringBuilder.append(object.getWeight());

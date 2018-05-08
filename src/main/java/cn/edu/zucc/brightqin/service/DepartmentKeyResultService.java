@@ -25,8 +25,8 @@ public class DepartmentKeyResultService {
         keyResultDAO.saveKeyResult(keyResult);
     }
 
-    public void deleteKeyResult(DepartmentKeyResult keyResult) {
-        keyResultDAO.deleteKeyResult(keyResult);
+    public void deleteKeyResultById(Integer id) {
+        keyResultDAO.deleteKeyResultById(id);
     }
 
     public void updateKeyResult(DepartmentKeyResult keyResult) {
@@ -37,8 +37,11 @@ public class DepartmentKeyResultService {
         return keyResultDAO.getKeyResultById(id);
     }
 
-
     public List<DepartmentKeyResult> getKeyResults() {
         return keyResultDAO.getKeyResults();
+    }
+
+    public List<DepartmentKeyResult> getDepartmentKeyResultsByDepartmentObjectId(Integer id) {
+        return keyResultDAO.getDepartmentKeyResultsByDepartmentObjectId(id);
     }
 }

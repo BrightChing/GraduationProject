@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaQuery;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,8 +30,8 @@ public class DepartmentKeyResultDAO {
         this.getSession().save(keyResult);
     }
 
-    public void deleteKeyResult(DepartmentKeyResult keyResult) {
-        this.getSession().delete(keyResult);
+    public void deleteKeyResultById(Integer id) {
+        this.getSession().createQuery("delete DepartmentKeyResult where departmentKeyResultId = ?").setParameter(0, id).executeUpdate();
     }
 
     public void updateKeyResult(DepartmentKeyResult keyResult) {
@@ -46,5 +47,15 @@ public class DepartmentKeyResultDAO {
         CriteriaQuery<DepartmentKeyResult> criteriaQuery = this.getSession().getCriteriaBuilder().createQuery(DepartmentKeyResult.class);
         criteriaQuery.from(DepartmentKeyResult.class);
         return this.getSession().createQuery(criteriaQuery).getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<DepartmentKeyResult> getDepartmentKeyResultsByDepartmentObjectId(Integer id) {
+        List list = this.getSession().createQuery("from DepartmentKeyResult  where departmentObjectId = ?").setParameter(0, id).getResultList();
+        List<DepartmentKeyResult> keyResults = new ArrayList<>();
+        for (Object result : list) {
+            keyResults.add((DepartmentKeyResult) result);
+        }
+        return keyResults;
     }
 }

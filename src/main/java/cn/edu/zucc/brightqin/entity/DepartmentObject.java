@@ -10,9 +10,10 @@ import java.util.Set;
 @Entity
 @Table(name = "DepartmentObject")
 public class DepartmentObject {
-    private Integer objectId;
-    private String objectName;
-    private Set<DepartmentKeyResult> results;
+    private Integer departmentObjectId;
+    private String departmentObjectName;
+    private float weight;
+    private Set<DepartmentKeyResult> departmentKeyResults;
     private Department department;
 
     public DepartmentObject() {
@@ -20,33 +21,42 @@ public class DepartmentObject {
     }
 
     @Id
-    @Column(name = "objectId", nullable = false, unique = true, length = 16)
+    @Column(name = "departmentObjectId", nullable = false, unique = true, length = 16)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getObjectId() {
-        return objectId;
+    public Integer getDepartmentObjectId() {
+        return departmentObjectId;
     }
 
-    public void setObjectId(Integer objectId) {
-        this.objectId = objectId;
+    public void setDepartmentObjectId(Integer departmentObjectId) {
+        this.departmentObjectId = departmentObjectId;
     }
 
-    @Column(name = "objectName", nullable = false, unique = true, length = 16)
-    public String getObjectName() {
-        return objectName;
+    @Column(name = "departmentObjectName", nullable = false, unique = true, length = 16)
+    public String getDepartmentObjectName() {
+        return departmentObjectName;
     }
 
-    public void setObjectName(String objectName) {
-        this.objectName = objectName;
+    public void setDepartmentObjectName(String departmentObjectName) {
+        this.departmentObjectName = departmentObjectName;
+    }
+
+    @Column(name = "weight")
+    public float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(float weight) {
+        this.weight = weight;
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "objectId")
-    public Set<DepartmentKeyResult> getResults() {
-        return results;
+    @JoinColumn(name = "departmentObjectId")
+    public Set<DepartmentKeyResult> getDepartmentKeyResults() {
+        return departmentKeyResults;
     }
 
-    public void setResults(Set<DepartmentKeyResult> results) {
-        this.results = results;
+    public void setDepartmentKeyResults(Set<DepartmentKeyResult> departmentKeyResults) {
+        this.departmentKeyResults = departmentKeyResults;
     }
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

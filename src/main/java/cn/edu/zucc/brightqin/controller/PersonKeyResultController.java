@@ -37,19 +37,26 @@ public class PersonKeyResultController {
      * 保存添加的数据
      */
     @RequestMapping(value = "/addPersonKeyResult", method = RequestMethod.POST)
-    public void addPersonKeyResult(HttpServletRequest request) {
+    public void addPersonKeyResult(HttpServletRequest request, HttpServletResponse response) {
         String pid = request.getParameter("personObjectId");
         String keyResultName = request.getParameter("keyResultName");
-        System.out.println(pid + "  " + keyResultName);
+        String weight = request.getParameter("weight");
         try {
             pid = java.net.URLDecoder.decode(pid, "UTF-8");
+            weight = java.net.URLDecoder.decode(weight, "UTF-8");
             keyResultName = java.net.URLDecoder.decode(keyResultName, "UTF-8");
             PersonKeyResult result = new PersonKeyResult();
             PersonObject object = objectService.getObjectById(Integer.valueOf(pid));
             result.setPersonObject(object);
+            result.setWeight(Float.parseFloat(weight));
             result.setKeyResultName(keyResultName);
             service.addKeyResult(result);
         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        try (PrintWriter pw = response.getWriter()) {
+            pw.print(true);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -73,17 +80,24 @@ public class PersonKeyResultController {
      * 更新数据
      */
     @RequestMapping(value = "/updatePersonKeyResult", method = RequestMethod.POST)
-    public void updatePersonKeyResult(HttpServletRequest request) {
+    public void updatePersonKeyResult(HttpServletRequest request, HttpServletResponse response) {
         String keyResultName = request.getParameter("keyResultName");
         String id = request.getParameter("keyResultId");
-
+        String weight = request.getParameter("weight");
         try {
+            weight = java.net.URLDecoder.decode(weight, "UTF-8");
             id = java.net.URLDecoder.decode(id, "UTF-8");
             keyResultName = java.net.URLDecoder.decode(keyResultName, "UTF-8");
-            PersonKeyResult keyResult = service.getKeyResultById(Integer.valueOf(id));
-            keyResult.setKeyResultName(keyResultName);
-            service.updateKeyResult(keyResult);
+            PersonKeyResult result = service.getKeyResultById(Integer.valueOf(id));
+            result.setKeyResultName(keyResultName);
+            result.setWeight(Float.parseFloat(weight));
+            service.updateKeyResult(result);
         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        try (PrintWriter pw = response.getWriter()) {
+            pw.print(true);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -93,21 +107,33 @@ public class PersonKeyResultController {
         String id = request.getParameter("id");
         response.setContentType("application/xml");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter pw = null;
         List<PersonKeyResult> personKeyResults = service.getKeyResultsByObjectId(Integer.valueOf(id));
-        try {
-            if (personKeyResults != null) {
-                PersonKeyResultXml resultXml = new PersonKeyResultXml(personKeyResults);
-                pw = response.getWriter();
+
+        if (personKeyResults != null) {
+            PersonKeyResultXml resultXml = new PersonKeyResultXml(personKeyResults);
+            try (PrintWriter pw = response.getWriter()) {
                 pw.print(resultXml.build());
-                System.out.println(resultXml.build());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (pw != null) {
-                pw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
+
+    @RequestMapping(value = "/checkWeight", method = RequestMethod.POST)
+    public void checkWeight(HttpServletResponse response, HttpServletRequest request) {
+        String id = request.getParameter("personObjectId");
+        response.setContentType("application/xml");
+        response.setCharacterEncoding("UTF-8");
+        float weightSum = 0;
+        List<PersonKeyResult> results = service.getKeyResultsByObjectId(Integer.valueOf(id));
+        for (PersonKeyResult result : results) {
+            weightSum += result.getWeight();
+        }
+        try (PrintWriter pw = response.getWriter()) {
+            pw.print(weightSum);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

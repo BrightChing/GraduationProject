@@ -13,6 +13,7 @@ public class PersonObject {
     private Integer personObjectId;
     private String personObjectName;
     private Set<PersonKeyResult> results;
+    private float weight;
     private Person person;
 
     public PersonObject() {
@@ -46,6 +47,15 @@ public class PersonObject {
 
     public void setResults(Set<PersonKeyResult> results) {
         this.results = results;
+    }
+
+    public float getWeight() {
+        return weight;
+    }
+
+    @Column(name = "weight")
+    public void setWeight(float weight) {
+        this.weight = weight;
     }
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

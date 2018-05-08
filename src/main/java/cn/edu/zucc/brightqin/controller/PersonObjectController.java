@@ -38,18 +38,26 @@ public class PersonObjectController {
      * 保存添加的数据
      */
     @RequestMapping(value = "/addPersonObject", method = RequestMethod.POST)
-    public void addPersonObject(HttpServletRequest request) {
+    public void addPersonObject(HttpServletRequest request, HttpServletResponse response) {
         String pid = request.getParameter("personId");
         String objectName = request.getParameter("objectName");
+        String weight = request.getParameter("weight");
         try {
             pid = java.net.URLDecoder.decode(pid, "UTF-8");
             objectName = java.net.URLDecoder.decode(objectName, "UTF-8");
+            weight = java.net.URLDecoder.decode(weight, "UTF-8");
             PersonObject object = new PersonObject();
             Person person = personService.getPersonById(Integer.valueOf(pid));
             object.setPerson(person);
+            object.setWeight(Float.parseFloat(weight));
             object.setPersonObjectName(objectName);
             service.addObject(object);
         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        try (PrintWriter pw = response.getWriter()) {
+            pw.print(true);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -69,19 +77,26 @@ public class PersonObjectController {
      * 更新数据
      */
     @RequestMapping(value = "/updatePersonObject", method = RequestMethod.POST)
-    public void updatePersonObject(HttpServletRequest request) {
+    public void updatePersonObject(HttpServletRequest request, HttpServletResponse response) {
         String id = request.getParameter("objectId");
         String objectName = request.getParameter("objectName");
+        String weight = request.getParameter("weight");
         try {
             objectName = java.net.URLDecoder.decode(objectName, "UTF-8");
             id = java.net.URLDecoder.decode(id, "UTF-8");
+            weight = java.net.URLDecoder.decode(weight, "UTF-8");
             PersonObject object = service.getObjectById(Integer.valueOf(id));
             object.setPersonObjectName(objectName);
+            object.setWeight(Float.parseFloat(weight));
             service.updateObject(object);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
+        try (PrintWriter pw = response.getWriter()) {
+            pw.print(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @RequestMapping(value = "/getPersonObjects")
@@ -103,6 +118,23 @@ public class PersonObjectController {
             if (pw != null) {
                 pw.close();
             }
+        }
+    }
+
+    @RequestMapping(value = "/checkWeight", method = RequestMethod.POST)
+    public void checkWeight(HttpServletResponse response, HttpServletRequest request) {
+        String id = request.getParameter("personId");
+        response.setContentType("application/xml");
+        response.setCharacterEncoding("UTF-8");
+        float weightSum = 0;
+        List<PersonObject> objects = service.getObjectsByPersonId(Integer.valueOf(id));
+        for (PersonObject object : objects) {
+            weightSum += object.getWeight();
+        }
+        try (PrintWriter pw = response.getWriter()) {
+            pw.print(weightSum);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

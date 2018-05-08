@@ -35,13 +35,16 @@ public class PersonKeyResultXml {
         stringBuilder.append(result.getKeyResultId());
         stringBuilder.append("\">");
         stringBuilder.append("<cell>");
-        stringBuilder.append("../icons/people.png");
+        stringBuilder.append("../icons/keyResult.png");
         stringBuilder.append("</cell>");
         stringBuilder.append("<cell>");
         stringBuilder.append(result.getPersonObject().getPersonObjectId());
         stringBuilder.append("</cell>");
         stringBuilder.append("<cell>");
         stringBuilder.append(result.getKeyResultName());
+        stringBuilder.append("</cell>");
+        stringBuilder.append("<cell>");
+        stringBuilder.append(result.getWeight());
         stringBuilder.append("</cell>");
         stringBuilder.append("</row>");
     }

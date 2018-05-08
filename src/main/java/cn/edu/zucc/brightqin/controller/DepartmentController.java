@@ -40,24 +40,24 @@ public class DepartmentController {
     public void addDepartment(HttpServletRequest request, HttpServletResponse response) {
         String name = request.getParameter("departmentName");
         String pid = request.getParameter("parentId");
+        PrintWriter pw = null;
         try {
             name = java.net.URLDecoder.decode(name, "UTF-8");
             pid = java.net.URLDecoder.decode(pid, "UTF-8");
             Department department = new Department();
-            String flag = "null";
-            if (!pid.equals(flag)) {
-                Department parent = service.getDepartmentById(Integer.valueOf(pid));
-                department.setDepartment(parent);
-            }
+            Department parent = service.getDepartmentById(Integer.valueOf(pid));
+            department.setDepartment(parent);
             department.setDepartmentName(name);
             service.addDepartment(department);
-            response.getWriter().print(department.getDepartmentId());
-            System.out.println(department.getDepartmentId());
+            pw = response.getWriter();
+            pw.print(department.getDepartmentId());
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (pw != null) {
+                pw.close();
+            }
         }
-
-
     }
 
 
@@ -85,7 +85,6 @@ public class DepartmentController {
             Department department = service.getDepartmentById(Integer.valueOf(id));
             department.setDepartmentName(name);
             service.updateDepartment(department);
-            System.out.println("name" + name + " id:" + id);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

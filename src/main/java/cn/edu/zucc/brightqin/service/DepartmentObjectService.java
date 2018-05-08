@@ -23,24 +23,29 @@ public class DepartmentObjectService {
     }
 
 
-    public void addObject(DepartmentObject object) {
-        objectDAO.saveObject(object);
+    public void addDepartmentObject(DepartmentObject object) {
+        objectDAO.saveDepartmentObject(object);
     }
 
-    public void deleteObject(Integer id) {
-        objectDAO.deleteObject(id);
+    public void deleteDepartmentObjectById(Integer id) {
+        objectDAO.deleteDepartmentObjectById(id);
     }
 
-    public void updateObject(DepartmentObject object) {
-        objectDAO.updateObject(object);
+    public void updateDepartmentObject(DepartmentObject object) {
+        objectDAO.updateDepartmentObject(object);
     }
 
-    public DepartmentObject getObjectById(Integer id) {
-        return objectDAO.getObjectById(id);
+    public DepartmentObject getDepartmentObjectById(Integer id) {
+        return objectDAO.getDepartmentObjectById(id);
     }
 
     @SuppressWarnings("unchecked")
-    public List<DepartmentObject> getObjects() {
-        return objectDAO.getObjects();
+    public List<DepartmentObject> getDepartmentObjects() {
+        return objectDAO.getDepartmentObjects();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<DepartmentObject> getDepartmenttObjectsByDepartmentId(Integer id) {
+        return objectDAO.getDepartmentObjectByDepartmentId(id);
     }
 }

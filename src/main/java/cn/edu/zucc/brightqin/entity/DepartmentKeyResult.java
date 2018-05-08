@@ -8,36 +8,37 @@ import javax.persistence.*;
 @Entity
 @Table(name = "DepartmentKeyResult")
 public class DepartmentKeyResult {
-    private Integer keyResultId;
-    private String keyResultName;
+    private Integer departmentKeyResultId;
+    private String departmentKeyResultName;
     private int selfScore;
     private int upstreamScore;
     private int totalScore;
+    private float weight;
     private DepartmentObject departmentObject;
+
 
     public DepartmentKeyResult() {
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "keyResultId", nullable = false, unique = true, length = 16)
-    public Integer getKeyResultId() {
-        return keyResultId;
+    @Column(name = "departmentKeyResultId", nullable = false, unique = true, length = 16)
+    public Integer getDepartmentKeyResultId() {
+        return departmentKeyResultId;
     }
 
-    public void setKeyResultId(Integer keyResultId) {
-        this.keyResultId = keyResultId;
+    public void setDepartmentKeyResultId(Integer departmentKeyResultId) {
+        this.departmentKeyResultId = departmentKeyResultId;
     }
 
-    @Column(name = "keyResultName", nullable = false, length = 16)
-    public String getKeyResultName() {
-        return keyResultName;
+    @Column(name = "departmentKeyResultName", nullable = false, length = 16)
+    public String getDepartmentKeyResultName() {
+        return departmentKeyResultName;
     }
 
-    public void setKeyResultName(String keyResultName) {
-        this.keyResultName = keyResultName;
+    public void setDepartmentKeyResultName(String departmentKeyResultName) {
+        this.departmentKeyResultName = departmentKeyResultName;
     }
-
 
     @Column(name = "selfScore")
     public int getSelfScore() {
@@ -66,8 +67,17 @@ public class DepartmentKeyResult {
         this.totalScore = totalScore;
     }
 
+    @Column(name = "weight")
+    public float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(float weight) {
+        this.weight = weight;
+    }
+
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "objectId")
+    @JoinColumn(name = "departmentObjectId")
     public DepartmentObject getDepartmentObject() {
         return departmentObject;
     }

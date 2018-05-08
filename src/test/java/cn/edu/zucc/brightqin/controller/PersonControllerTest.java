@@ -2,7 +2,6 @@ package cn.edu.zucc.brightqin.controller;
 
 import cn.edu.zucc.brightqin.entity.Person;
 import cn.edu.zucc.brightqin.service.PersonService;
-import cn.edu.zucc.brightqin.utils.PersonXml;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -21,12 +21,10 @@ public class PersonControllerTest {
 
     @Test
     public void main() {
-
-        List<Person> people = personService.getPersons();
-        if (people != null) {
-            PersonXml personXML = new PersonXml(people);
-            System.out.println(personXML.build());
-        }
+        String content = "554.99";
+        String pattern = "^\\d{1,2}(\\.\\d+)?$";
+        boolean isMatch = Pattern.matches(pattern, content);
+        System.out.println(isMatch);
     }
 
     @Test
