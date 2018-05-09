@@ -7,6 +7,4 @@
 .idea/modules.xml
 .idea/modules/
 .idea/sqldialects.xml
-build/
-src/test/java/cn/edu/zucc/brightqin/entity/
-src/test/resources/
+

@@ -60,12 +60,10 @@ public class PersonController {
             person.setPosition(position);
             person.setPhone(phone);
             person.setAddress(address);
-            person.setPassword("df");
-            System.out.println(personName + ";" + email + ";" + position + ";" + phone + ";" + address + ";" + did);
+            person.setPassword("123456");
             Department department = departmentService.getDepartmentById(Integer.valueOf(did));
             person.setDepartment(department);
             personService.addPerson(person);
-
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -78,7 +76,12 @@ public class PersonController {
     @RequestMapping(value = "/deletePersonById")
     public void deletePersonById(HttpServletResponse response, HttpServletRequest request) {
         String id = request.getParameter("id");
-        personService.deletePersonById(Integer.valueOf(id));
+        try (PrintWriter pw = response.getWriter()) {
+            personService.deletePersonById(Integer.valueOf(id));
+            pw.print(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -93,14 +96,13 @@ public class PersonController {
         String position = request.getParameter("position");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
-        try {
+        try (PrintWriter pw = response.getWriter()) {
             personId = java.net.URLDecoder.decode(personId, "UTF-8");
             personName = java.net.URLDecoder.decode(personName, "UTF-8");
             email = java.net.URLDecoder.decode(email, "UTF-8");
             position = java.net.URLDecoder.decode(position, "UTF-8");
             phone = java.net.URLDecoder.decode(phone, "UTF-8");
             address = java.net.URLDecoder.decode(address, "UTF-8");
-
             Person person = personService.getPersonById(Integer.valueOf(personId));
             person.setPersonName(personName);
             person.setEmail(email);
@@ -108,10 +110,10 @@ public class PersonController {
             person.setPhone(phone);
             person.setAddress(address);
             personService.updatePerson(person);
-        } catch (UnsupportedEncodingException e) {
+            pw.print(true);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     @RequestMapping(value = "/getPeople")
@@ -119,20 +121,12 @@ public class PersonController {
         String id = request.getParameter("id");
         response.setContentType("application/xml");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter pw = null;
         List<Person> people = personService.getPersonByDepartmentId(Integer.valueOf(id));
-        try {
-            if (people != null) {
-                PersonXml personXML = new PersonXml(people);
-                pw = response.getWriter();
-                pw.print(personXML.build());
-            }
+        try (PrintWriter pw = response.getWriter()) {
+            PersonXml personXML = new PersonXml(people);
+            pw.print(personXML.build());
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (pw != null) {
-                pw.close();
-            }
         }
     }
 }

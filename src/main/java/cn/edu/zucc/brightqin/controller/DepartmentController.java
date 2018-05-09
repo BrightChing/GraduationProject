@@ -12,14 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 
 /**
- * Created with IntelliJ IDEA.
- * Description:
- * User: brightqin
- * Date: 2018-04-03
- *
  * @author brightqin
  */
 @Controller
@@ -40,8 +34,7 @@ public class DepartmentController {
     public void addDepartment(HttpServletRequest request, HttpServletResponse response) {
         String name = request.getParameter("departmentName");
         String pid = request.getParameter("parentId");
-        PrintWriter pw = null;
-        try {
+        try (PrintWriter pw = response.getWriter()) {
             name = java.net.URLDecoder.decode(name, "UTF-8");
             pid = java.net.URLDecoder.decode(pid, "UTF-8");
             Department department = new Department();
@@ -49,14 +42,9 @@ public class DepartmentController {
             department.setDepartment(parent);
             department.setDepartmentName(name);
             service.addDepartment(department);
-            pw = response.getWriter();
             pw.print(department.getDepartmentId());
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (pw != null) {
-                pw.close();
-            }
         }
     }
 
@@ -67,7 +55,12 @@ public class DepartmentController {
     @RequestMapping(value = "/deleteDepartmentById")
     public void deleteDepartmentById(HttpServletResponse response, HttpServletRequest request) {
         String id = request.getParameter("id");
-        service.deleteDepartmentById(Integer.valueOf(id));
+        try (PrintWriter pw = response.getWriter()) {
+            service.deleteDepartmentById(Integer.valueOf(id));
+            pw.print(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -78,14 +71,14 @@ public class DepartmentController {
     public void updateDepartment(HttpServletRequest request, HttpServletResponse response) {
         String name = request.getParameter("departmentName");
         String id = request.getParameter("departmentId");
-        System.out.println("name" + name + " id:" + id);
-        try {
+        try (PrintWriter pw = response.getWriter()) {
             name = java.net.URLDecoder.decode(name, "UTF-8");
             id = java.net.URLDecoder.decode(id, "UTF-8");
             Department department = service.getDepartmentById(Integer.valueOf(id));
             department.setDepartmentName(name);
             service.updateDepartment(department);
-        } catch (UnsupportedEncodingException e) {
+            pw.print(true);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -97,20 +90,14 @@ public class DepartmentController {
     public void buildTree(HttpServletResponse response) {
         response.setContentType("application/xml");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter pw = null;
         Department department = service.getRootDepartment();
-        try {
-            if (department != null) {
-                department = service.getDepartmentById(department.getDepartmentId());
-                TreeBuilder treeBuilder = new TreeBuilder(department);
-                pw = response.getWriter();
+        if (department != null) {
+            department = service.getDepartmentById(department.getDepartmentId());
+            TreeBuilder treeBuilder = new TreeBuilder(department);
+            try (PrintWriter pw = response.getWriter()) {
                 pw.print(treeBuilder.build());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (pw != null) {
-                pw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

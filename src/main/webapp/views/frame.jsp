@@ -19,14 +19,13 @@
     </style>
     <script type="text/javascript">
         let myLayout1, myLayout2, myLayout3, myTabBar;
-
         function doOnLoad() {
             myTabBar = new dhtmlXTabBar("my_tabBar");
             myTabBar.addTab("tab1", "组织管理", null, null, true);
             myTabBar.addTab("tab2", "人员OKR管理", null, null);
             myTabBar.addTab("tab3", "部门OKR管理", null, null);
             OrganizationManagement();
-            myTabBar.attachEvent("onTabClick", function (id, lastId) {
+            myTabBar.attachEvent("onTabClick", function (id) {
                 if (id === "tab3") {
                     DepartmentOKRManagement();
                 }
@@ -34,9 +33,8 @@
                     PersonOKRManagement();
                 }
             });
+
         }
-
-
         function checkWeight(url, data) {
             dhx.ajax.post(url, data, function (result) {
                 let temp = result.xmlDoc.responseText;
@@ -56,8 +54,8 @@
             myLayout1.cells("a").setWidth(260);
             myLayout1.cells("a").setText("部门管理");
             let myToolbarLeft = myLayout1.cells("a").attachToolbar();
-            myToolbarLeft.setIconsPath("icons/");
-            myToolbarLeft.loadStruct("data/toolbar.xml", function () {
+            myToolbarLeft.setIconsPath("${pageContext.request.contextPath}/icons/");
+            myToolbarLeft.loadStruct("${pageContext.request.contextPath}/data/toolbar.xml", function () {
             });
             let myTree = myLayout1.cells("a").attachTree();
             myTree.setImagesPath("codebase/images/");
@@ -65,12 +63,12 @@
             /*右边的的布局 人员表*/
             myLayout1.cells("b").setText("人员管理");
             let myToolbarRight = myLayout1.cells("b").attachToolbar();
-            myToolbarRight.setIconsPath("icons/");
-            myToolbarRight.loadStruct("data/toolbar.xml", function () {
+            myToolbarRight.setIconsPath("${pageContext.request.contextPath}/icons/");
+            myToolbarRight.loadStruct("${pageContext.request.contextPath}/data/toolbar.xml", function () {
             });
             let myGrid = myLayout1.cells("b").attachGrid();
-            myGrid.setImagePath("codebase/images/");
-            myGrid.setIconsPath("icons/");
+            myGrid.setImagePath("${pageContext.request.contextPath}/codebase/images/");
+            myGrid.setIconsPath("${pageContext.request.contextPath}/icons/");
             myGrid.setHeader("&nbsp;,departmentId,员工名,职位,邮箱,手机号,地址");
             myGrid.setColTypes("img,ro,ro,ro,ro,ro,ro");
             myGrid.setInitWidths("70,0,100,100,150,120,*");
@@ -78,12 +76,12 @@
             myGrid.init();
 
             /*加载部门树*/
-            myTree.load("department/departmentTree", function () {
+            myTree.load("${pageContext.request.contextPath}/department/departmentTree", function () {
             }, "xml");
             /*加载点击部门的员工表*/
             myTree.attachEvent("onClick", function () {
                 myGrid.clearAll(false);
-                myGrid.load("person/getPeople?id=" + myTree.getSelectedItemId(), function () {
+                myGrid.load("${pageContext.request.contextPath}/person/getPeople?id=" + myTree.getSelectedItemId(), function () {
                 }, "xml");
             });
 
@@ -97,11 +95,18 @@
                     {
                         type: "checkbox", checked: true, list: [
                             {type: "settings", labelWidth: 60, inputWidth: 200, position: "label-left"},
-                            {type: "input", name: "personName", label: "员工名", value: ""},
-                            {type: "input", name: "position", label: "职位", value: ""},
-                            {type: "input", name: "email", label: "邮箱", value: "", validate: "ValidEmail"},
-                            {type: "input", name: "phone", label: "手机号", value: ""},
-                            {type: "input", name: "address", label: "地址", value: ""}
+                            {type: "input", name: "personName", label: "员工名", value: "", required: true},
+                            {type: "input", name: "position", label: "职位", value: "", required: true},
+                            {
+                                type: "input",
+                                name: "email",
+                                label: "邮箱",
+                                value: "",
+                                validate: "ValidEmail",
+                                required: true
+                            },
+                            {type: "input", name: "phone", label: "手机号", value: "", required: true},
+                            {type: "input", name: "address", label: "地址", value: "", required: true}
                         ]
                     },
                     {
@@ -115,7 +120,7 @@
                 let did = myTree.getSelectedItemId();
                 let dhxWins = new dhtmlXWindows();
                 dhxWins.attachViewportTo("my_tabBar");
-                let w1 = dhxWins.createWindow("w1", 0, 0, 380, 360);
+                let w1 = dhxWins.createWindow("w1", "0", "0", "380", "360");
                 dhxWins.window("w1").center();
                 w1.setText("添加人员");
                 let myForm = w1.attachForm(formData);
@@ -161,11 +166,41 @@
                     {
                         type: "checkbox", checked: true, list: [
                             {type: "settings", labelWidth: 60, inputWidth: 200, position: "label-left"},
-                            {type: "input", name: "personName", label: "员工名", value: myGrid.cells(rid, 2).getValue()},
-                            {type: "input", name: "position", label: "职位", value: myGrid.cells(rid, 3).getValue()},
-                            {type: "input", name: "email", label: "邮箱", value: myGrid.cells(rid, 4).getValue()},
-                            {type: "input", name: "phone", label: "手机号", value: myGrid.cells(rid, 5).getValue()},
-                            {type: "input", name: "address", label: "地址", value: myGrid.cells(rid, 6).getValue()}
+                            {
+                                type: "input",
+                                name: "personName",
+                                label: "员工名",
+                                value: myGrid.cells(rid, 2).getValue(),
+                                required: true
+                            },
+                            {
+                                type: "input",
+                                name: "position",
+                                label: "职位",
+                                value: myGrid.cells(rid, 3).getValue(),
+                                required: true
+                            },
+                            {
+                                type: "input",
+                                name: "email",
+                                label: "邮箱",
+                                value: myGrid.cells(rid, 4).getValue(),
+                                required: true
+                            },
+                            {
+                                type: "input",
+                                name: "phone",
+                                label: "手机号",
+                                value: myGrid.cells(rid, 5).getValue(),
+                                required: true
+                            },
+                            {
+                                type: "input",
+                                name: "address",
+                                label: "地址",
+                                value: myGrid.cells(rid, 6).getValue(),
+                                required: true
+                            }
                         ]
                     },
                     {
@@ -179,7 +214,7 @@
 
                 let dhxWins = new dhtmlXWindows();
                 dhxWins.attachViewportTo("my_tabBar");
-                let w1 = dhxWins.createWindow("w1", 0, 0, 380, 360);
+                let w1 = dhxWins.createWindow("w1", "0", "0", "380", "360");
                 dhxWins.window("w1").center();
                 w1.setText("编辑人员");
                 let myForm = w1.attachForm(formData);
@@ -258,12 +293,14 @@
                     if (myGrid.getRowsNum() === 0) {
                         dhtmlx.confirm('主人，真的要狠心删除我吗', function (result) {
                             if (result) {
-                                myTree.load("department/deleteDepartmentById?id=" + sid, function () {
+                                let data = "id=" + sid;
+                                dhx.ajax.post("department/deleteDepartmentById", data, function () {
                                     myTree.deleteItem(sid, true);
                                     /*加载父级部门的员工*/
-                                    myGrid.load("person/getPeople?id=" + pid, function () {
-                                    }, "xml");
-                                }, "xml");
+                                    let data1 = "id=" + pid;
+                                    dhx.ajax.post("person/getPeople", data1, function () {
+                                    });
+                                });
                             } else {
                                 dhtmlx.alert("已取消删除");
                             }
@@ -553,10 +590,10 @@
                 if (keyResultGrid.getRowsNum() === 0) {
                     dhtmlx.confirm('主人，真的要狠心删除我吗', function (result) {
                         if (result) {
-                            myTree.load("personObject/deletePersonObjectById?id=" + id, function () {
-                                keyResultGrid.clearAll(false);
+                            let data = "id=" + id;
+                            dhx.ajax.post("personObject/deletePersonObjectById", data, function () {
                                 objectGrid.deleteRow(id);
-                            }, "xml");
+                            });
                         } else {
                             dhtmlx.alert("已取消删除");
                         }
@@ -711,7 +748,7 @@
                             + "&weight=" + encodeURI(encodeURI(myForm.getItemValue("weight"))) + "&personObjectId=" + oid;
                         dhx.ajax.post("personKeyResult/addPersonKeyResult", data, function (result) {
                             if (result.xmlDoc.responseText === "true") {
-                                loadObject(oid);
+                                loadKeyResult(oid);
                                 checkWeight("personKeyResult/checkWeight", data)
                             }
                         });
@@ -724,14 +761,15 @@
             function deleteResult() {
                 let id = keyResultGrid.getSelectedRowId();
                 if (id == null) {
-                    dhtmlx.alert("请选中您将要删除的目标");
+                    dhtmlx.alert("请选中您将要删除的关键结果");
                     return;
                 }
                 dhtmlx.confirm('主人，真的要狠心删除我吗', function (result) {
                     if (result) {
-                        myTree.load("personKeyResult/deletePersonKeyResultById?id=" + id, function () {
+                        let data = "id=" + id;
+                        dhx.ajax.post("personKeyResult/deletePersonKeyResultById", data, function () {
                             keyResultGrid.deleteRow(id);
-                        }, "xml");
+                        });
                     } else {
                         dhtmlx.alert("已取消删除");
                     }
@@ -918,7 +956,7 @@
 
             /*添加部门目标*/
             function addDepartmentObject() {
-                if (myTree.getSelectedItemId() == '') {
+                if (myTree.getSelectedItemId() === '') {
                     dhtmlx.alert("请您先选中，您要为哪个部门人添加目标");
                     return;
                 }
@@ -993,10 +1031,10 @@
                 if (keyResultGrid.getRowsNum() === 0) {
                     dhtmlx.confirm('主人，真的要狠心删除我吗', function (result) {
                         if (result) {
-                            myTree.load("departmentObject/deleteDepartmentObjectById?id=" + id, function () {
-                                keyResultGrid.clearAll(false);
+                            let data = "id=" + id;
+                            dhx.ajax.post("departmentObject/deleteDepartmentObjectById", data, function () {
                                 objectGrid.deleteRow(id);
-                            }, "xml");
+                            });
                         } else {
                             dhtmlx.alert("已取消删除");
                         }
@@ -1167,9 +1205,10 @@
                 }
                 dhtmlx.confirm('主人，真的要狠心删除我吗', function (result) {
                     if (result) {
-                        myTree.load("departmentKeyResult/deleteDepartmentKeyResultById?id=" + id, function () {
+                        let data = "id=" + id;
+                        dhx.ajax.post("departmentKeyResult/deleteDepartmentKeyResultById", data, function () {
                             keyResultGrid.deleteRow(id);
-                        }, "xml");
+                        });
                     } else {
                         dhtmlx.alert("已取消删除");
                     }

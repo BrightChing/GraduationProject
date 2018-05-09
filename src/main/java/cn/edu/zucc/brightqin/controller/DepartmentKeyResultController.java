@@ -43,8 +43,7 @@ public class DepartmentKeyResultController {
         String oid = request.getParameter("objectId");
         String keyResultName = request.getParameter("keyResultName");
         String weight = request.getParameter("weight");
-        PrintWriter pw = null;
-        try {
+        try (PrintWriter pw = response.getWriter()) {
             oid = java.net.URLDecoder.decode(oid, "UTF-8");
             keyResultName = java.net.URLDecoder.decode(keyResultName, "UTF-8");
             weight = java.net.URLDecoder.decode(weight, "UTF-8");
@@ -54,14 +53,9 @@ public class DepartmentKeyResultController {
             keyResult.setWeight(Float.parseFloat(weight));
             keyResult.setDepartmentObject(object);
             service.addKeyResult(keyResult);
-            pw = response.getWriter();
             pw.print(true);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (pw != null) {
-                pw.close();
-            }
         }
     }
 
@@ -89,8 +83,7 @@ public class DepartmentKeyResultController {
         String keyResultName = request.getParameter("keyResultName");
         String keyResultId = request.getParameter("keyResultId");
         String weight = request.getParameter("weight");
-        PrintWriter pw = null;
-        try {
+        try (PrintWriter pw = response.getWriter()) {
             keyResultName = java.net.URLDecoder.decode(keyResultName, "UTF-8");
             keyResultId = java.net.URLDecoder.decode(keyResultId, "UTF-8");
             weight = java.net.URLDecoder.decode(weight, "UTF-8");
@@ -98,14 +91,9 @@ public class DepartmentKeyResultController {
             keyResult.setDepartmentKeyResultName(keyResultName);
             keyResult.setWeight(Float.parseFloat(weight));
             service.updateKeyResult(keyResult);
-            pw = response.getWriter();
             pw.print(true);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (pw != null) {
-                pw.close();
-            }
         }
     }
 

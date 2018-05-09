@@ -87,7 +87,7 @@ public class DepartmentObjectController {
         String objectName = request.getParameter("objectName");
         String objectId = request.getParameter("objectId");
         String weight = request.getParameter("weight");
-        try {
+        try (PrintWriter pw = response.getWriter()) {
             objectId = java.net.URLDecoder.decode(objectId, "UTF-8");
             objectName = java.net.URLDecoder.decode(objectName, "UTF-8");
             weight = java.net.URLDecoder.decode(weight, "UTF-8");
@@ -95,10 +95,6 @@ public class DepartmentObjectController {
             object.setDepartmentObjectName(objectName);
             object.setWeight(Float.parseFloat(weight));
             service.updateDepartmentObject(object);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        try (PrintWriter pw = response.getWriter()) {
             pw.print(true);
         } catch (IOException e) {
             e.printStackTrace();

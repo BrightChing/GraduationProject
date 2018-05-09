@@ -3,6 +3,7 @@ package cn.edu.zucc.brightqin.controller;
 
 import cn.edu.zucc.brightqin.entity.User;
 import cn.edu.zucc.brightqin.service.UserService;
+import cn.edu.zucc.brightqin.utils.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,8 +31,8 @@ public class UserController {
     @RequestMapping("/login")
     public String doLogin(@Validated String id, String password, Map<String, Object> map) {
         User user = userService.getUserById(id);
+        password = PasswordUtil.MD5(password);
         if (user != null && password.equals(user.getPassword())) {
-            //存放在request请求域中
             map.put("username", id);
             return "frame";
         }

@@ -414,7 +414,7 @@
                             + "&weight=" + encodeURI(encodeURI(myForm.getItemValue("weight"))) + "&personObjectId=" + oid;
                         dhx.ajax.post("personKeyResult/addPersonKeyResult", data, function (result) {
                             if (result.xmlDoc.responseText === "true") {
-                                loadObject(oid);
+                                loadKeyResult(oid);
                                 checkWeight("personKeyResult/checkWeight", data)
                             }
                         });

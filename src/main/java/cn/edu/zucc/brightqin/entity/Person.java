@@ -15,26 +15,23 @@ public class Person {
      * 用户ID
      */
     private Integer personId;
+
+    private String loginId;
     /**
      * 用户名
      */
-
     private String personName;
     /**
      * 密码
      */
-
     private String password;
     /**
      * 邮箱
      */
-
     private String email;
     /**
      * 部门
      */
-
-
     private String position;
     /**
      * 手机号
@@ -61,6 +58,15 @@ public class Person {
 
     public void setPersonId(Integer personId) {
         this.personId = personId;
+    }
+
+    @Column(name = "loginId", nullable = false, length = 32)
+    public String getLoginId() {
+        return loginId;
+    }
+
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
     }
 
     @Column(name = "personName", nullable = false, length = 16)
@@ -136,4 +142,5 @@ public class Person {
     public void setPersonObjects(Set<PersonObject> personObjects) {
         this.personObjects = personObjects;
     }
+
 }

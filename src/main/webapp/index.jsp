@@ -13,8 +13,7 @@
 <body>
 
 <div style="height:85px; background-color: #00BFFF; text-align:center;">
-    <a href="#"><img alt="log.png" src="${pageContext.request.contextPath}/images/logo.png" alt="企业OKR考核管理系统"
-                     style="margin:0 auto;display:block"></a>
+    <img src="${pageContext.request.contextPath}/images/logo.png" alt="企业OKR考核管理系统">
 </div>
 
 <div class="container">
