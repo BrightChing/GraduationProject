@@ -131,4 +131,46 @@ public class PersonKeyResultController {
         }
         WightUtil.print(weightSum, response, "关键结果");
     }
+
+    @RequestMapping(value = "/selfEvaluation", method = RequestMethod.POST)
+    public void selfEvaluation(HttpServletRequest request, HttpServletResponse response) {
+
+        String id = request.getParameter("keyResultId");
+        String evaluation = request.getParameter("evaluation");
+        try {
+            evaluation = java.net.URLDecoder.decode(evaluation, "UTF-8");
+            id = java.net.URLDecoder.decode(id, "UTF-8");
+            PersonKeyResult result = service.getKeyResultById(Integer.valueOf(id));
+            result.setSelfScore(Float.parseFloat(evaluation));
+            service.updateKeyResult(result);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        try (PrintWriter pw = response.getWriter()) {
+            pw.print(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @RequestMapping(value = "/upstreamEvaluation", method = RequestMethod.POST)
+    public void upstreamEvaluation(HttpServletRequest request, HttpServletResponse response) {
+        String id = request.getParameter("keyResultId");
+        String evaluation = request.getParameter("evaluation");
+        try {
+            evaluation = java.net.URLDecoder.decode(evaluation, "UTF-8");
+            id = java.net.URLDecoder.decode(id, "UTF-8");
+            PersonKeyResult result = service.getKeyResultById(Integer.valueOf(id));
+            result.setUpstreamScore(Float.parseFloat(evaluation));
+            service.updateKeyResult(result);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        try (PrintWriter pw = response.getWriter()) {
+            pw.print(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

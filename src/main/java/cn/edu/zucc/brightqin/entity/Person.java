@@ -43,7 +43,7 @@ public class Person {
     private String address;
 
     private Department department;
-
+    private boolean manager;
     private Set<PersonObject> personObjects;
 
     public Person() {
@@ -143,4 +143,12 @@ public class Person {
         this.personObjects = personObjects;
     }
 
+    @Column(name = "manager", columnDefinition = "bool default false")
+    public boolean isManager() {
+        return manager;
+    }
+
+    public void setManager(boolean manager) {
+        this.manager = manager;
+    }
 }

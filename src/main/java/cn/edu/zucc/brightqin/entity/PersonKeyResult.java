@@ -11,9 +11,9 @@ import javax.persistence.*;
 public class PersonKeyResult {
     private Integer keyResultId;
     private String keyResultName;
-    private int selfScore;
-    private int upstreamScore;
-    private int totalScore;
+    private float selfScore;
+    private float upstreamScore;
+    private float totalScore;
     private float weight;
     private PersonObject personObject;
 
@@ -41,29 +41,29 @@ public class PersonKeyResult {
     }
 
     @Column(name = "selfScore")
-    public int getSelfScore() {
+    public float getSelfScore() {
         return selfScore;
     }
 
-    public void setSelfScore(int selfScore) {
+    public void setSelfScore(float selfScore) {
         this.selfScore = selfScore;
     }
 
     @Column(name = "upstreamScore")
-    public int getUpstreamScore() {
+    public float getUpstreamScore() {
         return upstreamScore;
     }
 
-    public void setUpstreamScore(int upstreamScore) {
+    public void setUpstreamScore(float upstreamScore) {
         this.upstreamScore = upstreamScore;
     }
 
     @Column(name = "totalScore")
-    public int getTotalScore() {
+    public float getTotalScore() {
         return totalScore;
     }
 
-    public void setTotalScore(int totalScore) {
+    public void setTotalScore(float totalScore) {
         this.totalScore = totalScore;
     }
 

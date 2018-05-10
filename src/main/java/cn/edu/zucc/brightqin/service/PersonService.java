@@ -63,4 +63,8 @@ public class PersonService {
     public List<Person> getPersonByDepartmentId(Integer id) {
         return personDAO.getPersonByDepartmentId(id);
     }
+
+    public Person getPersonByLoginId(String loginId) {
+        return personDAO.getPersonByLoginId(loginId);
+    }
 }

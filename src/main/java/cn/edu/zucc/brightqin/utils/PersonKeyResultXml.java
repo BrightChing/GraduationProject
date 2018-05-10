@@ -46,6 +46,12 @@ public class PersonKeyResultXml {
         stringBuilder.append("<cell>");
         stringBuilder.append(result.getWeight());
         stringBuilder.append("</cell>");
+        stringBuilder.append("<cell>");
+        stringBuilder.append(result.getSelfScore());
+        stringBuilder.append("</cell>");
+        stringBuilder.append("<cell>");
+        stringBuilder.append(result.getUpstreamScore());
+        stringBuilder.append("</cell>");
         stringBuilder.append("</row>");
     }
 }

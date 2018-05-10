@@ -16,7 +16,7 @@ public class PersonObject {
     private float weight;
     private int month;
     private Person person;
-
+    private boolean review;
     public PersonObject() {
     }
 
@@ -76,5 +76,14 @@ public class PersonObject {
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    @Column(name = "review", columnDefinition = "bool default false")
+    public boolean isReview() {
+        return review;
+    }
+
+    public void setReview(boolean review) {
+        this.review = review;
     }
 }

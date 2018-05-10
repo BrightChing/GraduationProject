@@ -36,7 +36,7 @@ public class PersonDAO {
      * @return Person
      */
     public Person getPersonById(Integer id) {
-        return this.getSession().get(Person.class,id);
+        return this.getSession().get(Person.class, id);
     }
 
     /**
@@ -78,6 +78,7 @@ public class PersonDAO {
         return this.getSession().createQuery(personCriteriaQuery).getResultList();
     }
 
+    @SuppressWarnings("unchecked")
     public List<Person> getPersonByDepartmentId(Integer id) {
         List list = this.getSession().createQuery("from Person where departmentId = ?").setParameter(0, id).getResultList();
         List<Person> people = new ArrayList<>();
@@ -85,5 +86,9 @@ public class PersonDAO {
             people.add((Person) o);
         }
         return people;
+    }
+
+    public Person getPersonByLoginId(String loginId) {
+        return (Person) this.getSession().createQuery("from Person where loginId = ?").setParameter(0, loginId).uniqueResult();
     }
 }

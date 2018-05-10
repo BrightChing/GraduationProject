@@ -101,6 +101,22 @@ public class DepartmentObjectController {
         }
     }
 
+    @RequestMapping(value = "/reviewDepartmentObject", method = RequestMethod.POST)
+    public void reviewDepartmentObject(HttpServletRequest request, HttpServletResponse response) {
+        String objectId = request.getParameter("objectId");
+        String review = request.getParameter("review");
+        try (PrintWriter pw = response.getWriter()) {
+            objectId = java.net.URLDecoder.decode(objectId, "UTF-8");
+            review = java.net.URLDecoder.decode(review, "UTF-8");
+            DepartmentObject object = service.getDepartmentObjectById(Integer.valueOf(objectId));
+            object.setReview(Boolean.parseBoolean(review));
+            service.updateDepartmentObject(object);
+            pw.print(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @RequestMapping(value = "/getDepartmentObjectsByDepartmentId")
     public void getDepartmentObjectsByDepartmentId(HttpServletResponse response, HttpServletRequest request) {
 

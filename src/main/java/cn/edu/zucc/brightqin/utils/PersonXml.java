@@ -41,6 +41,12 @@ public class PersonXml {
         stringBuilder.append(person.getDepartment().getDepartmentId());
         stringBuilder.append("</cell>");
         stringBuilder.append("<cell>");
+        stringBuilder.append(person.getLoginId());
+        stringBuilder.append("</cell>");
+        stringBuilder.append("<cell>");
+        stringBuilder.append(person.getPassword());
+        stringBuilder.append("</cell>");
+        stringBuilder.append("<cell>");
         stringBuilder.append(person.getPersonName());
         stringBuilder.append("</cell>");
         stringBuilder.append("<cell>");
@@ -54,6 +60,9 @@ public class PersonXml {
         stringBuilder.append("</cell>");
         stringBuilder.append("<cell>");
         stringBuilder.append(person.getAddress());
+        stringBuilder.append("</cell>");
+        stringBuilder.append("<cell>");
+        stringBuilder.append(person.isManager());
         stringBuilder.append("</cell>");
         stringBuilder.append("</row>");
     }

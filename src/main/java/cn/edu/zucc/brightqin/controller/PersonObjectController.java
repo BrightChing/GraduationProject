@@ -103,6 +103,26 @@ public class PersonObjectController {
         }
     }
 
+    @RequestMapping(value = "/reviewPersonObject", method = RequestMethod.POST)
+    public void reviewPersonObject(HttpServletRequest request, HttpServletResponse response) {
+        String id = request.getParameter("objectId");
+        String review = request.getParameter("review");
+        try {
+            id = java.net.URLDecoder.decode(id, "UTF-8");
+            review = java.net.URLDecoder.decode(review, "UTF-8");
+            PersonObject object = service.getObjectById(Integer.valueOf(id));
+            object.setReview(Boolean.parseBoolean(review));
+            service.updateObject(object);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        try (PrintWriter pw = response.getWriter()) {
+            pw.print(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @RequestMapping(value = "/getPersonObjects")
     public void getPersonObjects(HttpServletResponse response, HttpServletRequest request) {
         Integer id = Integer.valueOf(request.getParameter("id"));

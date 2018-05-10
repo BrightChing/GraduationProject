@@ -48,6 +48,9 @@ public class PersonObjectXml {
         stringBuilder.append("<cell>");
         stringBuilder.append(object.getMonth());
         stringBuilder.append("</cell>");
+        stringBuilder.append("<cell>");
+        stringBuilder.append(object.isReview());
+        stringBuilder.append("</cell>");
         stringBuilder.append("</row>");
     }
 }

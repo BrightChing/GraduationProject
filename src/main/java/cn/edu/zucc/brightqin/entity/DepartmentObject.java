@@ -14,6 +14,7 @@ public class DepartmentObject {
     private String departmentObjectName;
     private float weight;
     private int month;
+    private boolean review;
     private Set<DepartmentKeyResult> departmentKeyResults;
     private Department department;
 
@@ -77,5 +78,14 @@ public class DepartmentObject {
 
     public void setDepartment(Department department) {
         this.department = department;
+    }
+
+    @Column(name = "review", columnDefinition = "bool default false")
+    public boolean isReview() {
+        return review;
+    }
+
+    public void setReview(boolean review) {
+        this.review = review;
     }
 }

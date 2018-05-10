@@ -11,6 +11,7 @@ import java.util.Set;
 public class Department {
     private Integer departmentId;
     private String departmentName;
+    private Integer managerId;
     private Set<Person> persons;
     private Department department;
     private Set<Department> childDepartments;
@@ -77,5 +78,14 @@ public class Department {
 
     public void setDepartmentObjects(Set<DepartmentObject> departmentObjects) {
         this.departmentObjects = departmentObjects;
+    }
+
+    @Column(name = "managerId", columnDefinition = "int default null ")
+    public Integer getManagerId() {
+        return managerId;
+    }
+
+    public void setManagerId(Integer managerId) {
+        this.managerId = managerId;
     }
 }

@@ -17,7 +17,7 @@
 </div>
 
 <div class="container">
-    <form id="loginForm" action="/user/login" method="post">
+    <form id="loginForm" action="${pageContext.request.contextPath}/user/login" method="post">
         <section class="content">
 
             <span class="input input--hideo">

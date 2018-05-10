@@ -92,13 +92,54 @@ public class DepartmentController {
         response.setCharacterEncoding("UTF-8");
         Department department = service.getRootDepartment();
         if (department != null) {
-            department = service.getDepartmentById(department.getDepartmentId());
             TreeBuilder treeBuilder = new TreeBuilder(department);
             try (PrintWriter pw = response.getWriter()) {
                 pw.print(treeBuilder.build());
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @RequestMapping(value = "/departmentTreeTwo")
+    public void departmentTreeTwo(HttpServletResponse response, HttpServletRequest request) {
+        String id = request.getParameter("id");
+        response.setContentType("application/xml");
+        response.setCharacterEncoding("UTF-8");
+        Department department = service.getDepartmentById(Integer.valueOf(id));
+        TreeBuilder treeBuilder = new TreeBuilder(department);
+        try (PrintWriter pw = response.getWriter()) {
+            pw.print(treeBuilder.buildTwo());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping(value = "/departmentTreeThree")
+    public void departmentTreeThree(HttpServletResponse response, HttpServletRequest request) {
+        String id = request.getParameter("id");
+        response.setContentType("application/xml");
+        response.setCharacterEncoding("UTF-8");
+        Department department = service.getDepartmentById(Integer.valueOf(id));
+        TreeBuilder treeBuilder = new TreeBuilder(department);
+        try (PrintWriter pw = response.getWriter()) {
+            pw.print(treeBuilder.buildThree());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping(value = "/departmentTreeFour")
+    public void departmentTreeFour(HttpServletResponse response, HttpServletRequest request) {
+        String id = request.getParameter("id");
+        response.setContentType("application/xml");
+        response.setCharacterEncoding("UTF-8");
+        Department department = service.getDepartmentById(Integer.valueOf(id));
+        TreeBuilder treeBuilder = new TreeBuilder(department);
+        try (PrintWriter pw = response.getWriter()) {
+            pw.print(treeBuilder.buildFour());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
