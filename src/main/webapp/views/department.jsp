@@ -18,7 +18,7 @@
         }
     </style>
     <script type="text/javascript">
-        let myLayout1, myLayout2, myLayout3, myLayout4, myTabBar;
+        let myLayout1, myLayout2, myLayout3, myLayout4, myLayout5, myTabBar;
 
         function doOnLoad() {
             myTabBar = new dhtmlXTabBar("my_tabBar");
@@ -26,6 +26,7 @@
             myTabBar.addTab("tab2", "人员OKR审查", null, null);
             myTabBar.addTab("tab3", "部门OKR审查", null, null);
             myTabBar.addTab("tab4", "对员工评分", null, null);
+            myTabBar.addTab("tab5", "对下级部门评分", null, null);
             DepartmentOKRManagement();
             myTabBar.attachEvent("onTabClick", function (id) {
                 if (id === "tab2") {
@@ -35,6 +36,8 @@
                     DepartmentOKRReview();
                 } else if (id === "tab4") {
                     PersonOKREvaluation();
+                } else if (id === "tab5") {
+                    DepartmentOKREvaluation();
                 }
             });
         }
@@ -939,6 +942,161 @@
                     dhxWins.window("w1").close();
                 });
             }
+        }
+
+        function DepartmentOKREvaluation() {
+
+            myLayout5 = myTabBar.tabs("tab5").attachLayout("3W");
+            /*左边的布局 部门树*/
+            myLayout5.cells("a").setWidth(260);
+            myLayout5.cells("a").setText("部门");
+
+            let myTree = myLayout5.cells("a").attachTree();
+            myTree.setImagesPath("${pageContext.request.contextPath}/codebase/images/");
+
+            /*右边的的布局目标表*/
+            myLayout5.cells("b").setText("目标");
+            let myToolbarLeft = myLayout5.cells("b").attachToolbar();
+            myToolbarLeft.setIconsPath("${pageContext.request.contextPath}/icons/");
+            myToolbarLeft.addInput("time", 4, "", 150);
+            $("input").replaceWith("月份&nbsp;" +
+                "<select id='month5'  class='month5' style='height:25px'>"
+                + "<option ></option>"
+                + "<option >1</option>"
+                + "<option >2</option>"
+                + "<option >3</option>"
+                + "<option >4</option>"
+                + "<option >5</option>"
+                + "<option >6</option>"
+                + "<option >7</option>"
+                + "<option >8</option>"
+                + "<option >9</option>"
+                + "<option >10</option>"
+                + "<option >11</option>"
+                + "<option >12</option>"
+                + "</select>");
+
+            let objectGrid = myLayout5.cells("b").attachGrid();
+            objectGrid.setHeader("&nbsp,departmentId,目标名,权重(%),所属月份,是否已通过审查");
+            objectGrid.setInitWidths("70,0,120,90,90,130");
+            objectGrid.setColAlign("center,left,left,left,left,left");
+            objectGrid.setColTypes("img,ro,ro,ro,ro,ro");
+            objectGrid.init();
+
+            myLayout5.cells("c").setText("关键结果");
+            let keyResultGrid = myLayout5.cells("c").attachGrid();
+            keyResultGrid.setImagePath("${pageContext.request.contextPath}/codebase/images/");
+            keyResultGrid.setIconsPath("${pageContext.request.contextPath}/icons/");
+            keyResultGrid.setHeader("&nbsp;,objectId,关键结果名,权重(%),自评分数,上级评分");
+            keyResultGrid.setColTypes("img,ro,ro,ro,ro,ro");
+            keyResultGrid.setInitWidths("70,0,120,90,90,90");
+            keyResultGrid.setColAlign("center,left,left,left,left,left");
+            keyResultGrid.init();
+
+            let resultToolBar = myLayout5.cells("c").attachToolbar();
+            resultToolBar.setIconsPath("${pageContext.request.contextPath}/icons/");
+            resultToolBar.loadStruct("${pageContext.request.contextPath}/data/evaluation.xml", function () {
+            });
+
+            /*加载部门树*/
+            myTree.load("${pageContext.request.contextPath}/department/departmentTreeThree?id=" + "${sessionScope.departmentId}", function () {
+            }, "xml");
+
+            $(document).ready(function () {
+                $(".month5").change(function () {
+                    let did = myTree.getSelectedItemId();
+                    loadObject(did);
+                });
+            });
+
+
+            function loadObject(departmentId) {
+                objectGrid.clearAll(false);
+                objectGrid.load("${pageContext.request.contextPath}/departmentObject/getDepartmentObjectsByDepartmentId?id="
+                    + departmentId + "&month=" + document.getElementById('month5').selectedIndex, function () {
+                }, "xml");
+            }
+
+            /*点击加载部门的目标表*/
+            myTree.attachEvent("onClick", function (id) {
+                document.getElementById('month5').selectedIndex = 0;
+                loadObject(id);
+            });
+
+            function loadKeyResult(objectId) {
+                keyResultGrid.clearAll(false);
+                keyResultGrid.load("${pageContext.request.contextPath}/departmentKeyResult/getDepartmentKeyResultsByObjectId?id=" + objectId, function () {
+                }, "xml");
+            }
+
+            objectGrid.attachEvent("onRowSelect", function (id, ind) {
+                loadKeyResult(id);
+            });
+
+            resultToolBar.attachEvent("onClick", function () {
+                evaluation();
+            });
+
+
+            function evaluation() {
+                let kid = keyResultGrid.getSelectedRowId();
+                if (kid == null) {
+                    dhtmlx.alert("请选中您将要打分的关键结果");
+                    return;
+                }
+
+                let formData = [
+                    {
+                        type: "checkbox", checked: true, list: [
+                            {type: "settings", labelWidth: 90, inputWidth: 200, position: "label-left"},
+                            {
+                                type: "input",
+                                name: "evaluation",
+                                label: "分数",
+                                value: keyResultGrid.cells(kid, 4).getValue(),
+                                validate: "^\\d+(\\.\\d+)?$",
+                                required: true
+                            }
+                        ]
+                    },
+                    {
+                        type: "checkbox", checked: 1, name: "check", list: [
+                            {type: "button", name: "OK", value: "确认", offsetLeft: 40, offsetTop: 10, inputWidth: 50},
+                            {type: "newcolumn"},
+                            {type: "button", name: "CANCEL", value: "取消", offsetLeft: 8, offsetTop: 10}
+                        ]
+                    }
+                ];
+                let dhxWins = new dhtmlXWindows();
+                dhxWins.attachViewportTo("my_tabBar");
+                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "280");
+                dhxWins.window("w1").center();
+                w1.setText("编辑关键结果");
+                let myForm = w1.attachForm(formData);
+                myForm.enableLiveValidation(true);
+                myForm.attachEvent("onValidateError", function (name, value, result) {
+                    dhtmlx.alert(myForm.getItemLabel(name) + ": 错误");
+                    myForm.uncheckItem("check");
+                });
+                myForm.attachEvent("onValidateSuccess", function (name, value, result) {
+                    if (parseFloat(myForm.getItemValue("evaluation")) > 100) {
+                        dhtmlx.alert(myForm.getItemLabel("evaluation") + ": 错误大于了100");
+                        myForm.uncheckItem("check");
+                        return;
+                    }
+                    myForm.checkItem("check");
+                });
+                myForm.attachEvent("onButtonClick", function (name) {
+                    if (name === "OK") {
+                        let data = "evaluation=" + encodeURI(encodeURI(myForm.getItemValue("evaluation"))) + "&keyResultId=" + kid;
+                        dhx.ajax.post("${pageContext.request.contextPath}/departmentKeyResult/upstreamEvaluationDepartmentKeyResult", data, function (result) {
+                            loadKeyResult(objectGrid.getSelectedRowId());
+                        });
+                    }
+                    dhxWins.window("w1").close();
+                });
+            }
+
         }
 
     </script>

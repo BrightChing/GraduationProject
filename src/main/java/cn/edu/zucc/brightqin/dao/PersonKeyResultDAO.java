@@ -32,7 +32,7 @@ public class PersonKeyResultDAO {
     }
 
     public void deleteKeyResultById(Integer id) {
-        this.getSession().createQuery("delete PersonKeyResult where keyResultId = ?").setParameter(0, id).executeUpdate();
+        this.getSession().createQuery("delete from PersonKeyResult where keyResultId = ?").setParameter(0, id).executeUpdate();
     }
 
     public void updateKeyResult(PersonKeyResult keyResult) {
