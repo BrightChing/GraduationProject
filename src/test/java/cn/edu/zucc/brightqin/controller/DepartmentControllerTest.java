@@ -1,8 +1,8 @@
 package cn.edu.zucc.brightqin.controller;
 
-import cn.edu.zucc.brightqin.entity.Department;
-import cn.edu.zucc.brightqin.service.DepartmentService;
-import cn.edu.zucc.brightqin.utils.TreeBuilder;
+import cn.edu.zucc.brightqin.graduation.entity.Department;
+import cn.edu.zucc.brightqin.graduation.service.DepartmentService;
+import cn.edu.zucc.brightqin.graduation.utils.TreeBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

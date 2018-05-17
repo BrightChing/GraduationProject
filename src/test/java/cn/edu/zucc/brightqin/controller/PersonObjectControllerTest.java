@@ -1,8 +1,8 @@
 package cn.edu.zucc.brightqin.controller;
 
-import cn.edu.zucc.brightqin.entity.PersonObject;
-import cn.edu.zucc.brightqin.service.PersonObjectService;
-import cn.edu.zucc.brightqin.utils.PersonObjectXml;
+import cn.edu.zucc.brightqin.graduation.entity.PersonObject;
+import cn.edu.zucc.brightqin.graduation.service.PersonObjectService;
+import cn.edu.zucc.brightqin.graduation.utils.PersonObjectXml;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
