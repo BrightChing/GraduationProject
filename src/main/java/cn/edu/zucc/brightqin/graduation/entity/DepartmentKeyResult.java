@@ -39,7 +39,7 @@ public class DepartmentKeyResult {
         this.departmentKeyResultName = departmentKeyResultName;
     }
 
-    @Column(name = "selfScore")
+    @Column(name = "selfScore", columnDefinition = "float default 0")
     public float getSelfScore() {
         return selfScore;
     }
@@ -48,7 +48,7 @@ public class DepartmentKeyResult {
         this.selfScore = selfScore;
     }
 
-    @Column(name = "upstreamScore")
+    @Column(name = "upstreamScore", columnDefinition = "float default 0")
     public float getUpstreamScore() {
         return upstreamScore;
     }
@@ -57,7 +57,7 @@ public class DepartmentKeyResult {
         this.upstreamScore = upstreamScore;
     }
 
-    @Column(name = "totalScore")
+    @Column(name = "totalScore", columnDefinition = "float default 0")
     public float getTotalScore() {
         return totalScore;
     }

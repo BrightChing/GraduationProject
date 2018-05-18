@@ -27,6 +27,10 @@
             myTabBar.addTab("tab3", "部门OKR审查", null, null);
             myTabBar.addTab("tab4", "对员工评分", null, null);
             myTabBar.addTab("tab5", "对下级部门评分", null, null);
+            myTabBar.addTab("tab6", "负责人自评", null, null);
+            myTabBar.addTab("tab7", "部门自评", null, null);
+            myTabBar.addTab("tab8", "部门绩效图表", null, null);
+            myTabBar.addTab("tab9", "人员绩效图表", null, null);
             DepartmentOKRManagement();
             myTabBar.attachEvent("onTabClick", function (id) {
                 if (id === "tab2") {
@@ -38,6 +42,17 @@
                     PersonOKREvaluation();
                 } else if (id === "tab5") {
                     DepartmentOKREvaluation();
+                } else if (id === "tab6") {
+                    PersonSelfEvaluation();
+                }
+                else if (id === "tab7") {
+                    DepartmentSelfOKREvaluation();
+                }
+                else if (id === "tab8") {
+                    DepartmentChart();
+                }
+                else if (id === "tab9") {
+                    PersonChart();
                 }
             });
         }
@@ -1053,7 +1068,7 @@
                                 type: "input",
                                 name: "evaluation",
                                 label: "分数",
-                                value: keyResultGrid.cells(kid, 4).getValue(),
+                                value: keyResultGrid.cells(kid, 5).getValue(),
                                 validate: "^\\d+(\\.\\d+)?$",
                                 required: true
                             }
@@ -1098,6 +1113,406 @@
             }
 
         }
+
+        function PersonSelfEvaluation() {
+            myLayout = myTabBar.tabs("tab6").attachLayout("2U");
+
+            myLayout.cells("a").setText("目标");
+            myLayout.cells("a").setWidth(500);
+            let objectToolBar = myLayout.cells("a").attachToolbar();
+            objectToolBar.addInput("time", 4, "", 150);
+            $("input").replaceWith("月份&nbsp;" +
+                "<select id='month6' class='month6' style='height:25px'>"
+                + "<option ></option>"
+                + "<option >1</option>"
+                + "<option >2</option>"
+                + "<option >3</option>"
+                + "<option >4</option>"
+                + "<option >5</option>"
+                + "<option >6</option>"
+                + "<option >7</option>"
+                + "<option >8</option>"
+                + "<option >9</option>"
+                + "<option >10</option>"
+                + "<option >11</option>"
+                + "<option >12</option>"
+                + "</select>");
+
+            let objectGrid = myLayout.cells("a").attachGrid();
+            objectGrid.setHeader("&nbsp,departmentId,目标名,权重(%),所属月份,是否已通过审查");
+            objectGrid.setInitWidths("70,0,120,90,90,130");
+            objectGrid.setColAlign("center,left,left,left,left,left");
+            objectGrid.setColTypes("img,ro,ro,ro,ro,ro");
+            objectGrid.init();
+
+            myLayout.cells("b").setText("关键结果管理");
+            let resultToolBar = myLayout.cells("b").attachToolbar();
+            resultToolBar.setIconsPath("${pageContext.request.contextPath}/icons/");
+            resultToolBar.loadStruct("${pageContext.request.contextPath}/data/evaluation.xml", function () {
+            });
+            let keyResultGrid = myLayout.cells("b").attachGrid();
+            keyResultGrid.setImagePath("${pageContext.request.contextPath}/codebase/images/");
+            keyResultGrid.setIconsPath("${pageContext.request.contextPath}/icons/");
+            keyResultGrid.setHeader("&nbsp;,objectId,关键结果名,权重(%),自评分数,上级评分");
+            keyResultGrid.setColTypes("img,ro,ro,ro,ro,ro");
+            keyResultGrid.setInitWidths("70,0,120,90,90,90");
+            keyResultGrid.setColAlign("center,left,left,left,left,left");
+            keyResultGrid.init();
+
+            loadObject('${sessionScope.userId}');
+
+            function loadObject(personId) {
+                keyResultGrid.clearAll(false);
+                objectGrid.clearAll(false);
+                objectGrid.load("${pageContext.request.contextPath}/personObject/getPersonObjects?id=" + personId
+                    + "&month=" + document.getElementById('month6').selectedIndex, function () {
+                }, "xml");
+            }
+
+
+            /*当选择人员目标时加载关键目标*/
+            objectGrid.attachEvent("onRowSelect", function (id, ind) {
+                loadKeyResult(id);
+            });
+
+            $(document).ready(function () {
+                $(".month6").change(function () {
+                    loadObject('${sessionScope.userId}');
+                });
+            });
+
+
+            /*给通过resultToolBar对员工关键结果进行操作*/
+            resultToolBar.attachEvent("onClick", function (id) {
+                evaluation()
+            });
+
+            function loadKeyResult(objectId) {
+                keyResultGrid.clearAll(false);
+                keyResultGrid.load("${pageContext.request.contextPath}/personKeyResult/getPersonKeyResultsByObjectId?id=" + objectId, function () {
+                }, "xml");
+            }
+
+            /*评价关键结果*/
+            function evaluation() {
+                let oid = objectGrid.getSelectedRowId();
+                let rid = keyResultGrid.getSelectedRowId();
+                if (rid == null) {
+                    dhtmlx.alert("请选中要评价的关键结果");
+                    return;
+                }
+                if (objectGrid.cells(oid, 5).getValue() === "false") {
+                    dhtmlx.alert("目标还没有通过审查确认，关键结果不可评价");
+                    return;
+                }
+                let formData = [
+                    {
+                        type: "checkbox", checked: true, list: [
+                            {type: "settings", labelWidth: 90, inputWidth: 200, position: "label-left"},
+                            {
+                                type: "input",
+                                name: "evaluation",
+                                label: "得分",
+                                value: keyResultGrid.cells(rid, 4).getValue(),
+                                validate: "^\\d+(\\.\\d+)?$",
+                                required: true
+                            }
+                        ]
+                    },
+                    {
+                        type: "checkbox", checked: 1, name: "check", list: [
+                            {type: "button", name: "OK", value: "确认", offsetLeft: 40, offsetTop: 10, inputWidth: 50},
+                            {type: "newcolumn"},
+                            {type: "button", name: "CANCEL", value: "取消", offsetLeft: 8, offsetTop: 10}
+                        ]
+                    }
+                ];
+                let dhxWins = new dhtmlXWindows();
+                dhxWins.attachViewportTo("my_tabBar");
+                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "280");
+                dhxWins.window("w1").center();
+                w1.setText("编辑关键结果");
+                let myForm = w1.attachForm(formData);
+                myForm.enableLiveValidation(true);
+                myForm.attachEvent("onValidateError", function (name, value, result) {
+                    dhtmlx.alert(myForm.getItemLabel(name) + ": 错误");
+                    myForm.uncheckItem("check");
+                });
+                myForm.attachEvent("onValidateSuccess", function (name, value, result) {
+                    if (parseFloat(myForm.getItemValue("evaluation")) > 100) {
+                        dhtmlx.alert(myForm.getItemLabel("evaluation") + ": 错误大于了100");
+                        myForm.uncheckItem("check");
+                        return;
+                    }
+                    myForm.checkItem("check");
+                });
+                myForm.attachEvent("onButtonClick", function (name) {
+                    if (name === "OK") {
+                        let data = "evaluation=" + encodeURI(encodeURI(myForm.getItemValue("evaluation"))) + "&keyResultId=" + rid;
+                        dhx.ajax.post("${pageContext.request.contextPath}/personKeyResult/selfEvaluation", data, function () {
+                            loadKeyResult(objectGrid.getSelectedRowId());
+                        });
+                    }
+                    dhxWins.window("w1").close();
+                });
+            }
+
+        }
+
+        function DepartmentSelfOKREvaluation() {
+
+            myLayout5 = myTabBar.tabs("tab7").attachLayout("2U");
+            /*左边的布局目标表*/
+            myLayout5.cells("a").setText("目标");
+            let myToolbarLeft = myLayout5.cells("a").attachToolbar();
+            myToolbarLeft.setIconsPath("${pageContext.request.contextPath}/icons/");
+            myToolbarLeft.addInput("time", 4, "", 150);
+            $("input").replaceWith("月份&nbsp;" +
+                "<select id='month7'  class='month7' style='height:25px'>"
+                + "<option ></option>"
+                + "<option >1</option>"
+                + "<option >2</option>"
+                + "<option >3</option>"
+                + "<option >4</option>"
+                + "<option >5</option>"
+                + "<option >6</option>"
+                + "<option >7</option>"
+                + "<option >8</option>"
+                + "<option >9</option>"
+                + "<option >10</option>"
+                + "<option >11</option>"
+                + "<option >12</option>"
+                + "</select>");
+
+            let objectGrid = myLayout5.cells("a").attachGrid();
+            objectGrid.setHeader("&nbsp,departmentId,目标名,权重(%),所属月份,是否已通过审查");
+            objectGrid.setInitWidths("70,0,120,90,90,130");
+            objectGrid.setColAlign("center,left,left,left,left,left");
+            objectGrid.setColTypes("img,ro,ro,ro,ro,ro");
+            objectGrid.init();
+
+            myLayout5.cells("b").setText("关键结果");
+            let keyResultGrid = myLayout5.cells("b").attachGrid();
+            keyResultGrid.setImagePath("${pageContext.request.contextPath}/codebase/images/");
+            keyResultGrid.setIconsPath("${pageContext.request.contextPath}/icons/");
+            keyResultGrid.setHeader("&nbsp;,objectId,关键结果名,权重(%),自评分数,上级评分");
+            keyResultGrid.setColTypes("img,ro,ro,ro,ro,ro");
+            keyResultGrid.setInitWidths("70,0,120,90,90,90");
+            keyResultGrid.setColAlign("center,left,left,left,left,left");
+            keyResultGrid.init();
+
+            let resultToolBar = myLayout5.cells("b").attachToolbar();
+            resultToolBar.setIconsPath("${pageContext.request.contextPath}/icons/");
+            resultToolBar.loadStruct("${pageContext.request.contextPath}/data/evaluation.xml", function () {
+            });
+
+            loadObject("${sessionScope.departmentId}");
+            $(document).ready(function () {
+                $(".month7").change(function () {
+                    let did = "${sessionScope.departmentId}";
+                    loadObject(did);
+                });
+            });
+
+
+            function loadObject(departmentId) {
+                objectGrid.clearAll(false);
+                objectGrid.load("${pageContext.request.contextPath}/departmentObject/getDepartmentObjectsByDepartmentId?id="
+                    + departmentId + "&month=" + document.getElementById('month7').selectedIndex, function () {
+                }, "xml");
+            }
+
+
+            function loadKeyResult(objectId) {
+                keyResultGrid.clearAll(false);
+                keyResultGrid.load("${pageContext.request.contextPath}/departmentKeyResult/getDepartmentKeyResultsByObjectId?id=" + objectId, function () {
+                }, "xml");
+            }
+
+            objectGrid.attachEvent("onRowSelect", function (id, ind) {
+                loadKeyResult(id);
+            });
+
+            resultToolBar.attachEvent("onClick", function () {
+                evaluation();
+            });
+
+
+            function evaluation() {
+                let kid = keyResultGrid.getSelectedRowId();
+                if (kid == null) {
+                    dhtmlx.alert("请选中您将要打分的关键结果");
+                    return;
+                }
+
+                let formData = [
+                    {
+                        type: "checkbox", checked: true, list: [
+                            {type: "settings", labelWidth: 90, inputWidth: 200, position: "label-left"},
+                            {
+                                type: "input",
+                                name: "evaluation",
+                                label: "分数",
+                                value: keyResultGrid.cells(kid, 4).getValue(),
+                                validate: "^\\d+(\\.\\d+)?$",
+                                required: true
+                            }
+                        ]
+                    },
+                    {
+                        type: "checkbox", checked: 1, name: "check", list: [
+                            {type: "button", name: "OK", value: "确认", offsetLeft: 40, offsetTop: 10, inputWidth: 50},
+                            {type: "newcolumn"},
+                            {type: "button", name: "CANCEL", value: "取消", offsetLeft: 8, offsetTop: 10}
+                        ]
+                    }
+                ];
+                let dhxWins = new dhtmlXWindows();
+                dhxWins.attachViewportTo("my_tabBar");
+                let w1 = dhxWins.createWindow("w1", "0", "0", "300", "280");
+                dhxWins.window("w1").center();
+                w1.setText("编辑关键结果");
+                let myForm = w1.attachForm(formData);
+                myForm.enableLiveValidation(true);
+                myForm.attachEvent("onValidateError", function (name, value, result) {
+                    dhtmlx.alert(myForm.getItemLabel(name) + ": 错误");
+                    myForm.uncheckItem("check");
+                });
+                myForm.attachEvent("onValidateSuccess", function (name, value, result) {
+                    if (parseFloat(myForm.getItemValue("evaluation")) > 100) {
+                        dhtmlx.alert(myForm.getItemLabel("evaluation") + ": 错误大于了100");
+                        myForm.uncheckItem("check");
+                        return;
+                    }
+                    myForm.checkItem("check");
+                });
+                myForm.attachEvent("onButtonClick", function (name) {
+                    if (name === "OK") {
+                        let data = "evaluation=" + encodeURI(encodeURI(myForm.getItemValue("evaluation"))) + "&keyResultId=" + kid;
+                        dhx.ajax.post("${pageContext.request.contextPath}/departmentKeyResult/selfEvaluationDepartmentKeyResult", data, function () {
+                            loadKeyResult(objectGrid.getSelectedRowId());
+                        });
+                    }
+                    dhxWins.window("w1").close();
+                });
+            }
+
+        }
+
+        function DepartmentChart() {
+
+            myLayout3 = myTabBar.tabs("tab8").attachLayout("2U");
+            /*左边的布局 部门树*/
+            myLayout3.cells("a").setWidth(260);
+            myLayout3.cells("a").setText("部门");
+
+            let myTree = myLayout3.cells("a").attachTree();
+            myTree.setImagesPath("${pageContext.request.contextPath}/codebase/images/");
+
+
+            /*右边的的布局目标表*/
+            myLayout3.cells("b").setText("目标");
+
+            /*加载部门树*/
+            myTree.load("${pageContext.request.contextPath}/department/departmentTreeTwo?id=" + "${sessionScope.departmentId}", function () {
+            }, "xml");
+            myTree.attachEvent("onClick", function (id) {
+                let myChart = myLayout3.cells("b").attachChart({
+                    view: "spline",
+                    value: "#sales#",
+                    item: {
+                        borderColor: "#ffffff",
+                        color: "#000000"
+                    },
+                    line: {
+                        color: "#ff9900",
+                        width: 3
+                    },
+                    xAxis: {
+                        template: "#month#月"
+                    },
+                    offset: 0,
+                    yAxis: {
+                        start: 50,
+                        end: 100,
+                        step: 1,
+                        template: function (obj) {
+                            return (obj % 5 ? "" : obj)
+                        }
+                    }
+                });
+                myChart.load("${pageContext.request.contextPath}/department/departmentChart?id=" + id, function () {
+                });
+            });
+        }
+
+
+        function PersonChart() {
+            myLayout2 = myTabBar.tabs("tab9").attachLayout("3W");
+            /*左边的布局 部门树*/
+            myLayout2.cells("a").setWidth(280);
+            myLayout2.cells("a").setText("部门");
+
+            let myTree = myLayout2.cells("a").attachTree();
+            myTree.setImagesPath("${pageContext.request.contextPath}/codebase/images/");
+
+            /*右边的的布局 人员表*/
+            myLayout2.cells("b").setText("人员");
+            myLayout2.cells("b").setWidth(200);
+            let personGrid = myLayout2.cells("b").attachGrid();
+            personGrid.setImagePath("${pageContext.request.contextPath}/codebase/images/");
+            personGrid.setIconsPath("${pageContext.request.contextPath}/icons/");
+            personGrid.setHeader("&nbsp;,departmentId,员工名");
+            personGrid.setColTypes("img,ro,ro");
+            personGrid.setInitWidths("70,0,*");
+            personGrid.setColAlign("center,left,left");
+            personGrid.init();
+
+            myLayout2.cells("c").setText("图标");
+
+
+            /*加载部门树*/
+            myTree.load("${pageContext.request.contextPath}/department/departmentTreeFour?id=" + "${sessionScope.departmentId}", function () {
+            }, "xml");
+
+            /*加载点击部门的员工表*/
+            myTree.attachEvent("onClick", function (id) {
+                personGrid.clearAll(false);
+                personGrid.load("${pageContext.request.contextPath}/person/getPersonDepartmentManager?id=" + id, function () {
+                }, "xml");
+            });
+
+            personGrid.attachEvent("onRowSelect", function (id, ind) {
+                let myChart = myLayout2.cells("c").attachChart({
+                    view: "spline",
+                    value: "#sales#",
+                    item: {
+                        borderColor: "#ffffff",
+                        color: "#000000"
+                    },
+                    line: {
+                        color: "#ff9900",
+                        width: 3
+                    },
+                    xAxis: {
+                        template: "#month#月"
+                    },
+                    offset: 0,
+                    yAxis: {
+                        start: 50,
+                        end: 100,
+                        step: 1,
+                        template: function (obj) {
+                            return (obj % 5 ? "" : obj)
+                        }
+                    }
+                });
+                myChart.load("${pageContext.request.contextPath}/person/personChart?id=" + id, function () {
+                });
+            });
+
+        }
+
 
     </script>
 </head>

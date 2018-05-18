@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+    <item id="1">
+        <sales>75.35</sales>
+        <month>1</month>
+    </item>
+    <item id="2">
+        <sales>73.36</sales>
+        <month>2</month>
+    </item>
+    <item id="3">
+        <sales>70.065</sales>
+        <month>3</month>
+    </item>
+    <item id="4">
+        <sales>76.71</sales>
+        <month>4</month>
+    </item>
+    <item id="5">
+        <sales>68.1</sales>
+        <month>5</month>
+    </item>
+    <item id="6">
+        <sales>81.43</sales>
+        <month>6</month>
+    </item>
+    <item id="7">
+        <sales>72.1</sales>
+        <month>7</month>
+    </item>
+    <item id="8">
+        <sales>79.295</sales>
+        <month>8</month>
+    </item>
+    <item id="9">
+        <sales>70.55</sales>
+        <month>9</month>
+    </item>
+    <item id="10">
+        <sales>72.64</sales>
+        <month>10</month>
+    </item>
+    <item id="11">
+        <sales>73.71</sales>
+        <month>11</month>
+    </item>
+    <item id="12">
+        <sales>72.575</sales>
+        <month>12</month>
+    </item>
+</data>

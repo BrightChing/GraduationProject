@@ -40,7 +40,7 @@ public class PersonKeyResult {
         this.personKeyResultName = personKeyResultName;
     }
 
-    @Column(name = "selfScore")
+    @Column(name = "selfScore", columnDefinition = "float default 0")
     public float getSelfScore() {
         return selfScore;
     }
@@ -49,7 +49,7 @@ public class PersonKeyResult {
         this.selfScore = selfScore;
     }
 
-    @Column(name = "upstreamScore")
+    @Column(name = "upstreamScore", columnDefinition = "float default 0")
     public float getUpstreamScore() {
         return upstreamScore;
     }
@@ -58,7 +58,7 @@ public class PersonKeyResult {
         this.upstreamScore = upstreamScore;
     }
 
-    @Column(name = "totalScore")
+    @Column(name = "totalScore", columnDefinition = "float default 0")
     public float getTotalScore() {
         return totalScore;
     }
@@ -67,7 +67,7 @@ public class PersonKeyResult {
         this.totalScore = totalScore;
     }
 
-    @Column(name = "weight")
+    @Column(name = "weight", columnDefinition = "float default 0")
     public float getWeight() {
         return weight;
     }

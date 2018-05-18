@@ -8,7 +8,7 @@ import javax.persistence.*;
  * @author brightqin
  */
 @Entity
-@Table(name = "user")
+@Table(name = "User")
 public class User {
 
     private String id;

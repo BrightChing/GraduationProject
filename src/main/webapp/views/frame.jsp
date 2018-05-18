@@ -654,10 +654,10 @@
             let keyResultGrid = myLayout2.cells("d").attachGrid();
             keyResultGrid.setImagePath("${pageContext.request.contextPath}/codebase/images/");
             keyResultGrid.setIconsPath("${pageContext.request.contextPath}/icons/");
-            keyResultGrid.setHeader("&nbsp;,objectId,关键结果名,权重(%),自评分数");
-            keyResultGrid.setColTypes("img,ro,ro,ro,ro");
-            keyResultGrid.setInitWidths("70,0,120,90,90");
-            keyResultGrid.setColAlign("center,left,left,left,left");
+            keyResultGrid.setHeader("&nbsp;,objectId,关键结果名,权重(%)");
+            keyResultGrid.setColTypes("img,ro,ro,ro");
+            keyResultGrid.setInitWidths("70,0,120,90");
+            keyResultGrid.setColAlign("center,left,left,left");
             keyResultGrid.init();
 
             /*加载部门树*/

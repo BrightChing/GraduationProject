@@ -32,7 +32,7 @@ public class DepartmentObject {
         this.departmentObjectId = departmentObjectId;
     }
 
-    @Column(name = "departmentObjectName", nullable = false, length = 16)
+    @Column(name = "departmentObjectName", nullable = false, length = 32)
     public String getDepartmentObjectName() {
         return departmentObjectName;
     }

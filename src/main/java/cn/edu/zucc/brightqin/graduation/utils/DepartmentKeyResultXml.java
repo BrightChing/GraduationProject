@@ -41,6 +41,12 @@ public class DepartmentKeyResultXml {
         stringBuilder.append("<cell>");
         stringBuilder.append(keyResult.getWeight());
         stringBuilder.append("</cell>");
+        stringBuilder.append("<cell>");
+        stringBuilder.append(keyResult.getSelfScore());
+        stringBuilder.append("</cell>");
+        stringBuilder.append("<cell>");
+        stringBuilder.append(keyResult.getUpstreamScore());
+        stringBuilder.append("</cell>");
         stringBuilder.append("</row>");
     }
 }

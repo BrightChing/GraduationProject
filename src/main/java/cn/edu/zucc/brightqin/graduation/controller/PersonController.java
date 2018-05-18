@@ -2,8 +2,13 @@ package cn.edu.zucc.brightqin.graduation.controller;
 
 import cn.edu.zucc.brightqin.graduation.entity.Department;
 import cn.edu.zucc.brightqin.graduation.entity.Person;
+import cn.edu.zucc.brightqin.graduation.entity.PersonKeyResult;
+import cn.edu.zucc.brightqin.graduation.entity.PersonObject;
 import cn.edu.zucc.brightqin.graduation.service.DepartmentService;
+import cn.edu.zucc.brightqin.graduation.service.PersonKeyResultService;
+import cn.edu.zucc.brightqin.graduation.service.PersonObjectService;
 import cn.edu.zucc.brightqin.graduation.service.PersonService;
+import cn.edu.zucc.brightqin.graduation.utils.ChartXml;
 import cn.edu.zucc.brightqin.graduation.utils.PasswordUtil;
 import cn.edu.zucc.brightqin.graduation.utils.PersonXml;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +35,15 @@ import java.util.Set;
 public class PersonController {
     private final DepartmentService departmentService;
     private final PersonService personService;
+    private final PersonObjectService personObjectService;
+    private final PersonKeyResultService personKeyResultService;
 
     @Autowired
-    public PersonController(DepartmentService departmentService, PersonService personService) {
+    public PersonController(DepartmentService departmentService, PersonService personService, PersonKeyResultService personKeyResultService, PersonObjectService personObjectService) {
         this.departmentService = departmentService;
         this.personService = personService;
+        this.personKeyResultService = personKeyResultService;
+        this.personObjectService = personObjectService;
     }
 
     /**
@@ -209,4 +218,36 @@ public class PersonController {
             e.printStackTrace();
         }
     }
+
+    @RequestMapping(value = "/personChart")
+    public void personChart(HttpServletResponse response, HttpServletRequest request) {
+        String id = request.getParameter("id");
+        response.setContentType("application/xml");
+        response.setCharacterEncoding("UTF-8");
+        float[] month = new float[13];
+        for (int i = 1; i < month.length; i++) {
+            month[i] = score(Integer.valueOf(id), i);
+        }
+        ChartXml chartXml = new ChartXml(month);
+        try (PrintWriter pw = response.getWriter()) {
+            pw.print(chartXml.build());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private float score(Integer id, int month) {
+        List<PersonObject> personObjects = personObjectService.getObjectsByPersonIdAndMonth(id, month);
+        float objectScore = 0;
+        for (PersonObject object : personObjects) {
+            List<PersonKeyResult> personKeyResults = personKeyResultService.getKeyResultsByObjectId(object.getPersonObjectId());
+            float resultScore = 0;
+            for (PersonKeyResult result : personKeyResults) {
+                resultScore += (result.getSelfScore() + result.getUpstreamScore()) * result.getWeight() / 200;
+            }
+            objectScore += resultScore * object.getWeight() / 100;
+        }
+        return objectScore;
+    }
+
 }

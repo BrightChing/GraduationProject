@@ -1,7 +1,12 @@
 package cn.edu.zucc.brightqin.graduation.controller;
 
 import cn.edu.zucc.brightqin.graduation.entity.Department;
+import cn.edu.zucc.brightqin.graduation.entity.DepartmentKeyResult;
+import cn.edu.zucc.brightqin.graduation.entity.DepartmentObject;
+import cn.edu.zucc.brightqin.graduation.service.DepartmentKeyResultService;
+import cn.edu.zucc.brightqin.graduation.service.DepartmentObjectService;
 import cn.edu.zucc.brightqin.graduation.service.DepartmentService;
+import cn.edu.zucc.brightqin.graduation.utils.ChartXml;
 import cn.edu.zucc.brightqin.graduation.utils.TreeBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * @author brightqin
@@ -20,10 +26,15 @@ import java.io.PrintWriter;
 @RequestMapping(value = "/department")
 public class DepartmentController {
     private final DepartmentService service;
+    private final DepartmentObjectService departmentObjectService;
+    private final DepartmentKeyResultService departmentKeyResultService;
 
     @Autowired
-    public DepartmentController(DepartmentService service) {
+    public DepartmentController(DepartmentService service, DepartmentObjectService departmentObjectService,
+                                DepartmentKeyResultService departmentKeyResultService) {
         this.service = service;
+        this.departmentObjectService = departmentObjectService;
+        this.departmentKeyResultService = departmentKeyResultService;
     }
 
 
@@ -141,6 +152,37 @@ public class DepartmentController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @RequestMapping(value = "/departmentChart")
+    public void departmentChart(HttpServletResponse response, HttpServletRequest request) {
+        String id = request.getParameter("id");
+        response.setContentType("application/xml");
+        response.setCharacterEncoding("UTF-8");
+        float[] month = new float[13];
+        for (int i = 1; i < month.length; i++) {
+            month[i] = score(Integer.valueOf(id), i);
+        }
+        ChartXml chartXml = new ChartXml(month);
+        try (PrintWriter pw = response.getWriter()) {
+            pw.print(chartXml.build());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private float score(Integer id, int month) {
+        List<DepartmentObject> departmentObjects = departmentObjectService.getDepartmenttObjectsByDepartmentId(id, month);
+        float objectScore = 0;
+        for (DepartmentObject object : departmentObjects) {
+            List<DepartmentKeyResult> departmentKeyResults = departmentKeyResultService.getDepartmentKeyResultsByDepartmentObjectId(object.getDepartmentObjectId());
+            float resultScore = 0;
+            for (DepartmentKeyResult result : departmentKeyResults) {
+                resultScore += (result.getSelfScore() + result.getUpstreamScore()) * result.getWeight() / 200;
+            }
+            objectScore += resultScore * object.getWeight() / 100;
+        }
+        return objectScore;
     }
 }
 

@@ -7,7 +7,7 @@ import java.util.Set;
  * @author brightqin
  */
 @Entity
-@Table(name = "department")
+@Table(name = "Department")
 public class Department {
     private Integer departmentId;
     private String departmentName;

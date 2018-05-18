@@ -28,8 +28,16 @@
             myTabBar = new dhtmlXTabBar("my_tabBar");
             myTabBar.addTab("tab1", "人员OKR管理", null, null, 1);
             myTabBar.addTab("tab2", "自评", null, null);
+            myTabBar.addTab("tab3", "绩效图表", null, null);
             PersonOKRManagement();
-            selfEvaluation();
+            myTabBar.attachEvent("onTabClick", function (id) {
+                if (id === "tab2") {
+                    selfEvaluation();
+                }
+                else if (id === "tab3") {
+                    PersonChart();
+                }
+            });
         }
 
         function checkWeight(url, data) {
@@ -799,6 +807,38 @@
                     dhxWins.window("w1").close();
                 });
             }
+
+        }
+
+        function PersonChart() {
+            myLayout = myTabBar.tabs("tab3").attachLayout("1C");
+            /*左边的布局 部门树*/
+            let myChart = myLayout.cells("a").attachChart({
+                view: "spline",
+                value: "#sales#",
+                item: {
+                    borderColor: "#ffffff",
+                    color: "#000000"
+                },
+                line: {
+                    color: "#ff9900",
+                    width: 3
+                },
+                xAxis: {
+                    template: "#month#月"
+                },
+                offset: 0,
+                yAxis: {
+                    start: 50,
+                    end: 100,
+                    step: 1,
+                    template: function (obj) {
+                        return (obj % 5 ? "" : obj)
+                    }
+                }
+            });
+            myChart.load("${pageContext.request.contextPath}/person/personChart?id=" + '${sessionScope.userId}', function () {
+            });
 
         }
     </script>

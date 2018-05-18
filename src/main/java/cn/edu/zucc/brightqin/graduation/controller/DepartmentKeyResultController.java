@@ -153,4 +153,20 @@ public class DepartmentKeyResultController {
         }
     }
 
+    @RequestMapping(value = "/selfEvaluationDepartmentKeyResult", method = RequestMethod.POST)
+    public void selfEvaluationDepartmentKeyResult(HttpServletRequest request, HttpServletResponse response) {
+        String keyResultId = request.getParameter("keyResultId");
+        String evaluation = request.getParameter("evaluation");
+        try (PrintWriter pw = response.getWriter()) {
+            keyResultId = java.net.URLDecoder.decode(keyResultId, "UTF-8");
+            evaluation = java.net.URLDecoder.decode(evaluation, "UTF-8");
+            DepartmentKeyResult keyResult = service.getKeyResultById(Integer.valueOf(keyResultId));
+            keyResult.setSelfScore(Integer.parseInt(evaluation));
+            service.updateKeyResult(keyResult);
+            pw.print(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
